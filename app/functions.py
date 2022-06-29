@@ -53,11 +53,11 @@ def getMachinery(machineryCode, key, mode, file_name):
             book.save(creation_path + creation_name)
 
             print(
-                "\nError: No such machinery code found for "
+                "\nWarning: No machinery code found for "
                 + key
-                + ": "
+                + " ( "
                 + machineryCode
-                + "\n"
+                + " )\n"
             )
             return "N/A"
 
@@ -113,56 +113,59 @@ def main_function():
                     # Default Machinery Name: machinery = data[key].iloc[2, 2]
                     # Machinery Name using the machinery code
                     machinery = getMachinery(
-                        str(data[key].iloc[2, 5]), key, "main", file_name
+                        str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
                     )
 
-                    # Start traversing the data on row 7
-                    row = 7
-                    isValid = True
+                    if (not pd.isna(machinery)) and (not pd.isna(vessel)):
+                        # Start traversing the data on row 7
+                        row = 7
+                        isValid = True
 
-                    # Prepare the sheets
-                    book = Workbook()
-                    sheet = book.active
+                        # Prepare the sheets
+                        book = Workbook()
+                        sheet = book.active
 
-                    sheet.append(main_header)
+                        sheet.append(main_header)
 
-                    while isValid:
+                        while isValid:
 
-                        rowData = (
-                            vessel,
-                            machinery,
-                        )
+                            rowData = (
+                                vessel,
+                                machinery,
+                            )
 
-                        for col in range(7):
-                            d = data[key].iloc[row, col]
+                            for col in range(7):
+                                d = data[key].iloc[row, col]
 
-                            if (pd.isna(d)) and (col == 0):
-                                isValid = False
-                                break
+                                if (pd.isna(d)) and (col == 0):
+                                    isValid = False
+                                    break
 
-                            if pd.isna(d):
-                                d = " "
+                                if pd.isna(d):
+                                    d = " "
 
-                            if (col == 3) and not (re.search("[a-zA-Z]", str(d))):
-                                d = str(d) + " Hours"
+                                if (col == 3) and not (re.search("[a-zA-Z]", str(d))):
+                                    d = str(d) + " Hours"
 
-                            if ((col == 4) or (col == 5)) and isinstance(d, datetime):
-                                d = d.strftime("%d-%b-%y")
-                            else:
-                                d = re.sub("\\s+", " ", str(d))
+                                if ((col == 4) or (col == 5)) and isinstance(
+                                    d, datetime
+                                ):
+                                    d = d.strftime("%d-%b-%y")
+                                else:
+                                    d = re.sub("\\s+", " ", str(d))
 
-                            tempTuple = (d,)
-                            rowData += tempTuple
+                                tempTuple = (d,)
+                                rowData += tempTuple
 
-                        if isValid:
-                            sheet.append(rowData)
-                            row += 1
+                            if isValid:
+                                sheet.append(rowData)
+                                row += 1
 
-                    create_name = file_name[: len(file_name) - 4]
-                    creation_folder = "./res/main/" + create_name
-                    if not os.path.exists(creation_folder):
-                        os.makedirs(creation_folder)
-                    book.save(creation_folder + "/" + key + ".xlsx")
+                        create_name = file_name[: len(file_name) - 4]
+                        creation_folder = "./res/main/" + create_name
+                        if not os.path.exists(creation_folder):
+                            os.makedirs(creation_folder)
+                        book.save(creation_folder + "/" + key + ".xlsx")
 
             print("Done...")
         except Exception as e:
