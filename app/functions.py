@@ -265,7 +265,7 @@ def sub_function():
         print("A - All")
 
         try:
-            file_key = input("\nInput file number: ")
+            file_key = input("\nSelect an option: ")
 
             if file_key != "A":
                 file_name = files[int(file_key)]
