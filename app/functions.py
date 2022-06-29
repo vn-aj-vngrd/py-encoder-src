@@ -13,12 +13,15 @@ def getMachinery(machineryCode, key, mode, file_name):
         path = "./app/data/gen_mach_list.xlsx"
         mach_list = pd.read_excel(path)
 
+        # "ECT"
+        last = mach_list.iloc[:, -1:]
+
         i = 0
         while (not pd.isna(mach_list.iloc[i, 1])) and (
             mach_list.iloc[i, 1] != machineryCode
         ):
             i += 1
-            if mach_list.iloc[i, 1] == "ECT":
+            if mach_list.iloc[i, 1] == last:
                 break
 
         if not pd.isna(mach_list.iloc[i, 1]) and (
