@@ -10,7 +10,7 @@ import re
 
 def getMachinery(machineryCode, key, mode, file_name):
     try:
-        path = "./app/data/gen_mach_list.xlsx"
+        path = "./data/gen_mach_list.xlsx"
         mach_list = pd.read_excel(path)
 
         # str(mach_list.iloc[:, -1:])
