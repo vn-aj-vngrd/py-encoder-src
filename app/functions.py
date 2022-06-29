@@ -10,10 +10,12 @@ import re
 
 def getMachinery(machineryCode, key, mode, file_name):
     try:
+        if not os.path.exists("./data"):
+            os.makedirs("./data")
+
         path = "./data/gen_mach_list.xlsx"
         mach_list = pd.read_excel(path)
 
-        # str(mach_list.iloc[:, -1:])
         last = "END"
 
         i = 0
