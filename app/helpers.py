@@ -134,7 +134,7 @@ def processSrc(mode: str):
 
 
 def exitApp():
-    isContinue = input("\nInput 1 to continue: ")
+    isContinue = input("\n🟢 Input 1 to continue: ")
     if isContinue == "1":
         return False
     else:
