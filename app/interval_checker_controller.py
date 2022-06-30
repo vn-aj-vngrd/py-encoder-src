@@ -26,7 +26,7 @@ def generateIntervalData(file_name):
         # Array of intervals
         intervals = getIntervals(1)
         intervals.append("")
-        print(intervals)
+        # print(intervals)
 
         # Iterate through the sheets
         for key in keys:
@@ -58,7 +58,7 @@ def generateIntervalData(file_name):
                         if pd.isna(data[key].iloc[row, 3]):
                             interval = ""
 
-                        # Check if the interval is hours
+                        # Check if the interval is in hour format
                         if not re.search("[a-zA-Z]", interval) and interval != "":
                             interval = interval + " Hours"
 
@@ -71,6 +71,11 @@ def generateIntervalData(file_name):
                                 interval.rstrip(),
                             )
                             sheet.append(rowData)
+                            print(
+                                "\nWarning: "
+                                + interval.rstrip()
+                                + " is not a valid interval.\n"
+                            )
 
                         row += 1
 
