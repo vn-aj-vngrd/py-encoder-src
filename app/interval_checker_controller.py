@@ -28,11 +28,10 @@ def generateIntervalData(file_name):
         intervals.append("")
         # print(intervals)
 
-        print("🔃 Processing...")
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
-                # print(str(key).rstrip())
+                print("🔃 Processing " + str(key).rstrip() + "...")
 
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
@@ -94,7 +93,7 @@ def generateIntervalData(file_name):
 def intervalChecker():
     try:
         while True:
-            header("Interval Checker")
+            header("✔️  Interval Checker")
 
             files = processSrc("interval")
             if len(files) == 0:

@@ -7,7 +7,7 @@ def generateRHData(file_name):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        print("Excel File: " + file_name)
+        print("\n📁 File: " + file_name)
 
         # Read the data
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
@@ -26,7 +26,7 @@ def generateRHData(file_name):
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
-                print(str(key).rstrip())
+                print("🔃 Processing " + str(key).rstrip() + "...")
 
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
@@ -59,7 +59,7 @@ def generateRHData(file_name):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
 
-        print("Done...")
+        print("👌 Done")
     except Exception as e:
         print("Error: " + str(e) + "\n")
 
@@ -67,7 +67,7 @@ def generateRHData(file_name):
 def runningHours():
     try:
         while True:
-            header("Running Hours")
+            header("🏃‍♂️ Running Hours")
 
             files = processSrc("running_hours")
             if len(files) == 0:

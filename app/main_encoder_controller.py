@@ -7,7 +7,7 @@ def generateMainData(file_name):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        print("Excel File: " + file_name)
+        print("\n📁 File: " + file_name)
 
         # Read the data
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
@@ -25,7 +25,8 @@ def generateMainData(file_name):
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
-                print(str(key).rstrip())
+                print("🔃 Processing " + str(key).rstrip() + "...")
+                # print(str(key).rstrip())
 
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
@@ -87,7 +88,7 @@ def generateMainData(file_name):
                         os.makedirs(creation_folder)
                     book.save(creation_folder + "/" + key + ".xlsx")
 
-        print("Done...")
+        print("👌 Done")
     except Exception as e:
         print("Error: " + str(e))
 
@@ -95,7 +96,7 @@ def generateMainData(file_name):
 def mainEncoder():
     try:
         while True:
-            header("Main Encoder")
+            header("💻 Main Encoder")
 
             files = processSrc("main")
             if len(files) == 0:
