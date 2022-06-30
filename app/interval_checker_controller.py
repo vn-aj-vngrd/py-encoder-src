@@ -25,6 +25,8 @@ def generateIntervalData(file_name):
 
         # Array of intervals
         intervals = getIntervals(1)
+        intervals.append("")
+        print(intervals)
 
         # Iterate through the sheets
         for key in keys:
@@ -33,6 +35,10 @@ def generateIntervalData(file_name):
 
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
+
+                machinery: str = getMachinery(
+                    str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
+                )
 
                 if not pd.isna(vessel):
                     # Start traversing the data on row 7
@@ -49,16 +55,20 @@ def generateIntervalData(file_name):
                             break
 
                         if pd.isna(data[key].iloc[row, 3]):
-                            interval = " "
+                            interval = ""
 
                         # Check if the interval is hours
-                        if not re.search("[a-zA-Z]", interval) and interval != " ":
+                        if not re.search("[a-zA-Z]", interval) and interval != "":
                             interval = interval + " Hours"
 
                         # If the interval is unique then append
                         if interval.rstrip() not in intervals:
                             intervals.append(interval)
-                            rowData = (vessel.rstrip(), interval.rstrip())
+                            rowData = (
+                                vessel.rstrip(),
+                                machinery.rstrip(),
+                                interval.rstrip(),
+                            )
                             sheet.append(rowData)
 
                         row += 1

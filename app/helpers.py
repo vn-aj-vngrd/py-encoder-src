@@ -82,8 +82,8 @@ def getIntervals(mode: int):
         while (not pd.isna(interval_list.iloc[i, mode])) and (
             interval_list.iloc[i, mode] != last
         ):
-            i += 1
             intervals.append(str(interval_list.iloc[i, mode]).rstrip())
+            i += 1
             if interval_list.iloc[i, mode] == last:
                 break
 

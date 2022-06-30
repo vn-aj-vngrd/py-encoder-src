@@ -59,10 +59,10 @@ def generateMainData(file_name):
                                 break
 
                             if pd.isna(d):
-                                d = " "
+                                d = ""
 
                             if col == 3:
-                                if not (re.search("[a-zA-Z]", str(d))):
+                                if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
                                     d = str(d) + " Hours"
                                 d = getInterval(d, interval_ids, interval_names)
 
