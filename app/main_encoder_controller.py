@@ -19,6 +19,9 @@ def generateMainData(file_name):
         interval_names = getIntervals(0)
         interval_ids = getIntervals(1)
 
+        interval_names.append("")
+        interval_ids.append("")
+
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:

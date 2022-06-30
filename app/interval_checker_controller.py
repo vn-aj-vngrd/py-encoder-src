@@ -54,7 +54,9 @@ def generateIntervalData(file_name):
                             is_Valid = False
                             break
 
-                        if pd.isna(data[key].iloc[row, 3]):
+                        if pd.isna(data[key].iloc[row, 3]) or isinstance(
+                            data[key].iloc[row, 3], datetime
+                        ):
                             interval = ""
 
                         # Check if the interval is hours
