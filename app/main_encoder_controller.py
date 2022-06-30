@@ -26,7 +26,6 @@ def generateMainData(file_name):
         for key in keys:
             if key not in not_included:
                 print("🔃 Processing " + str(key).rstrip() + "...")
-                # print(str(key).rstrip())
 
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
@@ -102,7 +101,7 @@ def mainEncoder():
             if len(files) == 0:
                 break
 
-            file_key = input("\nSelect an option: ")
+            file_key = input("\n👉 Select an option: ")
 
             if file_key != "A":
                 file_name = files[int(file_key)]

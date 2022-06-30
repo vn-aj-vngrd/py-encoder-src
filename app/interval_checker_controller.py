@@ -99,7 +99,7 @@ def intervalChecker():
             if len(files) == 0:
                 break
 
-            file_key = input("\nSelect an option: ")
+            file_key = input("\n👉 Select an option: ")
 
             if file_key != "A":
                 file_name = files[int(file_key)]
