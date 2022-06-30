@@ -100,7 +100,7 @@ def getInterval(interval_id: str, interval_ids: list, interval_names: list):
         return interval_names[idx]
     except ValueError:
         print("Error: " + str(interval_id) + " is not a valid interval id.")
-        return " "
+        return ""
     except Exception as e:
         print("Error: " + str(e))
 
