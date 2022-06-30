@@ -134,8 +134,23 @@ def processSrc(mode: str):
 
 
 def exitApp():
-    isContinue = input("Input 1 to continue: ")
+    isContinue = input("\nInput 1 to continue: ")
     if isContinue == "1":
         return False
     else:
         return True
+
+
+def header(title: str):
+    print(
+        r"""
+____              _____                     _           
+|  _ \ _   _      | ____|_ __   ___ ___   __| | ___ _ __ 
+| |_) | | | |_____|  _| | '_ \ / __/ _ \ / _` |/ _ \ '__|
+|  __/| |_| |_____| |___| | | | (_| (_) | (_| |  __/ |   
+|_|    \__, |     |_____|_| |_|\___\___/ \__,_|\___|_|   
+        |___/                                             
+            """
+    )
+
+    print(title + "\n")

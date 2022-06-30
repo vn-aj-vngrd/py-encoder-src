@@ -95,6 +95,8 @@ def generateMainData(file_name):
 def mainEncoder():
     try:
         while True:
+            header("Main Encoder")
+
             files = processSrc("main")
             if len(files) == 0:
                 break

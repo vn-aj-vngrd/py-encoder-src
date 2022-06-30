@@ -7,7 +7,7 @@ def generateIntervalData(file_name):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        print("Excel File: " + file_name)
+        print("\n📁 File: " + file_name)
 
         # Read the data
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
@@ -28,10 +28,11 @@ def generateIntervalData(file_name):
         intervals.append("")
         # print(intervals)
 
+        print("🔃 Processing...")
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
-                print(str(key).rstrip())
+                # print(str(key).rstrip())
 
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
@@ -85,6 +86,7 @@ def generateIntervalData(file_name):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
 
+        print("👌 Done")
     except Exception as e:
         print("Error: " + str(e))
 
@@ -92,6 +94,8 @@ def generateIntervalData(file_name):
 def intervalChecker():
     try:
         while True:
+            header("Interval Checker")
+
             files = processSrc("interval")
             if len(files) == 0:
                 break
