@@ -93,7 +93,7 @@ def generateIntervalData(file_name):
 def intervalChecker():
     try:
         while True:
-            header("✔️  Interval Checker")
+            header("⌚ Interval Checker")
 
             files = processSrc("interval")
             if len(files) == 0:

@@ -67,7 +67,7 @@ def generateRHData(file_name):
 def runningHours():
     try:
         while True:
-            header("🏃‍♂️ Running Hours")
+            header("⏳ Running Hours")
 
             files = processSrc("running_hours")
             if len(files) == 0:
