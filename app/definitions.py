@@ -1,4 +1,4 @@
-notIncluded = [
+not_included = [
     "Main Menu",
     "Running Hours",
     "MECO Setting",
@@ -23,6 +23,8 @@ main_header = (
     "last_done_running_hours",
 )
 
-sub_header = ("vessel", "machinery", "running_hours", "updating_date")
+rh_header = ("vessel", "machinery", "running_hours", "updating_date")
+
+interval_header = ("vessel", "machinery", "interval")
 
 bin_header = ("sheet_name", "code")

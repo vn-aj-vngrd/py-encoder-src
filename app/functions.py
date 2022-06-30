@@ -1,232 +1,14 @@
-from os.path import exists
-from app.definitions import *
-from openpyxl import Workbook
-from openpyxl import load_workbook
-from datetime import datetime
-import pandas as pd
+from app.helpers import *
 import os
-import re
 
 
-def getMachinery(machinery_code, key, mode, file_name):
+def mainFunction():
     try:
-        if not os.path.exists("./data"):
-            os.makedirs("./data")
-
-        if machinery_code == "nan" or machinery_code == "none":
-            machinery_code = key
-
-        path = "./data/gen_mach_list.xlsx"
-        mach_list = pd.read_excel(path)
-
-        last = "END"
-
-        i = 0
-        while (not pd.isna(mach_list.iloc[i, 1])) and (
-            mach_list.iloc[i, 1] != machinery_code
-        ):
-            i += 1
-            if mach_list.iloc[i, 1] == last:
+        while True:
+            files = processSrc("main")
+            if len(files) == 0:
                 break
 
-        if not pd.isna(mach_list.iloc[i, 1]) and (
-            mach_list.iloc[i, 1] == machinery_code
-        ):
-            return mach_list.iloc[i, 0]
-        else:
-            creation_name = "/" + file_name
-            creation_path = "./bin/" + mode
-
-            if not os.path.exists(creation_path):
-                os.makedirs(creation_path)
-
-            if not exists(creation_path + creation_name):
-                writer = pd.ExcelWriter(
-                    creation_path + creation_name, engine="xlsxwriter"
-                )
-                writer.save()
-                book = load_workbook(creation_path + creation_name)
-                sheet = book.active
-                sheet.append(bin_header)
-                book.save(creation_path + creation_name)
-
-            book = load_workbook(creation_path + creation_name)
-            sheet = book.active
-
-            rowData = (key, machinery_code)
-            sheet.append(rowData)
-            book.save(creation_path + creation_name)
-
-            print(
-                "\nWarning: No machinery code found for "
-                + key
-                + " ( "
-                + machinery_code
-                + " )\n"
-            )
-            return "N/A"
-
-    except Exception as e:
-        print("Error: " + str(e) + " (" + key + ": " + machinery_code + ")" + "\n")
-
-
-def generateMainData(file_name):
-    path = "src/" + file_name
-    print("Excel File: " + file_name)
-
-    # Read the data
-    data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
-
-    # Get the keys
-    xl = pd.ExcelFile(path)
-    keys = xl.sheet_names
-
-    # Iterate through the sheets
-    for key in keys:
-        if key not in notIncluded:
-            print(key)
-
-            # Vessel Name
-            vessel = data[key].iloc[0, 2]
-
-            # Default Machinery Name: machinery = data[key].iloc[2, 2]
-            # Machinery Name using the machinery code
-            machinery = getMachinery(
-                str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
-            )
-
-            if (not pd.isna(machinery)) and (not pd.isna(vessel)):
-                # Start traversing the data on row 7
-                row = 7
-                isValid = True
-
-                # Prepare the sheets
-                book = Workbook()
-                sheet = book.active
-
-                sheet.append(main_header)
-
-                while isValid:
-
-                    rowData = (
-                        vessel,
-                        machinery,
-                    )
-
-                    for col in range(7):
-                        d = data[key].iloc[row, col]
-
-                        if (pd.isna(d)) and (col == 0):
-                            isValid = False
-                            break
-
-                        if pd.isna(d):
-                            d = " "
-
-                        if (col == 3) and not (re.search("[a-zA-Z]", str(d))):
-                            d = str(d) + " Hours"
-
-                        if ((col == 4) or (col == 5)) and isinstance(d, datetime):
-                            d = d.strftime("%d-%b-%y")
-                        else:
-                            d = re.sub("\\s+", " ", str(d))
-
-                        tempTuple = (d,)
-                        rowData += tempTuple
-
-                    if isValid:
-                        sheet.append(rowData)
-                        row += 1
-
-                create_name = file_name[: len(file_name) - 4]
-                creation_folder = "./res/main/" + create_name
-                if not os.path.exists(creation_folder):
-                    os.makedirs(creation_folder)
-                book.save(creation_folder + "/" + key + ".xlsx")
-
-    print("Done...")
-
-
-def generateSubData(file_name):
-    try:
-        path = "src/" + file_name
-        print("Excel File: " + file_name)
-
-        # Read the data
-        data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
-
-        # Get the keys
-        xl = pd.ExcelFile(path)
-        keys = xl.sheet_names
-
-        # Get updated_at
-        if pd.isna(data["Running Hours"].iloc[2, 3]):
-            updating_date = " "
-        else:
-            updating_date = data["Running Hours"].iloc[2, 3].strftime("%d-%b-%y")
-
-        # Prepare the sheets
-        book = Workbook()
-        sheet = book.active
-
-        # Append the dates
-        sheet.append(sub_header)
-
-        # Iterate through the sheets
-        for key in keys:
-            if key not in notIncluded:
-                print(key)
-
-                # Vessel Name
-                vessel = data[key].iloc[0, 2]
-
-                # Default Machinery Name: machinery = data[key].iloc[2, 2]
-                # Machinery Name
-                machinery = getMachinery(
-                    str(data[key].iloc[2, 5]), key, "sub", file_name
-                )
-
-                # Running Hours
-                running_hours = data[key].iloc[3, 5]
-
-                rowData = (vessel, machinery, running_hours, updating_date)
-                sheet.append(rowData)
-
-        create_name = file_name[: len(file_name) - 4]
-        creation_folder = "./res/sub/" + create_name
-        if not os.path.exists(creation_folder):
-            os.makedirs(creation_folder)
-        book.save(creation_folder + "/" + file_name)
-
-        print("Done...")
-    except Exception as e:
-        print("Error: " + str(e) + "\n")
-
-
-def main_function():
-    if not os.path.exists("./res/main"):
-        os.makedirs("./res/main")
-
-    while True:
-        if not os.path.exists("./src"):
-            os.makedirs("./src")
-
-        files = []
-        i = 0
-        for excel in os.listdir("./src"):
-            if excel.endswith(".xlsx"):
-                files.append(excel)
-                print(i, "-", excel)
-                i += 1
-
-        if len(files) == 0:
-            print("No data found in src directory.")
-            break
-
-        print("A - All")
-
-        # Get the location of the data
-        try:
             file_key = input("\nSelect an option: ")
 
             if file_key != "A":
@@ -237,49 +19,54 @@ def main_function():
                 for _file in files:
                     generateMainData(_file)
 
-        except Exception as e:
-            print("Error: " + str(e))
+            if exitApp():
+                break
 
-        isContinue = input("Input 1 to continue: ")
-        if isContinue != "1":
-            break
+    except Exception as e:
+        print("Error: " + str(e))
 
 
-def sub_function():
-    if not os.path.exists("./res/sub"):
-        os.makedirs("./res/sub")
+def rhFunction():
+    try:
+        while True:
+            files = processSrc("running_hours")
+            if len(files) == 0:
+                break
 
-    while True:
-        if not os.path.exists("./src"):
-            os.makedirs("./src")
-
-        files = []
-        i = 0
-        for excel in os.listdir("./src"):
-            if excel.endswith(".xlsx"):
-                files.append(excel)
-                print(i, "-", excel)
-                i += 1
-
-        if len(files) == 0:
-            print("No such data found in src directory.")
-            break
-
-        print("A - All")
-
-        try:
             file_key = input("\nSelect an option: ")
 
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateSubData(file_name)
+                generateRHData(file_name)
             else:
                 for _file in files:
-                    generateSubData(_file)
+                    generateRHData(_file)
 
-        except Exception as e:
-            print("Error: " + str(e))
+            if exitApp():
+                break
 
-        isContinue = input("Input 1 to continue: ")
-        if isContinue != "1":
-            break
+    except Exception as e:
+        print("Error: " + str(e))
+
+
+def intervalFunction():
+    try:
+        while True:
+            files = processSrc("interval")
+            if len(files) == 0:
+                break
+
+            file_key = input("\nSelect an option: ")
+
+            if file_key != "A":
+                file_name = files[int(file_key)]
+                generateIntervalData(file_name)
+            else:
+                for _file in files:
+                    generateIntervalData(_file)
+
+            if exitApp():
+                break
+
+    except Exception as e:
+        print("Error: " + str(e))
