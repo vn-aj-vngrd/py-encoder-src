@@ -73,7 +73,7 @@ def generateIntervalData(file_name):
         print("Error: " + str(e))
 
 
-def intervalFunction():
+def intervalChecker():
     try:
         while True:
             files = processSrc("interval")

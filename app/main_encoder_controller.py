@@ -89,7 +89,7 @@ def generateMainData(file_name):
         print("Error: " + str(e))
 
 
-def mainFunction():
+def mainEncoder():
     try:
         while True:
             files = processSrc("main")

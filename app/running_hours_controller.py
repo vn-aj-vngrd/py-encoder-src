@@ -64,7 +64,7 @@ def generateRHData(file_name):
         print("Error: " + str(e) + "\n")
 
 
-def rhFunction():
+def runningHours():
     try:
         while True:
             files = processSrc("running_hours")
