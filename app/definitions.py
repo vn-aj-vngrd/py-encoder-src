@@ -25,6 +25,6 @@ main_header = (
 
 rh_header = ("vessel", "machinery", "running_hours", "updating_date")
 
-interval_header = ("vessel", "machinery", "interval")
+interval_header = ("vessel", "interval")
 
 bin_header = ("sheet_name", "code")

@@ -26,7 +26,7 @@ def generateMainData(file_name):
                 print(str(key).rstrip())
 
                 # Vessel Name
-                vessel = data[key].iloc[0, 2]
+                vessel = str(data[key].iloc[0, 2])
 
                 # Default Machinery Name: machinery = data[key].iloc[2, 2]
                 # Machinery Name using the machinery code
@@ -48,8 +48,8 @@ def generateMainData(file_name):
                     while is_Valid:
 
                         rowData = (
-                            vessel,
-                            machinery,
+                            vessel.rstrip(),
+                            machinery.rstrip(),
                         )
 
                         for col in range(7):
@@ -70,7 +70,7 @@ def generateMainData(file_name):
                             else:
                                 d = re.sub("\\s+", " ", str(d))
 
-                            tempTuple = (d,)
+                            tempTuple = (d.rstrip(),)
                             rowData += tempTuple
 
                         if is_Valid:
@@ -113,7 +113,7 @@ def generateRHData(file_name):
                 print(str(key).rstrip())
 
                 # Vessel Name
-                vessel = data[key].iloc[0, 2]
+                vessel = str(data[key].iloc[0, 2])
 
                 # Machinery Name
                 machinery = getMachinery(
@@ -121,7 +121,7 @@ def generateRHData(file_name):
                 )
 
                 # Running Hours
-                running_hours = data[key].iloc[3, 5]
+                running_hours = str(data[key].iloc[3, 5])
 
                 # Updated At
                 if not pd.isna(data[key].iloc[4, 5]):
@@ -129,7 +129,12 @@ def generateRHData(file_name):
                 else:
                     updating_date = " "
 
-                rowData = (vessel, machinery, running_hours, updating_date)
+                rowData = (
+                    vessel.rstrip(),
+                    machinery.rstrip(),
+                    running_hours.rstrip(),
+                    updating_date.rstrip(),
+                )
                 sheet.append(rowData)
 
         create_name = file_name[: len(file_name) - 4]
@@ -194,15 +199,18 @@ def generateIntervalData(file_name):
                             is_Valid = False
                             break
 
+                        if pd.isna(data[key].iloc[row, 3]):
+                            interval = " "
+
                         # Check if the interval is hours
-                        if not re.search("[a-zA-Z]", interval):
+                        if not re.search("[a-zA-Z]", interval) and interval != " ":
                             interval = interval + " Hours"
 
                         # If the interval is not yet written then it will be written
                         # Otherwise, not
                         if interval not in intervals:
                             intervals.append(interval)
-                            rowData = (vessel, machinery, interval)
+                            rowData = (vessel.rstrip(), interval.rstrip())
                             sheet.append(rowData)
 
                         row += 1
@@ -243,7 +251,7 @@ def getMachinery(machinery_code, key, mode, file_name):
         if not pd.isna(mach_list.iloc[i, 1]) and (
             mach_list.iloc[i, 1] == machinery_code
         ):
-            return mach_list.iloc[i, 0]
+            return str(mach_list.iloc[i, 0])
         else:
             creation_name = "/" + file_name
             creation_path = "./bin/" + mode
