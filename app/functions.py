@@ -8,10 +8,13 @@ import os
 import re
 
 
-def getMachinery(machineryCode, key, mode, file_name):
+def getMachinery(machinery_code, key, mode, file_name):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
+
+        if machinery_code == "nan" or machinery_code == "none":
+            machinery_code = key
 
         path = "./data/gen_mach_list.xlsx"
         mach_list = pd.read_excel(path)
@@ -20,14 +23,14 @@ def getMachinery(machineryCode, key, mode, file_name):
 
         i = 0
         while (not pd.isna(mach_list.iloc[i, 1])) and (
-            mach_list.iloc[i, 1] != machineryCode
+            mach_list.iloc[i, 1] != machinery_code
         ):
             i += 1
             if mach_list.iloc[i, 1] == last:
                 break
 
         if not pd.isna(mach_list.iloc[i, 1]) and (
-            mach_list.iloc[i, 1] == machineryCode
+            mach_list.iloc[i, 1] == machinery_code
         ):
             return mach_list.iloc[i, 0]
         else:
@@ -50,7 +53,7 @@ def getMachinery(machineryCode, key, mode, file_name):
             book = load_workbook(creation_path + creation_name)
             sheet = book.active
 
-            rowData = (key, machineryCode)
+            rowData = (key, machinery_code)
             sheet.append(rowData)
             book.save(creation_path + creation_name)
 
@@ -58,13 +61,13 @@ def getMachinery(machineryCode, key, mode, file_name):
                 "\nWarning: No machinery code found for "
                 + key
                 + " ( "
-                + machineryCode
+                + machinery_code
                 + " )\n"
             )
             return "N/A"
 
     except Exception as e:
-        print("Error: " + str(e) + " (" + key + ": " + machineryCode + ")" + "\n")
+        print("Error: " + str(e) + " (" + key + ": " + machinery_code + ")" + "\n")
 
 
 def generateMainData(file_name):
