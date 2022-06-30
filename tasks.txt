@@ -1,6 +1,0 @@
-20220220 GLU - DECK 	-- GOOD (No Errors)
-20220220 GLUE - ENGINE	-- GOOD (No Errors) (Warnings for N/A machinery codes)
-20220522 VSPE - ENGINE	-- GOOD (No Errors)
-20220528 VSG - DECK 	-- GOOD (No Errors)
-20220528 VSG - ENGINE	-- GOOD (No Errors)
-20220529 VSP - DECK	    -- GOOD (No Errors)
