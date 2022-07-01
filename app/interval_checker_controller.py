@@ -26,7 +26,8 @@ def generateIntervalData(file_name):
         # Array of intervals
         intervals = getIntervals(1)
         intervals.append("")
-        # print(intervals)
+
+        machineries = getMachineries()
 
         # Iterate through the sheets
         for key in keys:
@@ -37,7 +38,11 @@ def generateIntervalData(file_name):
                 vessel = str(data[key].iloc[0, 2])
 
                 machinery: str = getMachinery(
-                    str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
+                    str(data[key].iloc[2, 5]).rstrip(),
+                    key,
+                    "main",
+                    file_name,
+                    machineries,
                 )
 
                 if not pd.isna(vessel):
@@ -72,22 +77,22 @@ def generateIntervalData(file_name):
                             )
                             sheet.append(rowData)
                             print(
-                                "\nWarning: "
+                                "⚠️ Warning: "
                                 + interval.rstrip()
-                                + " is not a valid interval.\n"
+                                + " is not a valid interval."
                             )
 
                         row += 1
 
         create_name = file_name[: len(file_name) - 4]
-        creation_folder = "./res/interval/" + create_name
+        creation_folder = "./res/interval_checker/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
 
         print("👌 Done")
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e))
 
 
 def intervalChecker():
@@ -95,7 +100,7 @@ def intervalChecker():
         while True:
             header("⌚ Interval Checker")
 
-            files = processSrc("interval")
+            files = processSrc("interval_checker")
             if len(files) == 0:
                 break
 
@@ -112,4 +117,4 @@ def intervalChecker():
                 break
 
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e))

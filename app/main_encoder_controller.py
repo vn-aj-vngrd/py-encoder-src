@@ -22,6 +22,8 @@ def generateMainData(file_name):
         interval_names.append("")
         interval_ids.append("")
 
+        machineries = getMachineries()
+
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
@@ -33,10 +35,16 @@ def generateMainData(file_name):
                 # Default Machinery Name: machinery = data[key].iloc[2, 2]
                 # Machinery Name using the machinery code
                 machinery = getMachinery(
-                    str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
+                    str(data[key].iloc[2, 5]).rstrip(),
+                    key,
+                    "main",
+                    file_name,
+                    machineries,
                 )
 
-                if (not pd.isna(machinery)) and (not pd.isna(vessel)):
+                if (not pd.isna(machinery)) and (
+                    not pd.isna(vessel) and (machinery != "N/A")
+                ):
                     # Start traversing the data on row 7
                     row = 7
                     is_Valid = True
@@ -82,14 +90,14 @@ def generateMainData(file_name):
                             row += 1
 
                     create_name = file_name[: len(file_name) - 4]
-                    creation_folder = "./res/main/" + create_name
+                    creation_folder = "./res/main_encoder/" + create_name
                     if not os.path.exists(creation_folder):
                         os.makedirs(creation_folder)
                     book.save(creation_folder + "/" + key + ".xlsx")
 
         print("👌 Done")
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e))
 
 
 def mainEncoder():
@@ -97,7 +105,7 @@ def mainEncoder():
         while True:
             header("💻 Main Encoder")
 
-            files = processSrc("main")
+            files = processSrc("main_encoder")
             if len(files) == 0:
                 break
 
@@ -115,4 +123,4 @@ def mainEncoder():
                 break
 
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e))
