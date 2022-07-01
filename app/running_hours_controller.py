@@ -40,7 +40,6 @@ def generateRHData(file_name):
                     "running_hours",
                     file_name,
                     machineries,
-                    vessel,
                 )
 
                 if (

@@ -33,7 +33,6 @@ def getMachinery(
     mode: str,
     file_name: str,
     machineries: list,
-    vessel: str,
 ):
     try:
         machinery_code = machinery_code.rstrip()
@@ -60,12 +59,7 @@ def getMachinery(
         sheet = book.active
 
         desc = (
-            "⚠️ Warning: No machinery code found for "
-            + key
-            + " ( "
-            + machinery_code
-            + " ) under "
-            + vessel
+            "⚠️ Warning: No machinery code ( " + machinery_code + " ) found for " + key
         )
 
         rowData = (key, machinery_code, desc)

@@ -40,7 +40,6 @@ def generateMainData(file_name):
                     "main_encoder",
                     file_name,
                     machineries,
-                    vessel,
                 )
 
                 if (
@@ -78,11 +77,8 @@ def generateMainData(file_name):
                             if col == 3:
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
                                     d = str(d) + " Hours"
-                                track = [
-                                    vessel,
-                                    machinery
-                                ]
-                                
+                                track = [vessel, machinery]
+
                                 d = getInterval(d, interval_ids, interval_names, track)
 
                             if ((col == 4) or (col == 5)) and isinstance(d, datetime):
@@ -103,7 +99,11 @@ def generateMainData(file_name):
                         os.makedirs(creation_folder)
                     book.save(creation_folder + "/" + key + ".xlsx")
                 else:
-                    print("❌ Error: Vessel name or machinery code is missing.")
+                    print(
+                        '❌ Error: Vessel name or machinery code is missing for sheet "'
+                        + key
+                        + '"'
+                    )
 
         print("👌 Done")
     except Exception as e:

@@ -43,7 +43,6 @@ def generateIntervalData(file_name):
                     "interval_checker",
                     file_name,
                     machineries,
-                    vessel,
                 )
 
                 if (
