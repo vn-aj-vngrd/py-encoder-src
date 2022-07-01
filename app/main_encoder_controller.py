@@ -67,7 +67,7 @@ def generateMainData(file_name):
                         for col in range(7):
                             d = data[key].iloc[row, col]
 
-                            if (pd.isna(d)) and (col == 0):
+                            if (col == 0) and ((d == "") or (d == " ") or (pd.isna(d))):
                                 is_Valid = False
                                 break
 
@@ -92,6 +92,8 @@ def generateMainData(file_name):
                         if is_Valid:
                             sheet.append(rowData)
                             row += 1
+                        else:
+                            break
 
                     create_name = file_name[: len(file_name) - 4]
                     creation_folder = "./res/main_encoder/" + create_name
