@@ -77,7 +77,12 @@ def generateMainData(file_name):
                             if col == 3:
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
                                     d = str(d) + " Hours"
-                                d = getInterval(d, interval_ids, interval_names)
+                                track = [
+                                    vessel,
+                                    machinery
+                                ]
+                                
+                                d = getInterval(d, interval_ids, interval_names, track)
 
                             if ((col == 4) or (col == 5)) and isinstance(d, datetime):
                                 d = d.strftime("%d-%b-%y")

@@ -100,14 +100,24 @@ def getIntervals(mode: int):
         print("❌ Error: " + str(e))
 
 
-def getInterval(interval_id: str, interval_ids: list, interval_names: list):
+def getInterval(
+    interval_id: str, interval_ids: list, interval_names: list, track: list
+):
     try:
         interval_id = interval_id.rstrip()
         idx = interval_ids.index(interval_id)
 
         return interval_names[idx]
     except ValueError:
-        print("⚠️ Warning: " + str(interval_id) + " is not a valid interval.")
+        print(
+            "⚠️ Warning: "
+            + str(interval_id)
+            + " is not a valid interval ("
+            + track[0]
+            + " - "
+            + track[1]
+            + ")"
+        )
         return "N/A"
     except Exception as e:
         print("❌ Error: " + str(e))
