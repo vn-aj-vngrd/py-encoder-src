@@ -19,8 +19,8 @@ def generateMainData(file_name):
         interval_names = getIntervals(0)
         interval_ids = getIntervals(1)
 
-        interval_names.append("")
-        interval_ids.append("")
+        # interval_names.append("")
+        # interval_ids.append("")
 
         machineries = getMachineries()
 
@@ -77,8 +77,8 @@ def generateMainData(file_name):
                             if col == 3:
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
                                     d = str(d) + " Hours"
-                                track = [vessel, machinery]
 
+                                track = [vessel, machinery]
                                 d = getInterval(d, interval_ids, interval_names, track)
 
                             if ((col == 4) or (col == 5)) and isinstance(d, datetime):

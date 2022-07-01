@@ -25,7 +25,7 @@ def generateIntervalData(file_name):
 
         # Array of intervals
         intervals = getIntervals(1)
-        intervals.append("")
+        # intervals.append("")
 
         machineries = getMachineries()
 
