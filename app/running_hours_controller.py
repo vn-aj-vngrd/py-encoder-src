@@ -74,7 +74,7 @@ def generateRHData(file_name):
         creation_folder = "./res/running_hours/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        book.save(creation_folder + "/" + create_name + "csv")
+        book.save(creation_folder + "/" + file_name)
 
         print("👌 Done")
     except Exception as e:

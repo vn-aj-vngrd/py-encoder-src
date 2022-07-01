@@ -19,10 +19,16 @@ def generateMainData(file_name):
         interval_names = getIntervals(0)
         interval_ids = getIntervals(1)
 
-        # interval_names.append("")
+        # interval_names.append("N/A")
         # interval_ids.append("")
 
         machineries = getMachineries()
+
+        # Prepare the sheets
+        book = Workbook()
+        sheet = book.active
+
+        sheet.append(main_header)
 
         # Iterate through the sheets
         for key in keys:
@@ -53,11 +59,11 @@ def generateMainData(file_name):
                     row = 7
                     is_Valid = True
 
-                    # Prepare the sheets
-                    book = Workbook()
-                    sheet = book.active
+                    # # Prepare the sheets
+                    # book = Workbook()
+                    # sheet = book.active
 
-                    sheet.append(main_header)
+                    # sheet.append(main_header)
 
                     while is_Valid:
 
@@ -102,18 +108,25 @@ def generateMainData(file_name):
                         else:
                             break
 
-                    create_name = str(file_name[: len(file_name) - 4]).rstrip()
-                    creation_folder = "./res/main_encoder/" + create_name
-                    if not os.path.exists(creation_folder):
-                        os.makedirs(creation_folder)
-                    name_key = str(key).rstrip()
-                    book.save(creation_folder + "/" + name_key + ".csv")
+                    # create_name = str(file_name[: len(file_name) - 4]).rstrip()
+                    # creation_folder = "./res/main_encoder/" + create_name
+                    # if not os.path.exists(creation_folder):
+                    #     os.makedirs(creation_folder)
+                    # name_key = str(key).rstrip()
+                    # book.save(creation_folder + "/" + name_key + ".xlsx")
+
                 else:
                     print(
                         '❌ Error: Vessel name or machinery code is missing for sheet "'
                         + key
                         + '"'
                     )
+
+        create_name = str(file_name[: len(file_name) - 4]).rstrip()
+        creation_folder = "./res/main_encoder/" + create_name
+        if not os.path.exists(creation_folder):
+            os.makedirs(creation_folder)
+        book.save(creation_folder + "/" + file_name)
 
         print("👌 Done")
     except Exception as e:
