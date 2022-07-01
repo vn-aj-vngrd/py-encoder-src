@@ -107,7 +107,7 @@ def generateMainData(file_name):
                     if not os.path.exists(creation_folder):
                         os.makedirs(creation_folder)
                     name_key = str(key).rstrip()
-                    book.save(creation_folder + "/" + name_key + ".xlsx")
+                    book.save(creation_folder + "/" + name_key + ".csv")
                 else:
                     print(
                         '❌ Error: Vessel name or machinery code is missing for sheet "'
