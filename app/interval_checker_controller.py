@@ -45,7 +45,11 @@ def generateIntervalData(file_name):
                     machineries,
                 )
 
-                if not pd.isna(vessel):
+                if (
+                    not pd.isna(vessel)
+                    and not pd.isna(machinery)
+                    and (machinery != "N/A")
+                ):
                     # Start traversing the data on row 7
                     row = 7
                     is_Valid = True
@@ -83,7 +87,9 @@ def generateIntervalData(file_name):
                             )
 
                         row += 1
-
+                else:
+                    print("❌ Error: Vessel name or machinery code is missing.")
+                    
         create_name = file_name[: len(file_name) - 4]
         creation_folder = "./res/interval_checker/" + create_name
         if not os.path.exists(creation_folder):

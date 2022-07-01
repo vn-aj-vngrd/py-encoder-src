@@ -42,8 +42,10 @@ def generateMainData(file_name):
                     machineries,
                 )
 
-                if (not pd.isna(machinery)) and (
-                    not pd.isna(vessel) and (machinery != "N/A")
+                if (
+                    not pd.isna(machinery)
+                    and not pd.isna(vessel)
+                    and (machinery != "N/A")
                 ):
                     # Start traversing the data on row 7
                     row = 7
@@ -94,6 +96,8 @@ def generateMainData(file_name):
                     if not os.path.exists(creation_folder):
                         os.makedirs(creation_folder)
                     book.save(creation_folder + "/" + key + ".xlsx")
+                else:
+                    print("❌ Error: Vessel name or machinery code is missing.")
 
         print("👌 Done")
     except Exception as e:

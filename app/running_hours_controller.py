@@ -42,25 +42,33 @@ def generateRHData(file_name):
                     machineries,
                 )
 
-                # Running Hours
-                if not pd.isna(data[key].iloc[3, 5]):
-                    running_hours = str(data[key].iloc[3, 5])
-                else:
-                    running_hours = ""
+                if (
+                    not pd.isna(machinery)
+                    and not pd.isna(vessel)
+                    and (machinery != "N/A")
+                ):
 
-                # Updated At
-                if not pd.isna(data[key].iloc[4, 5]):
-                    updating_date = data[key].iloc[4, 5].strftime("%d-%b-%y")
-                else:
-                    updating_date = " "
+                    # Running Hours
+                    if not pd.isna(data[key].iloc[3, 5]):
+                        running_hours = str(data[key].iloc[3, 5])
+                    else:
+                        running_hours = ""
 
-                rowData = (
-                    vessel.rstrip(),
-                    machinery.rstrip(),
-                    running_hours.rstrip(),
-                    updating_date.rstrip(),
-                )
-                sheet.append(rowData)
+                    # Updated At
+                    if not pd.isna(data[key].iloc[4, 5]):
+                        updating_date = data[key].iloc[4, 5].strftime("%d-%b-%y")
+                    else:
+                        updating_date = " "
+
+                    rowData = (
+                        vessel.rstrip(),
+                        machinery.rstrip(),
+                        running_hours.rstrip(),
+                        updating_date.rstrip(),
+                    )
+                    sheet.append(rowData)
+                else:
+                    print("❌ Error: Vessel name or machinery code is missing.")
 
         create_name = file_name[: len(file_name) - 4]
         creation_folder = "./res/running_hours/" + create_name
