@@ -85,7 +85,7 @@ def generateIntervalData(file_name):
                         row += 1
 
         create_name = file_name[: len(file_name) - 4]
-        creation_folder = "./res/interval/" + create_name
+        creation_folder = "./res/interval_checker/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
@@ -100,7 +100,7 @@ def intervalChecker():
         while True:
             header("⌚ Interval Checker")
 
-            files = processSrc("interval")
+            files = processSrc("interval_checker")
             if len(files) == 0:
                 break
 
