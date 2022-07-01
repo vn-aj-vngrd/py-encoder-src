@@ -43,6 +43,7 @@ def generateIntervalData(file_name):
                     "interval_checker",
                     file_name,
                     machineries,
+                    vessel,
                 )
 
                 if (
@@ -89,7 +90,7 @@ def generateIntervalData(file_name):
                         row += 1
                 else:
                     print("❌ Error: Vessel name or machinery code is missing.")
-                    
+
         create_name = file_name[: len(file_name) - 4]
         creation_folder = "./res/interval_checker/" + create_name
         if not os.path.exists(creation_folder):

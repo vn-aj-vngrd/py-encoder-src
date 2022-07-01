@@ -33,6 +33,7 @@ def getMachinery(
     mode: str,
     file_name: str,
     machineries: list,
+    vessel: str,
 ):
     try:
         machinery_code = machinery_code.rstrip()
@@ -63,7 +64,8 @@ def getMachinery(
             + key
             + " ( "
             + machinery_code
-            + " )"
+            + " ) under "
+            + vessel
         )
 
         rowData = (key, machinery_code, desc)

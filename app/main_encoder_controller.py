@@ -40,6 +40,7 @@ def generateMainData(file_name):
                     "main_encoder",
                     file_name,
                     machineries,
+                    vessel,
                 )
 
                 if (
