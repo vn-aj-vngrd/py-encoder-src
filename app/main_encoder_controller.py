@@ -42,6 +42,8 @@ def generateMainData(file_name):
                     machineries,
                 )
 
+                machinery_code = machinery["code"]
+
                 if (
                     not pd.isna(machinery["name"])
                     and not pd.isna(vessel)
@@ -73,6 +75,11 @@ def generateMainData(file_name):
 
                             if pd.isna(d):
                                 d = ""
+
+                            if col == 0:
+                                col_key = d.split("-")[0]
+                                if col_key != machinery_code:
+                                    d = machinery_code + "-" + col_key[1]
 
                             if col == 3:
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):

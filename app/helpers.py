@@ -39,7 +39,7 @@ def getMachinery(
 
         for machinery in machineries:
             if machinery[1] == machinery_code or machinery[1] == key:
-                return {"name": machinery[0], "key": machinery[1]}
+                return {"name": machinery[0], "code": machinery[1]}
 
         creation_name = "/" + file_name
         creation_path = "./bin/" + mode
