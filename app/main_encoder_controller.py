@@ -43,9 +43,9 @@ def generateMainData(file_name):
                 )
 
                 if (
-                    not pd.isna(machinery)
+                    not pd.isna(machinery["name"])
                     and not pd.isna(vessel)
-                    and (machinery != "N/A")
+                    and (machinery["name"] != "N/A")
                 ):
                     # Start traversing the data on row 7
                     row = 7
@@ -61,7 +61,7 @@ def generateMainData(file_name):
 
                         rowData = (
                             vessel.rstrip(),
-                            machinery.rstrip(),
+                            machinery["name"].rstrip(),
                         )
 
                         for col in range(7):
@@ -78,7 +78,7 @@ def generateMainData(file_name):
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
                                     d = str(d) + " Hours"
 
-                                track = [vessel, machinery]
+                                track = [vessel, machinery["name"]]
                                 d = getInterval(d, interval_ids, interval_names, track)
 
                             if ((col == 4) or (col == 5)) and isinstance(d, datetime):
@@ -95,11 +95,12 @@ def generateMainData(file_name):
                         else:
                             break
 
-                    create_name = file_name[: len(file_name) - 4]
+                    create_name = str(file_name[: len(file_name) - 4]).rstrip()
                     creation_folder = "./res/main_encoder/" + create_name
                     if not os.path.exists(creation_folder):
                         os.makedirs(creation_folder)
-                    book.save(creation_folder + "/" + key + ".xlsx")
+                    name_key = str(key).rstrip()
+                    book.save(creation_folder + "/" + name_key + ".xlsx")
                 else:
                     print(
                         '❌ Error: Vessel name or machinery code is missing for sheet "'

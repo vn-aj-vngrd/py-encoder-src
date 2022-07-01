@@ -37,7 +37,7 @@ def generateIntervalData(file_name):
                 # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
 
-                machinery: str = getMachinery(
+                machinery = getMachinery(
                     str(data[key].iloc[2, 5]).rstrip(),
                     key,
                     "interval_checker",
@@ -47,8 +47,8 @@ def generateIntervalData(file_name):
 
                 if (
                     not pd.isna(vessel)
-                    and not pd.isna(machinery)
-                    and (machinery != "N/A")
+                    and not pd.isna(machinery["name"])
+                    and (machinery["name"] != "N/A")
                 ):
                     # Start traversing the data on row 7
                     row = 7
@@ -76,7 +76,7 @@ def generateIntervalData(file_name):
                             intervals.append(interval)
                             rowData = (
                                 vessel.rstrip(),
-                                machinery.rstrip(),
+                                machinery["name"].rstrip(),
                                 interval.rstrip(),
                             )
                             sheet.append(rowData)
@@ -90,7 +90,7 @@ def generateIntervalData(file_name):
                 else:
                     print("❌ Error: Vessel name or machinery code is missing.")
 
-        create_name = file_name[: len(file_name) - 4]
+        create_name = str(file_name[: len(file_name) - 4]).rstrip()
         creation_folder = "./res/interval_checker/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)

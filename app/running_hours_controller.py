@@ -43,9 +43,9 @@ def generateRHData(file_name):
                 )
 
                 if (
-                    not pd.isna(machinery)
+                    not pd.isna(machinery["name"])
                     and not pd.isna(vessel)
-                    and (machinery != "N/A")
+                    and (machinery["name"] != "N/A")
                 ):
 
                     # Running Hours
@@ -62,7 +62,7 @@ def generateRHData(file_name):
 
                     rowData = (
                         vessel.rstrip(),
-                        machinery.rstrip(),
+                        machinery["name"].rstrip(),
                         running_hours.rstrip(),
                         updating_date.rstrip(),
                     )
@@ -70,7 +70,7 @@ def generateRHData(file_name):
                 else:
                     print("❌ Error: Vessel name or machinery code is missing.")
 
-        create_name = file_name[: len(file_name) - 4]
+        create_name = str(file_name[: len(file_name) - 4]).rstrip()
         creation_folder = "./res/running_hours/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
