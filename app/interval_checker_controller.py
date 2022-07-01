@@ -79,7 +79,7 @@ def generateIntervalData(file_name):
                             print(
                                 "⚠️ Warning: "
                                 + interval.rstrip()
-                                + " is not a valid interval.\n"
+                                + " is not a valid interval."
                             )
 
                         row += 1
@@ -92,7 +92,7 @@ def generateIntervalData(file_name):
 
         print("👌 Done")
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))
 
 
 def intervalChecker():
@@ -117,4 +117,4 @@ def intervalChecker():
                 break
 
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))

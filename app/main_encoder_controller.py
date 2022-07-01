@@ -95,7 +95,7 @@ def generateMainData(file_name):
 
         print("👌 Done")
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))
 
 
 def mainEncoder():
@@ -121,4 +121,4 @@ def mainEncoder():
                 break
 
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))

@@ -66,12 +66,12 @@ def getMachinery(
             + key
             + " ( "
             + machinery_code
-            + "\n"
+            + " )"
         )
         return "N/A"
 
     except Exception as e:
-        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_code + ")" + "\n")
+        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_code + ")")
 
 
 def getIntervals(mode: int):
@@ -94,7 +94,7 @@ def getIntervals(mode: int):
 
         return intervals
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))
 
 
 def getInterval(interval_id: str, interval_ids: list, interval_names: list):
@@ -107,7 +107,7 @@ def getInterval(interval_id: str, interval_ids: list, interval_names: list):
         print("⚠️ Warning: " + str(interval_id) + " is not a valid interval id.")
         return "N/A"
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))
 
 
 def processSrc(mode: str):
@@ -135,7 +135,7 @@ def processSrc(mode: str):
 
         return files
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))
 
 
 def exitApp():

@@ -63,7 +63,7 @@ def generateRHData(file_name):
 
         print("👌 Done")
     except Exception as e:
-        print("❌ Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e))
 
 
 def runningHours():
@@ -88,4 +88,4 @@ def runningHours():
                 break
 
     except Exception as e:
-        print("❌ Error: " + str(e) + "/n")
+        print("❌ Error: " + str(e))
