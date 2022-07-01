@@ -23,6 +23,8 @@ def generateRHData(file_name):
         # Append the header
         sheet.append(rh_header)
 
+        machineries = getMachineries()
+
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
@@ -33,7 +35,7 @@ def generateRHData(file_name):
 
                 # Machinery Name
                 machinery = getMachinery(
-                    str(data[key].iloc[2, 5]), key, "sub", file_name
+                    str(data[key].iloc[2, 5]), key, "sub", file_name, machineries
                 )
 
                 # Running Hours
@@ -61,7 +63,7 @@ def generateRHData(file_name):
 
         print("👌 Done")
     except Exception as e:
-        print("Error: " + str(e) + "\n")
+        print("❌ Error: " + str(e) + "\n")
 
 
 def runningHours():
@@ -86,4 +88,4 @@ def runningHours():
                 break
 
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "/n")

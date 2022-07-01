@@ -26,7 +26,8 @@ def generateIntervalData(file_name):
         # Array of intervals
         intervals = getIntervals(1)
         intervals.append("")
-        # print(intervals)
+
+        machineries = getMachineries()
 
         # Iterate through the sheets
         for key in keys:
@@ -37,7 +38,11 @@ def generateIntervalData(file_name):
                 vessel = str(data[key].iloc[0, 2])
 
                 machinery: str = getMachinery(
-                    str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
+                    str(data[key].iloc[2, 5]).rstrip(),
+                    key,
+                    "main",
+                    file_name,
+                    machineries,
                 )
 
                 if not pd.isna(vessel):
@@ -72,7 +77,7 @@ def generateIntervalData(file_name):
                             )
                             sheet.append(rowData)
                             print(
-                                "\nWarning: "
+                                "⚠️ Warning: "
                                 + interval.rstrip()
                                 + " is not a valid interval.\n"
                             )
@@ -87,7 +92,7 @@ def generateIntervalData(file_name):
 
         print("👌 Done")
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")
 
 
 def intervalChecker():
@@ -112,4 +117,4 @@ def intervalChecker():
                 break
 
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")

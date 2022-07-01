@@ -22,6 +22,8 @@ def generateMainData(file_name):
         interval_names.append("")
         interval_ids.append("")
 
+        machineries = getMachineries()
+
         # Iterate through the sheets
         for key in keys:
             if key not in not_included:
@@ -33,7 +35,11 @@ def generateMainData(file_name):
                 # Default Machinery Name: machinery = data[key].iloc[2, 2]
                 # Machinery Name using the machinery code
                 machinery = getMachinery(
-                    str(data[key].iloc[2, 5]).rstrip(), key, "main", file_name
+                    str(data[key].iloc[2, 5]).rstrip(),
+                    key,
+                    "main",
+                    file_name,
+                    machineries,
                 )
 
                 if (not pd.isna(machinery)) and (not pd.isna(vessel)):
@@ -89,7 +95,7 @@ def generateMainData(file_name):
 
         print("👌 Done")
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")
 
 
 def mainEncoder():
@@ -115,4 +121,4 @@ def mainEncoder():
                 break
 
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")

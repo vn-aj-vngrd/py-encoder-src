@@ -8,65 +8,70 @@ import os
 import re
 
 
-def getMachinery(machinery_code: str, key: str, mode: str, file_name: str):
+def getMachineries():
+    machineries: list = []
+
+    path = "./data/gen_mach_list.xlsx"
+    mach_list = pd.read_excel(path)
+
+    last = "END"
+    i = 0
+    while not pd.isna(mach_list.iloc[i, 1]):
+
+        machineries.append([str(mach_list.iloc[i, 0]), str(mach_list.iloc[i, 1])])
+        i += 1
+        if mach_list.iloc[i, 1] == last:
+            break
+
+    return machineries
+
+
+def getMachinery(
+    machinery_code: str,
+    key: str,
+    mode: str,
+    file_name: str,
+    machineries: list,
+):
     try:
         machinery_code = machinery_code.rstrip()
 
-        if machinery_code == "nan" or machinery_code == "none":
-            machinery_code = key
+        for machinery in machineries:
+            if machinery[1] == machinery_code:
+                return machinery[0]
 
-        path = "./data/gen_mach_list.xlsx"
-        mach_list = pd.read_excel(path)
+        creation_name = "/" + file_name
+        creation_path = "./bin/" + mode
 
-        last = "END"
+        if not os.path.exists(creation_path):
+            os.makedirs(creation_path)
 
-        i = 0
-        while (not pd.isna(mach_list.iloc[i, 1])) and (
-            mach_list.iloc[i, 1] != machinery_code
-        ):
-            i += 1
-            if mach_list.iloc[i, 1] == last:
-                break
-
-        if not pd.isna(mach_list.iloc[i, 1]) and (
-            mach_list.iloc[i, 1] == machinery_code
-        ):
-            return str(mach_list.iloc[i, 0])
-        else:
-            creation_name = "/" + file_name
-            creation_path = "./bin/" + mode
-
-            if not os.path.exists(creation_path):
-                os.makedirs(creation_path)
-
-            if not exists(creation_path + creation_name):
-                writer = pd.ExcelWriter(
-                    creation_path + creation_name, engine="xlsxwriter"
-                )
-                writer.save()
-                book = load_workbook(creation_path + creation_name)
-                sheet = book.active
-                sheet.append(bin_header)
-                book.save(creation_path + creation_name)
-
+        if not exists(creation_path + creation_name):
+            writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
+            writer.save()
             book = load_workbook(creation_path + creation_name)
             sheet = book.active
-
-            rowData = (key, machinery_code)
-            sheet.append(rowData)
+            sheet.append(bin_header)
             book.save(creation_path + creation_name)
 
-            print(
-                "\nWarning: No machinery code found for "
-                + key
-                + " ( "
-                + machinery_code
-                + " )\n"
-            )
-            return "N/A"
+        book = load_workbook(creation_path + creation_name)
+        sheet = book.active
+
+        rowData = (key, machinery_code)
+        sheet.append(rowData)
+        book.save(creation_path + creation_name)
+
+        print(
+            "⚠️ Warning: No machinery code found for "
+            + key
+            + " ( "
+            + machinery_code
+            + "\n"
+        )
+        return "N/A"
 
     except Exception as e:
-        print("Error: " + str(e) + " (" + key + ": " + machinery_code + ")" + "\n")
+        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_code + ")" + "\n")
 
 
 def getIntervals(mode: int):
@@ -89,7 +94,7 @@ def getIntervals(mode: int):
 
         return intervals
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")
 
 
 def getInterval(interval_id: str, interval_ids: list, interval_names: list):
@@ -99,10 +104,10 @@ def getInterval(interval_id: str, interval_ids: list, interval_names: list):
 
         return interval_names[idx]
     except ValueError:
-        print("Warning: " + str(interval_id) + " is not a valid interval id.")
+        print("⚠️ Warning: " + str(interval_id) + " is not a valid interval id.")
         return "N/A"
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")
 
 
 def processSrc(mode: str):
@@ -130,7 +135,7 @@ def processSrc(mode: str):
 
         return files
     except Exception as e:
-        print("Error: " + str(e))
+        print("❌ Error: " + str(e) + "\n")
 
 
 def exitApp():
