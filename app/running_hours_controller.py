@@ -39,7 +39,10 @@ def generateRHData(file_name):
                 )
 
                 # Running Hours
-                running_hours = str(data[key].iloc[3, 5])
+                if not pd.isna(data[key].iloc[3, 5]):
+                    running_hours = str(data[key].iloc[3, 5])
+                else:
+                    running_hours = ""
 
                 # Updated At
                 if not pd.isna(data[key].iloc[4, 5]):
