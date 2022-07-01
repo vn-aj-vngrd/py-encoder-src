@@ -37,7 +37,7 @@ def generateMainData(file_name):
                 machinery = getMachinery(
                     str(data[key].iloc[2, 5]).rstrip(),
                     key,
-                    "main",
+                    "main_encoder",
                     file_name,
                     machineries,
                 )
@@ -106,8 +106,6 @@ def mainEncoder():
             header("💻 Main Encoder")
 
             files = processSrc("main_encoder")
-            if len(files) == 0:
-                break
 
             file_key = input("\n👉 Select an option: ")
 

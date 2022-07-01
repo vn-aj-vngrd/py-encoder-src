@@ -1,4 +1,5 @@
 from os.path import exists
+import time
 from app.definitions import *
 from openpyxl import Workbook
 from openpyxl import load_workbook
@@ -37,7 +38,7 @@ def getMachinery(
         machinery_code = machinery_code.rstrip()
 
         for machinery in machineries:
-            if machinery[1] == machinery_code:
+            if machinery[1] == machinery_code or machinery[1] == key:
                 return machinery[0]
 
         creation_name = "/" + file_name
@@ -57,17 +58,19 @@ def getMachinery(
         book = load_workbook(creation_path + creation_name)
         sheet = book.active
 
-        rowData = (key, machinery_code)
-        sheet.append(rowData)
-        book.save(creation_path + creation_name)
-
-        print(
+        desc = (
             "⚠️ Warning: No machinery code found for "
             + key
             + " ( "
             + machinery_code
             + " )"
         )
+
+        rowData = (key, machinery_code, desc)
+        sheet.append(rowData)
+        book.save(creation_path + creation_name)
+
+        print(desc)
         return "N/A"
 
     except Exception as e:
@@ -104,7 +107,7 @@ def getInterval(interval_id: str, interval_ids: list, interval_names: list):
 
         return interval_names[idx]
     except ValueError:
-        print("⚠️ Warning: " + str(interval_id) + " is not a valid interval id.")
+        print("⚠️ Warning: " + str(interval_id) + " is not a valid interval.")
         return "N/A"
     except Exception as e:
         print("❌ Error: " + str(e))
@@ -128,8 +131,9 @@ def processSrc(mode: str):
                 i += 1
 
         if len(files) == 0:
-            print("No such data found in src directory.")
-            return []
+            print("No data found in src directory.")
+            time.sleep(5)
+            exit()
 
         print("A - All")
 

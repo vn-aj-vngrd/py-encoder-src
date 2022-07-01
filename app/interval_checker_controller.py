@@ -40,7 +40,7 @@ def generateIntervalData(file_name):
                 machinery: str = getMachinery(
                     str(data[key].iloc[2, 5]).rstrip(),
                     key,
-                    "main",
+                    "interval_checker",
                     file_name,
                     machineries,
                 )
@@ -101,8 +101,6 @@ def intervalChecker():
             header("⌚ Interval Checker")
 
             files = processSrc("interval_checker")
-            if len(files) == 0:
-                break
 
             file_key = input("\n👉 Select an option: ")
 

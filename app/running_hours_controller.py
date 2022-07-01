@@ -35,7 +35,11 @@ def generateRHData(file_name):
 
                 # Machinery Name
                 machinery = getMachinery(
-                    str(data[key].iloc[2, 5]), key, "sub", file_name, machineries
+                    str(data[key].iloc[2, 5]),
+                    key,
+                    "running_hours",
+                    file_name,
+                    machineries,
                 )
 
                 # Running Hours
@@ -75,8 +79,6 @@ def runningHours():
             header("⏳ Running Hours")
 
             files = processSrc("running_hours")
-            if len(files) == 0:
-                break
 
             file_key = input("\n👉 Select an option: ")
 
