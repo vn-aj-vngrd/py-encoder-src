@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateRHData(file_name):
+def generateSubData(file_name):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -83,10 +83,10 @@ def subEncoder():
 
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateRHData(file_name)
+                generateSubData(file_name)
             else:
                 for _file in files:
-                    generateRHData(_file)
+                    generateSubData(_file)
 
             if exitApp():
                 break
