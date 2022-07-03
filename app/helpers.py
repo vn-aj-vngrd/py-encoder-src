@@ -64,7 +64,7 @@ def getMachinery(
 
         for machinery in machineries:
             if machinery[1] == machinery_id or machinery[1] == key:
-                return machinery[0]
+                return str(machinery[0])
 
         createBin(
             file_name,
@@ -109,7 +109,7 @@ def getCode(
 
         for code in codes:
             if code[1] == machinery_name or code[1] == key:
-                return code[0]
+                return str(code[0])
 
         createBin(
             file_name,
@@ -157,7 +157,7 @@ def getInterval(
 
         for interval in intervals:
             if interval[1] == interval_id or interval[1] == key:
-                return interval[0]
+                return str(interval[0])
 
         createBin(
             file_name,

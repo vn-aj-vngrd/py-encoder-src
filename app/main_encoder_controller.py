@@ -58,13 +58,21 @@ def generateMainData(file_name):
                             machinery_name.rstrip(),
                         )
 
+                        machinery_code = getCode(
+                            machinery_name,
+                            key,
+                            "main_encoder",
+                            file_name,
+                            codes,
+                        )
+
                         for col in range(7):
                             d = data[key].iloc[row, col]
 
                             if (col == 0) and (
                                 (d == "")
                                 or (d == " ")
-                                or (d == "Note:")
+                                or (machinery_code in str(d))
                                 or (pd.isna(d))
                             ):
                                 is_Valid = False
@@ -74,13 +82,6 @@ def generateMainData(file_name):
                                 d = ""
 
                             if col == 0:
-                                machinery_code = getCode(
-                                    machinery_name,
-                                    key,
-                                    "main_encoder",
-                                    file_name,
-                                    codes,
-                                )
 
                                 if machinery_code != "N/A":
                                     if "-" in d:
