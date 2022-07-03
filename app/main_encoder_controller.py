@@ -81,7 +81,6 @@ def generateMainData(file_name):
                                 d = ""
 
                             if col == 0:
-
                                 if machinery_code != "N/A":
                                     if "-" in d:
                                         col_key = d.split("-")
