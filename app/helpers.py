@@ -9,6 +9,31 @@ import os
 import re
 
 
+def createBin(file_name: str, mode: str, machinery_code: str, key: str, desc: str):
+    creation_name = "/" + file_name
+    creation_path = "./bin/" + mode
+
+    if not os.path.exists(creation_path):
+        os.makedirs(creation_path)
+
+    if not exists(creation_path + creation_name):
+        writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
+        writer.save()
+        book = load_workbook(creation_path + creation_name)
+        sheet = book.active
+        sheet.append(bin_header)
+        book.save(creation_path + creation_name)
+
+    book = load_workbook(creation_path + creation_name)
+    sheet = book.active
+
+    rowData = (key, machinery_code, desc)
+    sheet.append(rowData)
+    book.save(creation_path + creation_name)
+
+    print(desc)
+
+
 def getMachineries():
     machineries: list = []
 
@@ -17,12 +42,9 @@ def getMachineries():
 
     last = "END"
     i = 0
-    while not pd.isna(mach_list.iloc[i, 1]):
-
+    while not pd.isna(mach_list.iloc[i, 1]) and mach_list.iloc[i, 1] != "END":
         machineries.append([str(mach_list.iloc[i, 0]), str(mach_list.iloc[i, 1])])
         i += 1
-        if mach_list.iloc[i, 1] == last:
-            break
 
     return machineries
 
@@ -41,36 +63,61 @@ def getMachinery(
             if machinery[1] == machinery_code or machinery[1] == key:
                 return {"name": machinery[0], "code": machinery[1]}
 
-        creation_name = "/" + file_name
-        creation_path = "./bin/" + mode
-
-        if not os.path.exists(creation_path):
-            os.makedirs(creation_path)
-
-        if not exists(creation_path + creation_name):
-            writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
-            writer.save()
-            book = load_workbook(creation_path + creation_name)
-            sheet = book.active
-            sheet.append(bin_header)
-            book.save(creation_path + creation_name)
-
-        book = load_workbook(creation_path + creation_name)
-        sheet = book.active
-
-        desc = (
-            "⚠️ Warning: No machinery code ( " + machinery_code + " ) found for " + key
+        createBin(
+            file_name,
+            mode,
+            machinery_code,
+            key,
+            "⚠️ Warning: No machinery code ( " + machinery_code + " ) found for " + key,
         )
 
-        rowData = (key, machinery_code, desc)
-        sheet.append(rowData)
-        book.save(creation_path + creation_name)
-
-        print(desc)
         return "N/A"
 
     except Exception as e:
         print("❌ Error: " + str(e) + " (" + key + ": " + machinery_code + ")")
+
+
+def getCodes():
+    codes: list = []
+
+    path = "./data/code_list.xlsx"
+    code_list = pd.read_excel(path)
+
+    i = 0
+    while not pd.isna(code_list.iloc[i, 1]) and code_list.iloc[i, 1] != "END":
+        codes.append([str(code_list.iloc[i, 0]), str(code_list.iloc[i, 1])])
+        i += 1
+
+    return codes
+
+
+def getCode(
+    machinery_name: str,
+    key: str,
+    mode: str,
+    file_name: str,
+    codes: list,
+):
+    try:
+        machinery_name = machinery_name.rstrip()
+        
+        for code in codes:
+            if code[1] == machinery_name or code[1] == key:
+                return {"code": code[0], "name": code[1]}
+
+        createBin(
+            file_name,
+            mode,
+            machinery_name,
+            key,
+            "⚠️ Warning: No machinery name ( " + machinery_name + " ) found for " + key,
+        )
+
+        return "N/A"
+            
+             
+    except Exception as e:
+        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_name + ")")
 
 
 def getIntervals(mode: int):
@@ -119,6 +166,21 @@ def getInterval(
         print("❌ Error: " + str(e))
 
 
+def header(title: str):
+    print(
+        r"""
+____              _____                     _           
+|  _ \ _   _      | ____|_ __   ___ ___   __| | ___ _ __ 
+| |_) | | | |_____|  _| | '_ \ / __/ _ \ / _` |/ _ \ '__|
+|  __/| |_| |_____| |___| | | | (_| (_) | (_| |  __/ |   
+|_|    \__, |     |_____|_| |_|\___\___/ \__,_|\___|_|   
+        |___/                                             
+            """
+    )
+
+    print(title + "\n")
+
+
 def processSrc(mode: str):
     try:
         mode_path = "./res/" + mode
@@ -154,18 +216,3 @@ def exitApp():
         return False
     else:
         return True
-
-
-def header(title: str):
-    print(
-        r"""
-____              _____                     _           
-|  _ \ _   _      | ____|_ __   ___ ___   __| | ___ _ __ 
-| |_) | | | |_____|  _| | '_ \ / __/ _ \ / _` |/ _ \ '__|
-|  __/| |_| |_____| |___| | | | (_| (_) | (_| |  __/ |   
-|_|    \__, |     |_____|_| |_|\___\___/ \__,_|\___|_|   
-        |___/                                             
-            """
-    )
-
-    print(title + "\n")

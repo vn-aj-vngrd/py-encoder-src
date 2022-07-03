@@ -23,6 +23,7 @@ def generateMainData(file_name):
         # interval_ids.append("")
 
         machineries = getMachineries()
+        codes = getCodes()
 
         # Prepare the sheets
         book = Workbook()
@@ -47,8 +48,6 @@ def generateMainData(file_name):
                     file_name,
                     machineries,
                 )
-
-                machinery_code = machinery["code"]
 
                 if (
                     not pd.isna(machinery["name"])
@@ -83,9 +82,15 @@ def generateMainData(file_name):
                                 d = ""
 
                             if col == 0:
+                                machinery_code = getCode(
+                                    machinery["name"],
+                                    key,
+                                    "main_encoder",
+                                    file_name,
+                                    codes,
+                                )
                                 col_key = d.split("-")
-                                if col_key[0] != machinery_code:
-                                    d = machinery_code + "-" + col_key[1]
+                                d = machinery_code["code"] + "-" + col_key[1]
 
                             if col == 3:
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
