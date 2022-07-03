@@ -171,6 +171,10 @@ def getInterval(
         print("❌ Error: " + str(e) + " (" + key + ": " + interval_id + ")")
 
 
+def has_numbers(inputString):
+    return bool(re.search(r"\d", inputString))
+
+
 def header(title: str):
     print(
         r"""

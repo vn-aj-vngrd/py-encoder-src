@@ -72,6 +72,7 @@ def generateMainData(file_name):
                                 (d == "")
                                 or (d == " ")
                                 or (d == "Note:")
+                                or not (has_numbers(str(d)))
                                 or (pd.isna(d))
                             ):
                                 is_Valid = False
