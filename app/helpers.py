@@ -38,7 +38,7 @@ def getMachineries():
     try:
         machineries: list = []
 
-        path = "./data/gen_mach_list.xlsx"
+        path = "./data/name_list.xlsx"
         mach_list = pd.read_excel(path)
 
         i = 0
