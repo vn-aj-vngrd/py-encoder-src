@@ -71,7 +71,7 @@ def generateMainData(file_name):
                             if (col == 0) and (
                                 (d == "")
                                 or (d == " ")
-                                or (not machinery_code in str(d))
+                                or (d == "Note:")
                                 or (pd.isna(d))
                             ):
                                 is_Valid = False
