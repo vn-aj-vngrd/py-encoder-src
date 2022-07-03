@@ -41,7 +41,6 @@ def getMachineries():
         path = "./data/gen_mach_list.xlsx"
         mach_list = pd.read_excel(path)
 
-        last = "END"
         i = 0
         while not pd.isna(mach_list.iloc[i, 1]) and mach_list.iloc[i, 1] != "END":
             machineries.append([str(mach_list.iloc[i, 0]), str(mach_list.iloc[i, 1])])
@@ -72,10 +71,7 @@ def getMachinery(
             mode,
             machinery_id,
             key,
-            "⚠️ Warning: No valid machinery code ( "
-            + machinery_id
-            + " ) found for "
-            + key,
+            "⚠️ Warning: No machinery ( " + machinery_id + " ) found for " + key,
         )
 
         return "N/A"
@@ -121,10 +117,7 @@ def getCode(
             mode,
             machinery_name,
             key,
-            "⚠️ Warning: No valid machinery code ( "
-            + machinery_name
-            + " ) found for "
-            + key,
+            "⚠️ Warning: No machinery code ( " + machinery_name + " ) found for " + key,
         )
 
         return "N/A"
@@ -173,7 +166,7 @@ def getInterval(
             mode,
             interval_id,
             key,
-            "⚠️ Warning: No valid interval ( " + interval_id + " ) found for " + key,
+            "⚠️ Warning: No interval ( " + interval_id + " ) found for " + key,
         )
 
         return "N/A"

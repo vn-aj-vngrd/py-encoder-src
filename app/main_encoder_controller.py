@@ -14,9 +14,9 @@ def generateMainData(file_name):
         xl = pd.ExcelFile(path)
         keys = xl.sheet_names
 
-        intervals = getIntervals()
         machineries = getMachineries()
         codes = getCodes()
+        intervals = getIntervals()
 
         book = Workbook()
         sheet = book.active
@@ -60,7 +60,12 @@ def generateMainData(file_name):
                         for col in range(7):
                             d = data[key].iloc[row, col]
 
-                            if (col == 0) and ((d == "") or (d == " ") or (pd.isna(d))):
+                            if (col == 0) and (
+                                (d == "")
+                                or (d == " ")
+                                or (pd.isna(d))
+                                or (d == "Note:")
+                            ):
                                 is_Valid = False
                                 break
 
