@@ -22,12 +22,10 @@ def generateRHData(file_name):
 
         for key in keys:
             if key not in not_included:
-                print("🔃 Processing " + str(key).rstrip() + "...")
-
                 vessel = str(data[key].iloc[0, 2])
                 machinery_id = str(data[key].iloc[2, 5])
 
-                machinery = getMachinery(
+                machinery_name = getMachinery(
                     machinery_id,
                     key,
                     "sub_encoder",
@@ -35,10 +33,12 @@ def generateRHData(file_name):
                     machineries,
                 )
 
+                print("🔃 Processing " + machinery_name + "...")
+
                 if (
-                    not pd.isna(machinery["name"])
+                    not pd.isna(machinery_name)
                     and not pd.isna(vessel)
-                    and (machinery["name"] != "N/A")
+                    and (machinery_name != "N/A")
                 ):
 
                     if not pd.isna(data[key].iloc[3, 5]):
@@ -53,7 +53,7 @@ def generateRHData(file_name):
 
                     rowData = (
                         vessel,
-                        machinery["name"],
+                        machinery_name,
                         running_hours,
                         updating_date,
                     )

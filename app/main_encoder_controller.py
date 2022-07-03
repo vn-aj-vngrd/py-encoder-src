@@ -36,7 +36,7 @@ def generateMainData(file_name):
                     machineries,
                 )
 
-                print("🔃 Processing " + str(machinery_name).rstrip() + "...")
+                print("🔃 Processing " + machinery_name + "...")
 
                 if (
                     not pd.isna(machinery_name)
