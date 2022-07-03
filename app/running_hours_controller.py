@@ -37,7 +37,7 @@ def generateRHData(file_name):
                 machinery = getMachinery(
                     str(data[key].iloc[2, 5]),
                     key,
-                    "running_hours",
+                    "sub_encoder",
                     file_name,
                     machineries,
                 )
@@ -71,7 +71,7 @@ def generateRHData(file_name):
                     print("❌ Error: Vessel name or machinery code is missing.")
 
         create_name = str(file_name[: len(file_name) - 4]).rstrip()
-        creation_folder = "./res/running_hours/" + create_name
+        creation_folder = "./res/sub_encoder/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
@@ -81,12 +81,12 @@ def generateRHData(file_name):
         print("❌ Error: " + str(e))
 
 
-def runningHours():
+def subEncoder():
     try:
         while True:
-            header("⏳ Running Hours")
+            header("⏳ Sub Encoder - Running Hours")
 
-            files = processSrc("running_hours")
+            files = processSrc("sub_encoder")
 
             file_key = input("\n👉 Select an option: ")
 

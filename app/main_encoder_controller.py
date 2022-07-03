@@ -143,7 +143,7 @@ def generateMainData(file_name):
 def mainEncoder():
     try:
         while True:
-            header("💻 Main Encoder")
+            header("🏭 Main Encoder - Vessel Machineries")
 
             files = processSrc("main_encoder")
 
