@@ -36,13 +36,20 @@ def generateMainData(file_name):
                     machineries,
                 )
 
-                print("🔃 Processing " + machinery_name + "...")
+                machinery_code = getCode(
+                    machinery_name,
+                    key,
+                    "main_encoder",
+                    file_name,
+                    codes,
+                )
 
                 if (
                     not pd.isna(machinery_name)
                     and (machinery_name != "N/A")
                     and not pd.isna(vessel)
                 ):
+                    print("🔃 Processing " + machinery_name + "...")
                     row = 7
                     is_Valid = True
 
@@ -56,14 +63,6 @@ def generateMainData(file_name):
                         rowData = (
                             vessel.rstrip(),
                             machinery_name.rstrip(),
-                        )
-
-                        machinery_code = getCode(
-                            machinery_name,
-                            key,
-                            "main_encoder",
-                            file_name,
-                            codes,
                         )
 
                         for col in range(7):
