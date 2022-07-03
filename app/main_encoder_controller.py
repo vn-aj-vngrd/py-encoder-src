@@ -9,40 +9,28 @@ def generateMainData(file_name):
         path = "src/" + file_name
         print("\n📁 File: " + file_name)
 
-        # Read the data
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
-        # Get the keys
         xl = pd.ExcelFile(path)
         keys = xl.sheet_names
 
-        interval_names = getIntervals(0)
-        interval_ids = getIntervals(1)
-
-        # interval_names.append("N/A")
-        # interval_ids.append("")
-
+        intervals = getIntervals()
         machineries = getMachineries()
         codes = getCodes()
 
-        # Prepare the sheets
         book = Workbook()
         sheet = book.active
-
         sheet.append(main_header)
 
-        # Iterate through the sheets
         for key in keys:
             if key not in not_included:
                 print("🔃 Processing " + str(key).rstrip() + "...")
 
-                # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
+                machinery_id = str(data[key].iloc[2, 5]).rstrip()
 
-                # Default Machinery Name: machinery = data[key].iloc[2, 2]
-                # Machinery Name using the machinery code
-                machinery = getMachinery(
-                    str(data[key].iloc[2, 5]).rstrip(),
+                machinery_name = getMachinery(
+                    machinery_id,
                     key,
                     "main_encoder",
                     file_name,
@@ -50,25 +38,23 @@ def generateMainData(file_name):
                 )
 
                 if (
-                    not pd.isna(machinery["name"])
+                    not pd.isna(machinery_name)
+                    and (machinery_name != "N/A")
                     and not pd.isna(vessel)
-                    and (machinery["name"] != "N/A")
                 ):
-                    # Start traversing the data on row 7
                     row = 7
                     is_Valid = True
 
-                    # # Prepare the sheets
+                    # Prepare the sheets
                     # book = Workbook()
                     # sheet = book.active
-
                     # sheet.append(main_header)
 
                     while is_Valid:
 
                         rowData = (
                             vessel.rstrip(),
-                            machinery["name"].rstrip(),
+                            machinery_name.rstrip(),
                         )
 
                         for col in range(7):
@@ -83,21 +69,32 @@ def generateMainData(file_name):
 
                             if col == 0:
                                 machinery_code = getCode(
-                                    machinery["name"],
+                                    machinery_name,
                                     key,
                                     "main_encoder",
                                     file_name,
                                     codes,
                                 )
-                                col_key = d.split("-")
-                                d = machinery_code["code"] + "-" + col_key[1]
+
+                                if machinery_code != "N/A":
+                                    col_key = d.split("-")
+                                    d = machinery_code + "-" + col_key[1]
+                                else:
+                                    d = machinery_code
 
                             if col == 3:
                                 if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
                                     d = str(d) + " Hours"
 
-                                track = [vessel, machinery["name"]]
-                                d = getInterval(d, interval_ids, interval_names, track)
+                                machinery_interval = getInterval(
+                                    d,
+                                    key,
+                                    "main_encoder",
+                                    file_name,
+                                    intervals,
+                                )
+
+                                d = machinery_interval
 
                             if ((col == 4) or (col == 5)) and isinstance(d, datetime):
                                 d = d.strftime("%d-%b-%y")

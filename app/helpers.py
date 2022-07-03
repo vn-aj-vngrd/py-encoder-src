@@ -35,60 +35,70 @@ def createBin(file_name: str, mode: str, machinery_code: str, key: str, desc: st
 
 
 def getMachineries():
-    machineries: list = []
+    try:
+        machineries: list = []
 
-    path = "./data/gen_mach_list.xlsx"
-    mach_list = pd.read_excel(path)
+        path = "./data/gen_mach_list.xlsx"
+        mach_list = pd.read_excel(path)
 
-    last = "END"
-    i = 0
-    while not pd.isna(mach_list.iloc[i, 1]) and mach_list.iloc[i, 1] != "END":
-        machineries.append([str(mach_list.iloc[i, 0]), str(mach_list.iloc[i, 1])])
-        i += 1
+        last = "END"
+        i = 0
+        while not pd.isna(mach_list.iloc[i, 1]) and mach_list.iloc[i, 1] != "END":
+            machineries.append([str(mach_list.iloc[i, 0]), str(mach_list.iloc[i, 1])])
+            i += 1
 
-    return machineries
+        return machineries
+    except Exception as e:
+        print("❌ Error: " + str(e))
 
 
 def getMachinery(
-    machinery_code: str,
+    machinery_id: str,
     key: str,
     mode: str,
     file_name: str,
     machineries: list,
 ):
     try:
-        machinery_code = machinery_code.rstrip()
+        if not pd.isna(machinery_id) or machinery_id != "":
+            machinery_id = machinery_id.rstrip()
 
         for machinery in machineries:
-            if machinery[1] == machinery_code or machinery[1] == key:
-                return {"name": machinery[0], "code": machinery[1]}
+            if machinery[1] == machinery_id or machinery[1] == key:
+                return machinery[0]
 
         createBin(
             file_name,
             mode,
-            machinery_code,
+            machinery_id,
             key,
-            "⚠️ Warning: No machinery code ( " + machinery_code + " ) found for " + key,
+            "⚠️ Warning: No valid machinery code ( "
+            + machinery_id
+            + " ) found for "
+            + key,
         )
 
         return "N/A"
 
     except Exception as e:
-        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_code + ")")
+        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_id + ")")
 
 
 def getCodes():
-    codes: list = []
+    try:
+        codes: list = []
 
-    path = "./data/code_list.xlsx"
-    code_list = pd.read_excel(path)
+        path = "./data/code_list.xlsx"
+        code_list = pd.read_excel(path)
 
-    i = 0
-    while not pd.isna(code_list.iloc[i, 1]) and code_list.iloc[i, 1] != "END":
-        codes.append([str(code_list.iloc[i, 0]), str(code_list.iloc[i, 1])])
-        i += 1
+        i = 0
+        while not pd.isna(code_list.iloc[i, 1]) and code_list.iloc[i, 1] != "END":
+            codes.append([str(code_list.iloc[i, 0]), str(code_list.iloc[i, 1])])
+            i += 1
 
-    return codes
+        return codes
+    except Exception as e:
+        print("❌ Error: " + str(e))
 
 
 def getCode(
@@ -99,44 +109,44 @@ def getCode(
     codes: list,
 ):
     try:
-        machinery_name = machinery_name.rstrip()
-        
+        if not pd.isna(machinery_name) or machinery_name != "":
+            machinery_name = machinery_name.rstrip()
+
         for code in codes:
             if code[1] == machinery_name or code[1] == key:
-                return {"code": code[0], "name": code[1]}
+                return code[0]
 
         createBin(
             file_name,
             mode,
             machinery_name,
             key,
-            "⚠️ Warning: No machinery name ( " + machinery_name + " ) found for " + key,
+            "⚠️ Warning: No valid machinery code ( "
+            + machinery_name
+            + " ) found for "
+            + key,
         )
 
         return "N/A"
-            
-             
     except Exception as e:
         print("❌ Error: " + str(e) + " (" + key + ": " + machinery_name + ")")
 
 
-def getIntervals(mode: int):
+def getIntervals():
     try:
-        intervals = []
+        intervals: list = []
 
         path = "./data/interval_list.xlsx"
         interval_list = pd.read_excel(path)
 
-        last = "END"
-
         i = 0
-        while (not pd.isna(interval_list.iloc[i, mode])) and (
-            interval_list.iloc[i, mode] != last
+        while (
+            not pd.isna(interval_list.iloc[i, 1]) and interval_list.iloc[i, 1] != "END"
         ):
-            intervals.append(str(interval_list.iloc[i, mode]).rstrip())
+            intervals.append(
+                [str(interval_list.iloc[i, 0]), str(interval_list.iloc[i, 1])]
+            )
             i += 1
-            if interval_list.iloc[i, mode] == last:
-                break
 
         return intervals
     except Exception as e:
@@ -144,26 +154,31 @@ def getIntervals(mode: int):
 
 
 def getInterval(
-    interval_id: str, interval_ids: list, interval_names: list, track: list
+    interval_id: str,
+    key: str,
+    mode: str,
+    file_name: str,
+    intervals: list,
 ):
     try:
-        interval_id = interval_id.rstrip()
-        idx = interval_ids.index(interval_id)
+        if not pd.isna(interval_id) or interval_id != "":
+            interval_id = interval_id.rstrip()
 
-        return interval_names[idx]
-    except ValueError:
-        print(
-            "⚠️ Warning: "
-            + str(interval_id)
-            + " is not a valid interval ("
-            + track[0]
-            + " - "
-            + track[1]
-            + ")"
+        for interval in intervals:
+            if interval[1] == interval_id or interval[1] == key:
+                return interval[0]
+
+        createBin(
+            file_name,
+            mode,
+            interval_id,
+            key,
+            "⚠️ Warning: No valid interval ( " + interval_id + " ) found for " + key,
         )
+
         return "N/A"
     except Exception as e:
-        print("❌ Error: " + str(e))
+        print("❌ Error: " + str(e) + " (" + key + ": " + interval_id + ")")
 
 
 def header(title: str):
