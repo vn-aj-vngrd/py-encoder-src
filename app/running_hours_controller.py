@@ -9,33 +9,26 @@ def generateRHData(file_name):
         path = "src/" + file_name
         print("\n📁 File: " + file_name)
 
-        # Read the data
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
-        # Get the keys
         xl = pd.ExcelFile(path)
         keys = xl.sheet_names
 
-        # Prepare the sheets
         book = Workbook()
         sheet = book.active
-
-        # Append the header
         sheet.append(rh_header)
 
         machineries = getMachineries()
 
-        # Iterate through the sheets
         for key in keys:
             if key not in not_included:
                 print("🔃 Processing " + str(key).rstrip() + "...")
 
-                # Vessel Name
                 vessel = str(data[key].iloc[0, 2])
+                machinery_id = str(data[key].iloc[2, 5])
 
-                # Machinery Name
                 machinery = getMachinery(
-                    str(data[key].iloc[2, 5]),
+                    machinery_id,
                     key,
                     "sub_encoder",
                     file_name,
@@ -48,23 +41,21 @@ def generateRHData(file_name):
                     and (machinery["name"] != "N/A")
                 ):
 
-                    # Running Hours
                     if not pd.isna(data[key].iloc[3, 5]):
                         running_hours = str(data[key].iloc[3, 5])
                     else:
                         running_hours = ""
 
-                    # Updated At
                     if not pd.isna(data[key].iloc[4, 5]):
                         updating_date = data[key].iloc[4, 5].strftime("%d-%b-%y")
                     else:
-                        updating_date = " "
+                        updating_date = ""
 
                     rowData = (
-                        vessel.rstrip(),
-                        machinery["name"].rstrip(),
-                        running_hours.rstrip(),
-                        updating_date.rstrip(),
+                        vessel,
+                        machinery["name"],
+                        running_hours,
+                        updating_date,
                     )
                     sheet.append(rowData)
                 else:

@@ -9,7 +9,7 @@ import os
 import re
 
 
-def createBin(file_name: str, mode: str, machinery_code: str, key: str, desc: str):
+def createBin(file_name: str, mode: str, key: str, desc: str):
     creation_name = "/" + file_name
     creation_path = "./bin/" + mode
 
@@ -27,7 +27,7 @@ def createBin(file_name: str, mode: str, machinery_code: str, key: str, desc: st
     book = load_workbook(creation_path + creation_name)
     sheet = book.active
 
-    rowData = (key, machinery_code, desc)
+    rowData = (key, desc)
     sheet.append(rowData)
     book.save(creation_path + creation_name)
 
@@ -69,7 +69,6 @@ def getMachinery(
         createBin(
             file_name,
             mode,
-            machinery_id,
             key,
             "⚠️ Warning: No machinery ( " + machinery_id + " ) found for " + key,
         )
@@ -115,7 +114,6 @@ def getCode(
         createBin(
             file_name,
             mode,
-            machinery_name,
             key,
             "⚠️ Warning: No machinery code ( " + machinery_name + " ) found for " + key,
         )
@@ -164,7 +162,6 @@ def getInterval(
         createBin(
             file_name,
             mode,
-            interval_id,
             key,
             "⚠️ Warning: No interval ( " + interval_id + " ) found for " + key,
         )

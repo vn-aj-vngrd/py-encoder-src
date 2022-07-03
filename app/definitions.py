@@ -30,4 +30,4 @@ rh_header = ("vessel", "machinery", "running_hours", "updating_date")
 
 interval_header = ("vessel", "machinery", "interval")
 
-bin_header = ("sheet_name", "code", "desc")
+bin_header = ("sheet_name", "desc")

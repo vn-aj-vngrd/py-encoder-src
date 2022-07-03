@@ -24,7 +24,6 @@ def generateMainData(file_name):
 
         for key in keys:
             if key not in not_included:
-                print("🔃 Processing " + str(key).rstrip() + "...")
 
                 vessel = str(data[key].iloc[0, 2])
                 machinery_id = str(data[key].iloc[2, 5]).rstrip()
@@ -36,6 +35,8 @@ def generateMainData(file_name):
                     file_name,
                     machineries,
                 )
+
+                print("🔃 Processing " + str(machinery_name).rstrip() + "...")
 
                 if (
                     not pd.isna(machinery_name)
@@ -63,8 +64,8 @@ def generateMainData(file_name):
                             if (col == 0) and (
                                 (d == "")
                                 or (d == " ")
-                                or (pd.isna(d))
                                 or (d == "Note:")
+                                or (pd.isna(d))
                             ):
                                 is_Valid = False
                                 break
@@ -82,8 +83,14 @@ def generateMainData(file_name):
                                 )
 
                                 if machinery_code != "N/A":
-                                    col_key = d.split("-")
-                                    d = machinery_code + "-" + col_key[1]
+                                    if "-" in d:
+                                        col_key = d.split("-")
+                                        d = machinery_code + "-" + col_key[1]
+                                    else:
+                                        match = re.match(r"([a-z]+)([0-9]+)", d, re.I)
+                                        if match:
+                                            col_key = match.groups()
+                                        d = machinery_code + "-" + col_key[1]
                                 else:
                                     d = machinery_code
 
