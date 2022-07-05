@@ -125,11 +125,11 @@ def generateUJData(file_name):
                             rowData += tempTuple
 
                             if col == 6:
-                                instructions = data[key].iloc[row, 10]
-                                remarks = data[key].iloc[row, 11]
+                                instructions = str(data[key].iloc[row, 10]).strip()
+                                remarks = str(data[key].iloc[row, 11]).strip()
                                 tempTuple = (
-                                    instructions,
-                                    remarks,
+                                    re.sub("\\s+", " ", instructions),
+                                    re.sub("\\s+", " ", remarks),
                                 )
                                 rowData += tempTuple
 
@@ -153,11 +153,12 @@ def generateUJData(file_name):
                         + '"'
                     )
 
-        create_name = str(file_name[: len(file_name) - 4]).strip()
-        creation_folder = "./res/update_jobs/" + create_name
+        # create_name = str(file_name[: len(file_name) - 4]).strip()
+        # creation_folder = "./res/update_jobs/" + create_name + "/"
+        creation_folder = "./res/update_jobs/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        book.save(creation_folder + "/" + file_name)
+        book.save(creation_folder + file_name)
 
         print("👌 Done")
     except Exception as e:

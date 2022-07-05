@@ -144,11 +144,12 @@ def generateSCData(file_name):
                         + '"'
                     )
 
-        create_name = str(file_name[: len(file_name) - 4]).strip()
-        creation_folder = "./res/sub_categories/" + create_name
+        # create_name = str(file_name[: len(file_name) - 4]).strip()
+        # creation_folder = "./res/sub_categories/" + create_name + "/"
+        creation_folder = "./res/sub_categories/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        book.save(creation_folder + "/" + file_name)
+        book.save(creation_folder + file_name)
 
         print("👌 Done")
     except Exception as e:
