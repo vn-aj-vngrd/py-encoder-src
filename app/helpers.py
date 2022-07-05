@@ -1,4 +1,5 @@
 from os.path import exists
+import sys
 import time
 from app.definitions import *
 from openpyxl import Workbook
@@ -212,7 +213,7 @@ def processSrc(mode: str):
         if len(files) == 0:
             print("No data found in src directory.")
             time.sleep(5)
-            exit()
+            sys.exit(0)
 
         print("A - All")
 
