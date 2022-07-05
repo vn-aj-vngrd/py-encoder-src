@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateMainData(file_name):
+def generateSCData(file_name):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -154,7 +154,7 @@ def generateMainData(file_name):
 def sub_categories():
     try:
         while True:
-            header("🏭 Main Encoder - Vessel Machineries")
+            header("🚢 Main Encoder - Vessel Machineries")
 
             files = processSrc("sub_categories")
 
@@ -162,11 +162,11 @@ def sub_categories():
 
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateMainData(file_name)
+                generateSCData(file_name)
 
             else:
                 for _file in files:
-                    generateMainData(_file)
+                    generateSCData(_file)
 
             if exitApp():
                 break
