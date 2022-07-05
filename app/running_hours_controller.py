@@ -61,12 +61,14 @@ def generateRHData(file_name):
                 else:
                     print("❌ Error: Vessel name or machinery code is missing.")
 
-        # create_name = str(file_name[: len(file_name) - 4]).strip()
+        # create_name = str(file_name[: len(file_name) - 5]).strip()
         # creation_folder = "./res/running_hours/" + create_name + "/"
+
+        _filename = str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
         creation_folder = "./res/running_hours/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        book.save(creation_folder + file_name)
+        book.save(creation_folder + _filename)
 
         print("👌 Done")
     except Exception as e:

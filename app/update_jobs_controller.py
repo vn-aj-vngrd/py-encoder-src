@@ -145,7 +145,7 @@ def generateUJData(file_name):
                         else:
                             break
 
-                    # create_name = str(file_name[: len(file_name) - 4]).strip()
+                    # create_name = str(file_name[: len(file_name) - 5]).strip()
                     # creation_folder = "./res/update_jobs/" + create_name
                     # if not os.path.exists(creation_folder):
                     #     os.makedirs(creation_folder)
@@ -159,12 +159,16 @@ def generateUJData(file_name):
                         + '"'
                     )
 
-        # create_name = str(file_name[: len(file_name) - 4]).strip()
+        # create_name = str(file_name[: len(file_name) - 5]).strip()
         # creation_folder = "./res/update_jobs/" + create_name + "/"
+
+        _filename = (
+            str(file_name[: len(file_name) - 5]).strip() + " (Update Jobs)" + ".xlsx"
+        )
         creation_folder = "./res/update_jobs/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        book.save(creation_folder + file_name)
+        book.save(creation_folder + _filename)
 
         print("👌 Done")
     except Exception as e:
