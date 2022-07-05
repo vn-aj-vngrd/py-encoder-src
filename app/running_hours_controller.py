@@ -75,7 +75,7 @@ def generateRHData(file_name):
 def running_hours():
     try:
         while True:
-            header("⏳ Sub Encoder - Running Hours")
+            header("⏳ Running Hours")
 
             files = processSrc("running_hours")
 

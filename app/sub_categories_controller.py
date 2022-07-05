@@ -154,7 +154,7 @@ def generateSCData(file_name):
 def sub_categories():
     try:
         while True:
-            header("🚢 Main Encoder - Vessel Machineries")
+            header("🚢 Sub Categories")
 
             files = processSrc("sub_categories")
 

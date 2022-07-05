@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateMainData(file_name):
+def generateUJData(file_name):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -31,7 +31,7 @@ def generateMainData(file_name):
                 machinery_name = getMachinery(
                     machinery_id,
                     key,
-                    "sub_categories",
+                    "update_jobs",
                     file_name,
                     machineries,
                 )
@@ -39,7 +39,7 @@ def generateMainData(file_name):
                 machinery_code = getCode(
                     machinery_name,
                     key,
-                    "sub_categories",
+                    "update_jobs",
                     file_name,
                     codes,
                 )
@@ -105,7 +105,7 @@ def generateMainData(file_name):
                                 machinery_interval = getInterval(
                                     d,
                                     key,
-                                    "sub_categories",
+                                    "update_jobs",
                                     file_name,
                                     intervals,
                                 )
@@ -127,7 +127,7 @@ def generateMainData(file_name):
                             break
 
                     # create_name = str(file_name[: len(file_name) - 4]).strip()
-                    # creation_folder = "./res/sub_categories/" + create_name
+                    # creation_folder = "./res/update_jobs/" + create_name
                     # if not os.path.exists(creation_folder):
                     #     os.makedirs(creation_folder)
                     # name_key = str(key).strip()
@@ -141,7 +141,7 @@ def generateMainData(file_name):
                     )
 
         create_name = str(file_name[: len(file_name) - 4]).strip()
-        creation_folder = "./res/sub_categories/" + create_name
+        creation_folder = "./res/update_jobs/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
@@ -151,22 +151,22 @@ def generateMainData(file_name):
         print("❌ Error: " + str(e))
 
 
-def sub_categories():
+def update_jobs():
     try:
         while True:
-            header("🚢 Main Encoder - Vessel Machineries")
+            header("👷 Update Jobs")
 
-            files = processSrc("sub_categories")
+            files = processSrc("update_jobs")
 
             file_key = input("\n👉 Select an option: ")
 
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateMainData(file_name)
+                generateUJData(file_name)
 
             else:
                 for _file in files:
-                    generateMainData(_file)
+                    generateUJData(_file)
 
             if exitApp():
                 break
