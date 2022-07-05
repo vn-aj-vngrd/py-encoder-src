@@ -57,32 +57,28 @@ def generateUJData(file_name):
                     # sheet.append(main_header)
 
                     while True:
+
                         code = data[key].iloc[row, 0]
                         if not isValid(code):
                             break
                         else:
-                            if machinery_code != "N/A":
-                                if "-" in machinery_code:
-                                    col_key = machinery_code.split("-")
+                            if "-" in code:
+                                col_key = code.split("-")
+                                code = (
+                                    machinery_code.rstrip() + "-" + col_key[1].lstrip()
+                                )
+                            else:
+                                match = re.match(
+                                    r"([a-z]+)([0-9]+)", machinery_code, re.I
+                                )
+                                if match:
+                                    col_key = match.groups()
+
                                     code = (
                                         machinery_code.rstrip()
                                         + "-"
                                         + col_key[1].lstrip()
                                     )
-                                else:
-                                    match = re.match(
-                                        r"([a-z]+)([0-9]+)", machinery_code, re.I
-                                    )
-                                    if match:
-                                        col_key = match.groups()
-
-                                        code = (
-                                            machinery_code.rstrip()
-                                            + "-"
-                                            + col_key[1].lstrip()
-                                        )
-                            else:
-                                code = machinery_code
 
                         name = data[key].iloc[row, 1]
                         if isEmpty(name):

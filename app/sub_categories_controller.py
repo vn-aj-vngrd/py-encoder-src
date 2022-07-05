@@ -62,28 +62,21 @@ def generateSCData(file_name):
                         if not isValid(code):
                             break
                         else:
-                            if machinery_code != "N/A":
-                                if "-" in machinery_code:
-                                    col_key = machinery_code.split("-")
+                            if "-" in code:
+                                col_key = code.split("-")
+                                code = machinery_code.rstrip() + "-" + col_key[1].lstrip()
+                            else:
+                                match = re.match(
+                                    r"([a-z]+)([0-9]+)", machinery_code, re.I
+                                )
+                                if match:
+                                    col_key = match.groups()
+
                                     code = (
                                         machinery_code.rstrip()
                                         + "-"
                                         + col_key[1].lstrip()
                                     )
-                                else:
-                                    match = re.match(
-                                        r"([a-z]+)([0-9]+)", machinery_code, re.I
-                                    )
-                                    if match:
-                                        col_key = match.groups()
-
-                                        code = (
-                                            machinery_code.rstrip()
-                                            + "-"
-                                            + col_key[1].lstrip()
-                                        )
-                            else:
-                                code = machinery_code
 
                         name = data[key].iloc[row, 1]
                         if isEmpty(name):
@@ -132,9 +125,9 @@ def generateSCData(file_name):
                             last_done_running_hours = ""
 
                         rowData = (
-                            vessel.strip(),
-                            machinery.strip(),
-                            str(code).strip(),
+                            vessel,
+                            machinery,
+                            code,
                             str(name).strip(),
                             re.sub("\\s+", " ", str(description.strip())),
                             str(interval).strip(),
