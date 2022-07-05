@@ -68,9 +68,7 @@ def generateUJData(file_name):
                                     machinery_code.rstrip() + "-" + col_key[1].lstrip()
                                 )
                             else:
-                                match = re.match(
-                                    r"([a-z]+)([0-9]+)", code, re.I
-                                )
+                                match = re.match(r"([a-z]+)([0-9]+)", code, re.I)
                                 if match:
                                     col_key = match.groups()
 
@@ -101,7 +99,7 @@ def generateUJData(file_name):
                             interval = getInterval(
                                 interval,
                                 key,
-                                "sub_categories",
+                                "update_jobs",
                                 file_name,
                                 intervals,
                             )

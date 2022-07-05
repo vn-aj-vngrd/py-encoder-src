@@ -10,7 +10,9 @@ import re
 
 
 def createBin(file_name: str, mode: str, key: str, desc: str):
-    creation_name = "/" + file_name
+    creation_name = (
+        "/" + str(file_name[: len(file_name) - 5]).strip() + " (Bin)" + ".xlsx"
+    )
     creation_path = "./bin/" + mode
 
     if not os.path.exists(creation_path):
@@ -171,7 +173,7 @@ def getInterval(
         print("❌ Error: " + str(e) + " (" + key + ": " + interval_id + ")")
 
 
-def has_numbers(inputString):
+def has_numbers(inputString: str):
     return bool(re.search(r"\d", inputString))
 
 
@@ -219,7 +221,7 @@ def processSrc(mode: str):
         print("❌ Error: " + str(e))
 
 
-def isEmpty(data):
+def isEmpty(data: any):
     if (
         (pd.isna(data))
         or (data == "")
@@ -232,7 +234,7 @@ def isEmpty(data):
         return False
 
 
-def isValid(data):
+def isValid(data: any):
     if (
         (pd.isna(data))
         or (data == "")
