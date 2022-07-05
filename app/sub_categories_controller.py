@@ -31,7 +31,7 @@ def generateMainData(file_name):
                 machinery_name = getMachinery(
                     machinery_id,
                     key,
-                    "main_encoder",
+                    "sub_categories",
                     file_name,
                     machineries,
                 )
@@ -39,7 +39,7 @@ def generateMainData(file_name):
                 machinery_code = getCode(
                     machinery_name,
                     key,
-                    "main_encoder",
+                    "sub_categories",
                     file_name,
                     codes,
                 )
@@ -105,7 +105,7 @@ def generateMainData(file_name):
                                 machinery_interval = getInterval(
                                     d,
                                     key,
-                                    "main_encoder",
+                                    "sub_categories",
                                     file_name,
                                     intervals,
                                 )
@@ -127,7 +127,7 @@ def generateMainData(file_name):
                             break
 
                     # create_name = str(file_name[: len(file_name) - 4]).strip()
-                    # creation_folder = "./res/main_encoder/" + create_name
+                    # creation_folder = "./res/sub_categories/" + create_name
                     # if not os.path.exists(creation_folder):
                     #     os.makedirs(creation_folder)
                     # name_key = str(key).strip()
@@ -141,7 +141,7 @@ def generateMainData(file_name):
                     )
 
         create_name = str(file_name[: len(file_name) - 4]).strip()
-        creation_folder = "./res/main_encoder/" + create_name
+        creation_folder = "./res/sub_categories/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
@@ -151,12 +151,12 @@ def generateMainData(file_name):
         print("❌ Error: " + str(e))
 
 
-def mainEncoder():
+def sub_categories():
     try:
         while True:
             header("🏭 Main Encoder - Vessel Machineries")
 
-            files = processSrc("main_encoder")
+            files = processSrc("sub_categories")
 
             file_key = input("\n👉 Select an option: ")
 

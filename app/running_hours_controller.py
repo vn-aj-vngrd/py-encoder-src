@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateSubData(file_name):
+def generateRHData(file_name):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -28,7 +28,7 @@ def generateSubData(file_name):
                 machinery_name = getMachinery(
                     machinery_id,
                     key,
-                    "sub_encoder",
+                    "running_hours",
                     file_name,
                     machineries,
                 )
@@ -62,7 +62,7 @@ def generateSubData(file_name):
                     print("❌ Error: Vessel name or machinery code is missing.")
 
         create_name = str(file_name[: len(file_name) - 4]).strip()
-        creation_folder = "./res/sub_encoder/" + create_name
+        creation_folder = "./res/running_hours/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         book.save(creation_folder + "/" + file_name)
@@ -72,21 +72,21 @@ def generateSubData(file_name):
         print("❌ Error: " + str(e))
 
 
-def subEncoder():
+def running_hours():
     try:
         while True:
             header("⏳ Sub Encoder - Running Hours")
 
-            files = processSrc("sub_encoder")
+            files = processSrc("running_hours")
 
             file_key = input("\n👉 Select an option: ")
 
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateSubData(file_name)
+                generateRHData(file_name)
             else:
                 for _file in files:
-                    generateSubData(_file)
+                    generateRHData(_file)
 
             if exitApp():
                 break
