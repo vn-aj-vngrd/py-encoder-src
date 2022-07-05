@@ -1,6 +1,3 @@
-from multiprocessing.sharedctypes import Array
-
-
 not_included = [
     "Main Menu",
     "Running Hours",
@@ -14,7 +11,7 @@ not_included = [
     "Details",
 ]
 
-main_header = (
+sc_header = (
     "vessel",
     "machinery",
     "code",
@@ -24,6 +21,20 @@ main_header = (
     "commissioning_date",
     "last_done_date",
     "last_done_running_hours",
+)
+
+uj_header = (
+    "vessel",
+    "machinery",
+    "code",
+    "name",
+    "description",
+    "interval",
+    "commissioning_date",
+    "last_done_date",
+    "last_done_running_hours",
+    "instructions",
+    "remarks",
 )
 
 rh_header = ("vessel", "machinery", "running_hours", "updating_date")

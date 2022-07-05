@@ -20,7 +20,7 @@ def generateSCData(file_name):
 
         book = Workbook()
         sheet = book.active
-        sheet.append(main_header)
+        sheet.append(sc_header)
 
         for key in keys:
             if key not in not_included:
@@ -94,7 +94,11 @@ def generateSCData(file_name):
                                         match = re.match(r"([a-z]+)([0-9]+)", d, re.I)
                                         if match:
                                             col_key = match.groups()
-                                        d = machinery_code + "-" + col_key[1]
+                                        d = (
+                                            machinery_code.rstrip()
+                                            + "-"
+                                            + col_key[1].lstrip()
+                                        )
                                 else:
                                     d = machinery_code
 
@@ -114,8 +118,8 @@ def generateSCData(file_name):
 
                             if ((col == 4) or (col == 5)) and isinstance(d, datetime):
                                 d = d.strftime("%d-%b-%y")
-                            else:
-                                d = re.sub("\\s+", " ", str(d))
+
+                            d = re.sub("\\s+", " ", str(d))
 
                             tempTuple = (d.strip(),)
                             rowData += tempTuple
