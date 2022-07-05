@@ -99,7 +99,7 @@ def generateSCData(file_name):
 
                         interval = data[key].iloc[row, 3]
                         if isEmpty(interval):
-                            interval = ""
+                            interval = "N/A"
                         else:
                             if not (re.search("[a-zA-Z]", str(interval))):
                                 interval = str(interval) + " Hours"
