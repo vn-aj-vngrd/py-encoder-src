@@ -69,7 +69,7 @@ def generateUJData(file_name):
                                 )
                             else:
                                 match = re.match(
-                                    r"([a-z]+)([0-9]+)", machinery_code, re.I
+                                    r"([a-z]+)([0-9]+)", code, re.I
                                 )
                                 if match:
                                     col_key = match.groups()
