@@ -14,18 +14,17 @@ def generateUJData(file_name):
         xl = pd.ExcelFile(path)
         keys = xl.sheet_names
 
-        machineries = getMachineries()
-        codes = getCodes()
-        intervals = getIntervals()
-
         book = Workbook()
         sheet = book.active
         sheet.append(uj_header)
 
+        machineries = getMachineries()
+        codes = getCodes()
+        intervals = getIntervals()
+        vessel = str(data[keys[12]].iloc[0, 2])
+
         for key in keys:
             if key not in not_included:
-
-                vessel = str(data[key].iloc[0, 2])
                 machinery_id = str(data[key].iloc[2, 5]).strip()
 
                 machinery = getMachinery(

@@ -14,14 +14,13 @@ def generateSCData(file_name):
         xl = pd.ExcelFile(path)
         keys = xl.sheet_names
 
-        machineries = getMachineries()
-        codes = getCodes()
-        intervals = getIntervals()
-
         book = Workbook()
         sheet = book.active
         sheet.append(sc_header)
 
+        machineries = getMachineries()
+        codes = getCodes()
+        intervals = getIntervals()
         vessel = str(data[keys[12]].iloc[0, 2])
 
         for key in keys:
