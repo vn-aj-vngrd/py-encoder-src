@@ -48,8 +48,8 @@ def generateRHData(file_name):
                             updating_date = updating_date.strftime("%d-%b-%y")
 
                     rowData = (
-                        vessel.strip(),
-                        machinery.strip(),
+                        vessel,
+                        machinery,
                         running_hours,
                         updating_date,
                     )

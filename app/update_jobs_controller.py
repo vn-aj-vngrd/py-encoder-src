@@ -135,9 +135,9 @@ def generateUJData(file_name):
                             remarks = ""
 
                         rowData = (
-                            vessel.strip(),
-                            machinery.strip(),
-                            str(code).strip(),
+                            vessel,
+                            machinery,
+                            code,
                             str(name).strip(),
                             re.sub("\\s+", " ", str(description).strip()),
                             str(interval).strip(),
