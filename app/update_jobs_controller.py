@@ -125,11 +125,17 @@ def generateUJData(file_name):
                             rowData += tempTuple
 
                             if col == 6:
-                                instructions = str(data[key].iloc[row, 10]).strip()
-                                remarks = str(data[key].iloc[row, 11]).strip()
+                                instructions = data[key].iloc[row, 10]
+                                if pd.isna(instructions):
+                                    instructions = ""
+
+                                remarks = data[key].iloc[row, 11]
+                                if pd.isna(remarks):
+                                    remarks = ""
+
                                 tempTuple = (
-                                    re.sub("\\s+", " ", instructions),
-                                    re.sub("\\s+", " ", remarks),
+                                    re.sub("\\s+", " ", str(instructions)),
+                                    re.sub("\\s+", " ", str(remarks)),
                                 )
                                 rowData += tempTuple
 
