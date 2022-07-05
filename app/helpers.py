@@ -231,8 +231,9 @@ def isValid(data: str):
         (data == "")
         or (data == " ")
         or (pd.isna(data))
-        or (data == "Note:") 
+        or (data == "Note:")
         or (data == "nan")
+        or (data == "N/A")
         or not (has_numbers(data))
     ):
         return False

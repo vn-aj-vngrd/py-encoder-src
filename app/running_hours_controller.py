@@ -25,7 +25,7 @@ def generateRHData(file_name):
                 vessel = str(data[key].iloc[0, 2])
                 machinery_id = str(data[key].iloc[2, 5])
 
-                machinery_name = getMachinery(
+                machinery = getMachinery(
                     machinery_id,
                     key,
                     "running_hours",
@@ -33,27 +33,23 @@ def generateRHData(file_name):
                     machineries,
                 )
 
-                print("🔃 Processing " + machinery_name + "...")
+                if isValid(vessel) and isValid(machinery):
+                    print("🔃 Processing " + machinery + "...")
 
-                if (
-                    not pd.isna(machinery_name)
-                    and not pd.isna(vessel)
-                    and (machinery_name != "N/A")
-                ):
-
-                    if not pd.isna(data[key].iloc[3, 5]):
-                        running_hours = str(data[key].iloc[3, 5])
-                    else:
+                    running_hours = data[key].iloc[3, 5]
+                    if isEmpty(running_hours):
                         running_hours = ""
 
-                    if not pd.isna(data[key].iloc[4, 5]):
-                        updating_date = data[key].iloc[4, 5].strftime("%d-%b-%y")
-                    else:
+                    updating_date = data[key].iloc[4, 5]
+                    if isEmpty(updating_date):
                         updating_date = ""
+                    else:
+                        if isinstance(updating_date, datetime):
+                            updating_date = updating_date.strftime("%d-%b-%y")
 
                     rowData = (
-                        vessel,
-                        machinery_name,
+                        vessel.strip(),
+                        machinery.strip(),
                         running_hours,
                         updating_date,
                     )
@@ -64,7 +60,9 @@ def generateRHData(file_name):
         # create_name = str(file_name[: len(file_name) - 5]).strip()
         # creation_folder = "./res/running_hours/" + create_name + "/"
 
-        _filename = str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
+        _filename = (
+            str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
+        )
         creation_folder = "./res/running_hours/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)

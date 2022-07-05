@@ -44,11 +44,7 @@ def generateSCData(file_name):
                     codes,
                 )
 
-                if (
-                    not pd.isna(machinery)
-                    and (machinery != "N/A")
-                    and not pd.isna(vessel)
-                ):
+                if isValid(vessel) and isValid(machinery) and isValid(machinery_code):
                     print("🔃 Processing " + machinery + "...")
                     row = 7
 

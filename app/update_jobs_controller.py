@@ -28,7 +28,7 @@ def generateUJData(file_name):
                 vessel = str(data[key].iloc[0, 2])
                 machinery_id = str(data[key].iloc[2, 5]).strip()
 
-                machinery_name = getMachinery(
+                machinery = getMachinery(
                     machinery_id,
                     key,
                     "update_jobs",
@@ -37,113 +37,120 @@ def generateUJData(file_name):
                 )
 
                 machinery_code = getCode(
-                    machinery_name,
+                    machinery,
                     key,
                     "update_jobs",
                     file_name,
                     codes,
                 )
 
-                if (
-                    not pd.isna(machinery_name)
-                    and (machinery_name != "N/A")
-                    and not pd.isna(vessel)
-                ):
-                    print("🔃 Processing " + machinery_name + "...")
+                if isValid(vessel) and isValid(machinery) and isValid(machinery_code):
+                    print("🔃 Processing " + machinery + "...")
                     row = 7
-                    is_Valid = True
 
                     # Prepare the sheets
                     # book = Workbook()
                     # sheet = book.active
                     # sheet.append(main_header)
 
-                    while is_Valid:
+                    while True:
+                        code = data[key].iloc[row, 0]
+                        if not isValid(code):
+                            break
+                        else:
+                            if machinery_code != "N/A":
+                                if "-" in machinery_code:
+                                    col_key = machinery_code.split("-")
+                                    code = (
+                                        machinery_code.rstrip()
+                                        + "-"
+                                        + col_key[1].lstrip()
+                                    )
+                                else:
+                                    match = re.match(
+                                        r"([a-z]+)([0-9]+)", machinery_code, re.I
+                                    )
+                                    if match:
+                                        col_key = match.groups()
+
+                                        code = (
+                                            machinery_code.rstrip()
+                                            + "-"
+                                            + col_key[1].lstrip()
+                                        )
+                            else:
+                                code = machinery_code
+
+                        name = data[key].iloc[row, 1]
+                        if isEmpty(name):
+                            name = ""
+                        # Manual Override (--Force Fix)
+                        if str(code) == "RE-009":
+                            name = "EPIRB"
+
+                        description = data[key].iloc[row, 2]
+                        if isEmpty(description):
+                            description = ""
+
+                        interval = data[key].iloc[row, 3]
+                        if isEmpty(interval):
+                            interval = ""
+                        else:
+                            if not (re.search("[a-zA-Z]", interval)):
+                                interval = str(interval) + " Hours"
+
+                            interval = getInterval(
+                                interval,
+                                key,
+                                "sub_categories",
+                                file_name,
+                                intervals,
+                            )
+
+                        commissioning_date = data[key].iloc[row, 4]
+                        if isEmpty(commissioning_date):
+                            commissioning_date = ""
+                        else:
+                            if isinstance(commissioning_date, datetime):
+                                commissioning_date = commissioning_date.strftime(
+                                    "%d-%b-%y"
+                                )
+
+                        last_done_date = data[key].iloc[row, 5]
+                        if isEmpty(last_done_date):
+                            last_done_date = ""
+                        else:
+                            if isinstance(last_done_date, datetime):
+                                last_done_date = last_done_date.strftime("%d-%b-%y")
+
+                        last_done_running_hours = data[key].iloc[row, 6]
+                        if isEmpty(last_done_running_hours):
+                            last_done_running_hours = ""
+
+                        instructions = data[key].iloc[row, 10]
+                        if isEmpty(instructions):
+                            instructions = ""
+
+                        remarks = data[key].iloc[row, 11]
+                        if isEmpty(remarks):
+                            remarks = ""
 
                         rowData = (
                             vessel.strip(),
-                            machinery_name.strip(),
+                            machinery.strip(),
+                            str(code).strip(),
+                            str(name).strip(),
+                            re.sub("\\s+", " ", str(description).strip()),
+                            str(interval).strip(),
+                            str(commissioning_date).strip(),
+                            str(last_done_date).strip(),
+                            str(last_done_running_hours).strip(),
+                            re.sub("\\s+", " ", str(instructions).strip()),
+                            re.sub("\\s+", " ", str(remarks).strip()),
                         )
 
-                        for col in range(7):
-                            d = data[key].iloc[row, col]
-
-                            if (col == 0) and (
-                                (d == "")
-                                or (d == " ")
-                                or (d == "Note:")
-                                or not (has_numbers(str(d)))
-                                or (pd.isna(d))
-                            ):
-                                is_Valid = False
-                                break
-
-                            if pd.isna(d):
-                                d = ""
-
-                            if col == 0:
-                                if machinery_code != "N/A":
-                                    if "-" in d:
-                                        col_key = d.split("-")
-                                        d = (
-                                            machinery_code.rstrip()
-                                            + "-"
-                                            + col_key[1].lstrip()
-                                        )
-                                    else:
-                                        match = re.match(r"([a-z]+)([0-9]+)", d, re.I)
-                                        if match:
-                                            col_key = match.groups()
-                                        d = (
-                                            machinery_code.rstrip()
-                                            + "-"
-                                            + col_key[1].lstrip()
-                                        )
-                                else:
-                                    d = machinery_code
-
-                            if col == 3:
-                                if not (re.search("[a-zA-Z]", str(d))) and (d != ""):
-                                    d = str(d) + " Hours"
-
-                                machinery_interval = getInterval(
-                                    d,
-                                    key,
-                                    "update_jobs",
-                                    file_name,
-                                    intervals,
-                                )
-
-                                d = machinery_interval
-
-                            if ((col == 4) or (col == 5)) and isinstance(d, datetime):
-                                d = d.strftime("%d-%b-%y")
-
-                            d = re.sub("\\s+", " ", str(d))
-
-                            tempTuple = (d.strip(),)
-                            rowData += tempTuple
-
-                            if col == 6:
-                                instructions = data[key].iloc[row, 10]
-                                if pd.isna(instructions):
-                                    instructions = ""
-
-                                remarks = data[key].iloc[row, 11]
-                                if pd.isna(remarks):
-                                    remarks = ""
-
-                                tempTuple = (
-                                    re.sub("\\s+", " ", str(instructions)),
-                                    re.sub("\\s+", " ", str(remarks)),
-                                )
-                                rowData += tempTuple
-
-                        if is_Valid:
-                            sheet.append(rowData)
-                            row += 1
-                        else:
-                            break
+                        sheet.append(rowData)
+                        row += 1
 
                     # create_name = str(file_name[: len(file_name) - 5]).strip()
                     # creation_folder = "./res/update_jobs/" + create_name
