@@ -219,21 +219,26 @@ def processSrc(mode: str):
         print("❌ Error: " + str(e))
 
 
-def isEmpty(data: str):
-    if (data == "") or (data == " ") or (pd.isna(data)) or (data == "nan"):
+def isEmpty(data):
+    if (
+        (pd.isna(data))
+        or (data == "")
+        or (data == " ")
+        or (data == "nan")
+        or (data == "N/A")
+    ):
         return True
     else:
         return False
 
 
-def isValid(data: str):
+def isValid(data):
     if (
-        (data == "")
+        (pd.isna(data))
+        or (data == "")
         or (data == " ")
-        or (pd.isna(data))
         or (data == "Note:")
         or (data == "nan")
-        or (data == "N/A")
         or not (has_numbers(data))
     ):
         return False

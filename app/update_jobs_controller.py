@@ -44,7 +44,11 @@ def generateUJData(file_name):
                     codes,
                 )
 
-                if isValid(vessel) and isValid(machinery) and isValid(machinery_code):
+                if (
+                    not isEmpty(vessel)
+                    and not isEmpty(machinery)
+                    and not isEmpty(machinery_code)
+                ):
                     print("🔃 Processing " + machinery + "...")
                     row = 7
 
@@ -96,7 +100,7 @@ def generateUJData(file_name):
                         if isEmpty(interval):
                             interval = ""
                         else:
-                            if not (re.search("[a-zA-Z]", interval)):
+                            if not (re.search("[a-zA-Z]", str(interval))):
                                 interval = str(interval) + " Hours"
 
                             interval = getInterval(

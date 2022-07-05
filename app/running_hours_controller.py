@@ -33,7 +33,7 @@ def generateRHData(file_name):
                     machineries,
                 )
 
-                if isValid(vessel) and isValid(machinery):
+                if not isEmpty(vessel) and not isEmpty(machinery):
                     print("🔃 Processing " + machinery + "...")
 
                     running_hours = data[key].iloc[3, 5]
