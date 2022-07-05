@@ -22,10 +22,10 @@ def generateSCData(file_name):
         sheet = book.active
         sheet.append(sc_header)
 
+        vessel = str(data[keys[12]].iloc[0, 2])
+
         for key in keys:
             if key not in not_included:
-
-                vessel = str(data[key].iloc[0, 2])
                 machinery_id = str(data[key].iloc[2, 5]).strip()
 
                 machinery = getMachinery(
