@@ -219,6 +219,27 @@ def processSrc(mode: str):
         print("❌ Error: " + str(e))
 
 
+def isEmpty(data: str):
+    if (data == "") or (data == " ") or (pd.isna(data)) or (data == "nan"):
+        return True
+    else:
+        return False
+
+
+def isValid(data: str):
+    if (
+        (data == "")
+        or (data == " ")
+        or (pd.isna(data))
+        or (data == "Note:") 
+        or (data == "nan")
+        or not (has_numbers(data))
+    ):
+        return False
+    else:
+        return True
+
+
 def exitApp():
     isContinue = input("\n🟢 Input 1 to continue: ")
     if isContinue == "1":
