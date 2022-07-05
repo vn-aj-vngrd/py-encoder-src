@@ -26,7 +26,7 @@ def generateMainData(file_name):
             if key not in not_included:
 
                 vessel = str(data[key].iloc[0, 2])
-                machinery_id = str(data[key].iloc[2, 5]).rstrip()
+                machinery_id = str(data[key].iloc[2, 5]).strip()
 
                 machinery_name = getMachinery(
                     machinery_id,
@@ -61,8 +61,8 @@ def generateMainData(file_name):
                     while is_Valid:
 
                         rowData = (
-                            vessel.rstrip(),
-                            machinery_name.rstrip(),
+                            vessel.strip(),
+                            machinery_name.strip(),
                         )
 
                         for col in range(7):
@@ -85,7 +85,11 @@ def generateMainData(file_name):
                                 if machinery_code != "N/A":
                                     if "-" in d:
                                         col_key = d.split("-")
-                                        d = machinery_code + "-" + col_key[1]
+                                        d = (
+                                            machinery_code.rstrip()
+                                            + "-"
+                                            + col_key[1].lstrip()
+                                        )
                                     else:
                                         match = re.match(r"([a-z]+)([0-9]+)", d, re.I)
                                         if match:
@@ -113,7 +117,7 @@ def generateMainData(file_name):
                             else:
                                 d = re.sub("\\s+", " ", str(d))
 
-                            tempTuple = (d.rstrip(),)
+                            tempTuple = (d.strip(),)
                             rowData += tempTuple
 
                         if is_Valid:
@@ -122,11 +126,11 @@ def generateMainData(file_name):
                         else:
                             break
 
-                    # create_name = str(file_name[: len(file_name) - 4]).rstrip()
+                    # create_name = str(file_name[: len(file_name) - 4]).strip()
                     # creation_folder = "./res/main_encoder/" + create_name
                     # if not os.path.exists(creation_folder):
                     #     os.makedirs(creation_folder)
-                    # name_key = str(key).rstrip()
+                    # name_key = str(key).strip()
                     # book.save(creation_folder + "/" + name_key + ".xlsx")
 
                 else:
@@ -136,7 +140,7 @@ def generateMainData(file_name):
                         + '"'
                     )
 
-        create_name = str(file_name[: len(file_name) - 4]).rstrip()
+        create_name = str(file_name[: len(file_name) - 4]).strip()
         creation_folder = "./res/main_encoder/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)

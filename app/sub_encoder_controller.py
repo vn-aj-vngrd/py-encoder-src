@@ -61,7 +61,7 @@ def generateSubData(file_name):
                 else:
                     print("❌ Error: Vessel name or machinery code is missing.")
 
-        create_name = str(file_name[: len(file_name) - 4]).rstrip()
+        create_name = str(file_name[: len(file_name) - 4]).strip()
         creation_folder = "./res/sub_encoder/" + create_name
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)

@@ -60,7 +60,7 @@ def getMachinery(
 ):
     try:
         if not pd.isna(machinery_id) or machinery_id != "":
-            machinery_id = machinery_id.rstrip()
+            machinery_id = machinery_id.strip()
 
         for machinery in machineries:
             if machinery[1] == machinery_id or machinery[1] == key:
@@ -105,7 +105,7 @@ def getCode(
 ):
     try:
         if not pd.isna(machinery_name) or machinery_name != "":
-            machinery_name = machinery_name.rstrip()
+            machinery_name = machinery_name.strip()
 
         for code in codes:
             if code[1] == machinery_name or code[1] == key:
@@ -153,7 +153,7 @@ def getInterval(
 ):
     try:
         if not pd.isna(interval_id) or interval_id != "":
-            interval_id = interval_id.rstrip()
+            interval_id = interval_id.strip()
 
         for interval in intervals:
             if interval[1] == interval_id or interval[1] == key:
