@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateRHData(file_name):
+def generateRHData(file_name: str, machineries: list):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -18,7 +18,6 @@ def generateRHData(file_name):
         sheet = book.active
         sheet.append(rh_header)
 
-        machineries = getMachineries()
         vessel = str(data[keys[12]].iloc[0, 2])
 
         for key in keys:
@@ -82,12 +81,14 @@ def running_hours():
 
             file_key = input("\n👉 Select an option: ")
 
+            machineries = getMachineries()
+
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateRHData(file_name)
+                generateRHData(file_name, machineries)
             else:
                 for _file in files:
-                    generateRHData(_file)
+                    generateRHData(_file, machineries)
 
             if exitApp():
                 break

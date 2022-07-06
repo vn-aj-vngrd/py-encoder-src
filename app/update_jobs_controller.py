@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateUJData(file_name):
+def generateUJData(file_name: str, machineries: list, codes: list, intervals: list):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -18,9 +18,6 @@ def generateUJData(file_name):
         sheet = book.active
         sheet.append(uj_header)
 
-        machineries = getMachineries()
-        codes = getCodes()
-        intervals = getIntervals()
         vessel = str(data[keys[12]].iloc[0, 2])
 
         for key in keys:
@@ -188,13 +185,17 @@ def update_jobs():
 
             file_key = input("\n👉 Select an option: ")
 
+            machineries = getMachineries()
+            codes = getCodes()
+            intervals = getIntervals()
+
             if file_key != "A":
-                file_name = files[int(file_key)]
-                generateUJData(file_name)
+                file_name = str(files[int(file_key)])
+                generateUJData(file_name, machineries, codes, intervals)
 
             else:
                 for _file in files:
-                    generateUJData(_file)
+                    generateUJData(_file, machineries, codes, intervals)
 
             if exitApp():
                 break

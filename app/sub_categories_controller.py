@@ -1,7 +1,7 @@
 from app.helpers import *
 
 
-def generateSCData(file_name):
+def generateSCData(file_name: str, machineries: list, codes: list, intervals: list):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -18,9 +18,6 @@ def generateSCData(file_name):
         sheet = book.active
         sheet.append(sc_header)
 
-        machineries = getMachineries()
-        codes = getCodes()
-        intervals = getIntervals()
         vessel = str(data[keys[12]].iloc[0, 2])
 
         for key in keys:
@@ -64,11 +61,11 @@ def generateSCData(file_name):
                         else:
                             if "-" in code:
                                 col_key = code.split("-")
-                                code = machinery_code.rstrip() + "-" + col_key[1].lstrip()
-                            else:
-                                match = re.match(
-                                    r"([a-z]+)([0-9]+)", code, re.I
+                                code = (
+                                    machinery_code.rstrip() + "-" + col_key[1].lstrip()
                                 )
+                            else:
+                                match = re.match(r"([a-z]+)([0-9]+)", code, re.I)
                                 if match:
                                     col_key = match.groups()
 
@@ -175,13 +172,17 @@ def sub_categories():
 
             file_key = input("\n👉 Select an option: ")
 
+            machineries = getMachineries()
+            codes = getCodes()
+            intervals = getIntervals()
+
             if file_key != "A":
                 file_name = files[int(file_key)]
-                generateSCData(file_name)
+                generateSCData(file_name, machineries, codes, intervals)
 
             else:
                 for _file in files:
-                    generateSCData(_file)
+                    generateSCData(_file, machineries, codes, intervals)
 
             if exitApp():
                 break
