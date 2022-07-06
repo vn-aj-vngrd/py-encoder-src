@@ -50,8 +50,8 @@ def generateRHData(file_name):
                     rowData = (
                         vessel,
                         machinery,
-                        running_hours,
-                        updating_date,
+                        str(running_hours).strip(),
+                        str(updating_date).strip(),
                     )
                     sheet.append(rowData)
                 else:
