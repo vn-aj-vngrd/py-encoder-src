@@ -63,14 +63,17 @@ def py_encoder():
             elif file_key == "E" or file_key == "e":
                 clear()
                 header()
-                console.print(
-                    "\nCreated by: " + "[warning]Van AJ B. Vanguardia[/warning]"
-                )
-                console.print(
-                    "Source: " + "[url]https://github.com/vn-aj-vngrd/py-encoder[/url]"
-                )
-                break
 
+                console.print(
+                    "\n\n💻 Source: "
+                    + "[url]https://github.com/vn-aj-vngrd/py-encoder[/url]"
+                )
+                console.print(
+                    "💛 Created by: " + "[warning]Van AJ B. Vanguardia[/warning]\n\n"
+                )
+
+                time.sleep(10)
+                sys.exit(0)
             else:
                 isError = True
 

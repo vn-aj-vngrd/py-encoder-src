@@ -276,7 +276,7 @@ def processSrc(mode: str, title: str):
 
         if len(files) == 0:
             console.print("⚠️ No data found in src directory.", style="warning")
-            time.sleep(5)
+            time.sleep(10)
             sys.exit(0)
 
         table.add_row("A", "Select All")
