@@ -309,8 +309,7 @@ def promptExit():
     console.print(table)
 
     opt = Prompt.ask(
-        "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
-        default="C",
+        "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
     )
 
     if opt == "C":
