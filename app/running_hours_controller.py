@@ -22,7 +22,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
 
         warnings_errors = False
 
-        in_key = track(keys, description="🟢 [green]Processing")
+        in_key = track(keys, description="🟢 [success]Processing")
         if debugMode:
             in_key = keys
 
@@ -40,9 +40,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
                     if debugMode:
-                        console.print(
-                            "🟢 [bright_green]Processing: [/bright_green]" + machinery 
-                        )
+                        console.print("🟢 [success]Processing: [/success]" + machinery)
 
                     valid = True
 
@@ -116,10 +114,10 @@ def running_hours(debugMode: bool):
                 )
 
             if debugMode:
-                console.print("🛠️ Debug Mode: Activated", style="secondary")
+                console.print("🍏 Debug Mode: On", style="success")
 
             file_key = Prompt.ask(
-                "[yellow blink]👉 Select an option[/yellow blink]",
+                "[blink yellow]👉 Select an option[/blink yellow]",
             )
 
             machineries = getMachineries()

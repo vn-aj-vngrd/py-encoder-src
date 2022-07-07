@@ -41,7 +41,7 @@ def py_encoder():
                 )
 
             if debugMode:
-                console.print("🛠️ Debug Mode: Activated", style="secondary")
+                console.print("🍏 Debug Mode: On", style="success")
 
             file_key = Prompt.ask(
                 ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
@@ -61,6 +61,14 @@ def py_encoder():
                 debugMode = debugging()
 
             elif file_key == "E" or file_key == "e":
+                clear()
+                header()
+                console.print(
+                    "\nCreated by: " + "[warning]Van AJ B. Vanguardia[/warning]"
+                )
+                console.print(
+                    "Source: " + "[url]https://github.com/vn-aj-vngrd/py-encoder[/url]"
+                )
                 break
 
             else:

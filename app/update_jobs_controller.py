@@ -24,7 +24,7 @@ def generateUJData(
 
         warnings_errors = False
 
-        in_key = track(keys, description="🟢 [green]Processing")
+        in_key = track(keys, description="🟢 [success]Processing")
         if debugMode:
             in_key = keys
 
@@ -54,9 +54,7 @@ def generateUJData(
                     and not isEmpty(machinery_code)
                 ):
                     if debugMode:
-                        console.print(
-                            "🟢 [bright_green]Processing: [/bright_green]" + machinery
-                        )
+                        console.print("🟢 [success]Processing: [/success]" + machinery)
                     row = 7
 
                     # Prepare the sheets
@@ -205,7 +203,7 @@ def update_jobs(debugMode: bool):
 
             files = processSrc(
                 "sub_categories",
-                "⛏️ [yellow]Update Jobs[/yellow]",
+                "🛠️ [yellow]Update Jobs[/yellow]",
             )
 
             files_count = len(files)
@@ -217,10 +215,10 @@ def update_jobs(debugMode: bool):
                 )
 
             if debugMode:
-                console.print("🛠️ Debug Mode: Activated", style="secondary")
+                console.print("🍏 Debug Mode: On", style="success")
 
             file_key = Prompt.ask(
-                "[yellow blink]👉 Select an option[/yellow blink]",
+                "[blink yellow]👉 Select an option[/blink yellow]",
             )
 
             machineries = getMachineries()

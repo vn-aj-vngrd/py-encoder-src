@@ -24,10 +24,11 @@ from rich.progress import track
 custom_theme = Theme(
     {
         "primary": "bold cyan",
-        "secondary": "bold green",
+        "success": "bold bright_green",
         "info": "cyan",
         "warning": "yellow",
         "danger": "bright_red",
+        "url": "not bold not italic underline bright_blue",
     }
 )
 
@@ -340,7 +341,7 @@ def promptExit():
     console.print("\n", table, "\n")
 
     opt = Prompt.ask(
-        ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
+        ":backhand_index_pointing_right:[blink yellow] Select an option[/blink yellow]"
     )
 
     if opt == "C" or opt == "c":
