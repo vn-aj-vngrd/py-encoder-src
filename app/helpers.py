@@ -275,7 +275,7 @@ def processSrc(mode: str, title: str):
                 i += 1
 
         if len(files) == 0:
-            console.print("⚠️ No data found in src directory.", style="warning")
+            console.print("\n\n⚠️ No data found in src directory.\n\n", style="warning")
             time.sleep(10)
             sys.exit(0)
 
