@@ -197,12 +197,14 @@ def sub_categories():
                 for _file in files:
                     generateSCData(_file, machineries, codes, intervals)
                 processDone = True
+                isError = False
             elif file_key == "G":
                 break
             elif int(file_key) >= 1 and int(file_key) <= files_count:
                 file_name = files[int(file_key) - 1]
                 generateSCData(file_name, machineries, codes, intervals)
                 processDone = True
+                isError = False
             else:
                 isError = True
 

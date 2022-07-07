@@ -213,8 +213,9 @@ def header():
 
     console.print(
         title,
-        style="blink cyan",
+        style="cyan",
     )
+    # blink
 
 
 def processSrc(mode: str, title: str):
