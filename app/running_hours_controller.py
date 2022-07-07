@@ -7,7 +7,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        console.print("\n\n:file_folder: File: " + file_name)
+        console.print("\n\n📝 " + file_name)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -22,8 +22,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
 
         warnings_errors = False
 
-        processing_icon = ":clockwise_vertical_arrows:"
-        in_key = track(keys, description=processing_icon + " [green]Processing")
+        in_key = track(keys, description="🟢 [green]Processing")
         if debugMode:
             in_key = keys
 
@@ -42,9 +41,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
                 if not isEmpty(vessel) and not isEmpty(machinery):
                     if debugMode:
                         console.print(
-                            ":clockwise_vertical_arrows: Processing "
-                            + machinery
-                            + "..."
+                            "🟢 [bright_green]Processing: [/bright_green]" + machinery 
                         )
 
                     valid = True
@@ -74,7 +71,8 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
                     warnings_errors = True
                     if debugMode:
                         console.print(
-                            ":x: Error: Vessel name or machinery code is missing."
+                            "❌ Error: Vessel name or machinery code is missing.",
+                            style="danger",
                         )
 
         # create_name = str(file_name[: len(file_name) - 5]).strip()
@@ -89,11 +87,13 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
         book.save(creation_folder + _filename)
 
         if warnings_errors and not debugMode:
-            console.print("⚠️ Warnings or Errors found, refer to the bin folder.")
+            console.print(
+                "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
+            )
 
-        console.print(":ok_hand: Done\n\n")
+        console.print("📥 Done", style="info")
     except Exception as e:
-        console.print(":x: Error: " + str(e))
+        console.print("❌ Error: " + str(e), style="danger")
 
 
 def running_hours(debugMode: bool):
@@ -110,13 +110,16 @@ def running_hours(debugMode: bool):
             files_count = len(files)
 
             if isError:
-                console.print(":x: Error: " + "You selected an invalid option.")
+                console.print(
+                    "❌ Error: " + "You have selected an invalid option.",
+                    style="danger",
+                )
 
             if debugMode:
                 console.print("🛠️ Debug Mode: Activated", style="secondary")
 
             file_key = Prompt.ask(
-                ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+                "[yellow blink]👉 Select an option[/yellow blink]",
             )
 
             machineries = getMachineries()
@@ -142,4 +145,5 @@ def running_hours(debugMode: bool):
                 break
         except Exception as e:
             isError = True
-            # console.print(":x: Error: " + str(e))
+            if debugMode:
+                console.print("❌ Error: " + str(e), style="danger")

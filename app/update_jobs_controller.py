@@ -9,7 +9,7 @@ def generateUJData(
             os.makedirs("./data")
 
         path = "src/" + file_name
-        console.print("\n\n:file_folder: File: " + file_name)
+        console.print("\n\n📝 " + file_name)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -24,8 +24,7 @@ def generateUJData(
 
         warnings_errors = False
 
-        processing_icon = ":clockwise_vertical_arrows:"
-        in_key = track(keys, description=processing_icon + " [green]Processing")
+        in_key = track(keys, description="🟢 [green]Processing")
         if debugMode:
             in_key = keys
 
@@ -56,9 +55,7 @@ def generateUJData(
                 ):
                     if debugMode:
                         console.print(
-                            ":clockwise_vertical_arrows: Processing "
-                            + machinery
-                            + "..."
+                            "🟢 [bright_green]Processing: [/bright_green]" + machinery
                         )
                     row = 7
 
@@ -175,9 +172,10 @@ def generateUJData(
                     warnings_errors = True
                     if debugMode:
                         console.print(
-                            ':x: Error: Vessel name or machinery code is missing for sheet "'
+                            '❌ Vessel name or machinery code is missing for sheet "'
                             + key
-                            + '"'
+                            + '"',
+                            style="danger",
                         )
 
         _filename = (
@@ -189,11 +187,13 @@ def generateUJData(
         book.save(creation_folder + _filename)
 
         if warnings_errors and not debugMode:
-            console.print("⚠️ Warnings or Errors found, refer to the bin folder.")
+            console.print(
+                "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
+            )
 
-        console.print(":ok_hand: Done\n\n")
+        console.print("📥 Done")
     except Exception as e:
-        console.print(":x: Error: " + str(e))
+        console.print("❌ " + str(e), style="danger")
 
 
 def update_jobs(debugMode: bool):
@@ -205,19 +205,22 @@ def update_jobs(debugMode: bool):
 
             files = processSrc(
                 "sub_categories",
-                ":man_construction_worker: [yellow]Update Jobs[/yellow]",
+                "⛏️ [yellow]Update Jobs[/yellow]",
             )
 
             files_count = len(files)
 
             if isError:
-                console.print(":x: Error: " + "You selected an invalid option.")
+                console.print(
+                    "❌ " + "You have selected an invalid option.",
+                    style="danger",
+                )
 
             if debugMode:
                 console.print("🛠️ Debug Mode: Activated", style="secondary")
 
             file_key = Prompt.ask(
-                ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+                "[yellow blink]👉 Select an option[/yellow blink]",
             )
 
             machineries = getMachineries()
@@ -245,4 +248,5 @@ def update_jobs(debugMode: bool):
                 break
         except Exception as e:
             isError = True
-            # console.print(":x: Error: " + str(e))
+            if debugMode:
+                console.print("❌ " + str(e), style="danger")

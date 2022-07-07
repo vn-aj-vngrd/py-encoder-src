@@ -27,7 +27,7 @@ custom_theme = Theme(
         "secondary": "bold green",
         "info": "cyan",
         "warning": "yellow",
-        "danger": "red",
+        "danger": "bright_red",
     }
 )
 
@@ -337,13 +337,13 @@ def promptExit():
     table.add_row("C", "Continue")
     table.add_row("G", "Go Back")
 
-    console.print(table)
+    console.print("\n", table, "\n")
 
     opt = Prompt.ask(
-        "\n\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
+        ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
     )
 
-    if opt == "C":
+    if opt == "C" or opt == "c":
         return False
 
     else:
