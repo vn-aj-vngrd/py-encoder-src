@@ -1,12 +1,8 @@
-# from py_encoder import main
-
 import pandas as pd
 import sys
 import time
 import os
 import re
-import pyfiglet
-import pyfiglet.fonts
 
 from os import system, name
 from os.path import exists
@@ -210,10 +206,15 @@ def has_numbers(inputString: str):
 
 def header():
 
-    title = pyfiglet.figlet_format("Py-Encoder", font="slant")
-
     console.print(
-        title,
+        r"""
+    ____              ______                     __         
+   / __ \__  __      / ____/___  _________  ____/ /__  _____
+  / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
+ / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
+/_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/     
+      /____/                                                
+    """,
         style="cyan",
     )
     # blink
