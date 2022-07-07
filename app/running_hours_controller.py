@@ -35,24 +35,29 @@ def generateRHData(file_name: str, machineries: list):
                 if not isEmpty(vessel) and not isEmpty(machinery):
                     print("🔃 Processing " + machinery + "...")
 
+                    valid = True
+
                     running_hours = data[key].iloc[3, 5]
                     if isEmpty(running_hours):
-                        running_hours = ""
+                        valid = False
+                        # running_hours = ""
 
                     updating_date = data[key].iloc[4, 5]
                     if isEmpty(updating_date):
-                        updating_date = ""
-                    else:
-                        if isinstance(updating_date, datetime):
-                            updating_date = updating_date.strftime("%d-%b-%y")
+                        valid = False
+                        # updating_date = ""
 
-                    rowData = (
-                        vessel,
-                        machinery,
-                        str(running_hours).strip(),
-                        str(updating_date).strip(),
-                    )
-                    sheet.append(rowData)
+                    if isinstance(updating_date, datetime):
+                        updating_date = updating_date.strftime("%d-%b-%y")
+
+                    if valid:
+                        rowData = (
+                            vessel,
+                            machinery,
+                            str(running_hours).strip(),
+                            str(updating_date).strip(),
+                        )
+                        sheet.append(rowData)
                 else:
                     print("❌ Error: Vessel name or machinery code is missing.")
 
