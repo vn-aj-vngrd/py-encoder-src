@@ -121,6 +121,7 @@ def running_hours():
                 isError = True
 
             if processDone and promptExit():
+                isError = processDone = False
                 break
         except Exception as e:
             isError = True

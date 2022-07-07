@@ -202,9 +202,10 @@ def sub_categories():
                 generateSCData(file_name, machineries, codes, intervals)
                 processDone = True
             else:
-                isError: True
+                isError = True
 
             if processDone and promptExit():
+                isError = processDone = False
                 break
         except Exception as e:
             isError = True
