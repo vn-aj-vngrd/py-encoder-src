@@ -211,4 +211,4 @@ def sub_categories():
                 break
         except Exception as e:
             isError = True
-            console.print(":x: Error: " + str(e))
+            # console.print(":x: Error: " + str(e))

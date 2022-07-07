@@ -213,7 +213,7 @@ def header():
 
     console.print(
         title,
-        style="cyan",
+        style="blink cyan",
     )
 
 
