@@ -1,13 +1,13 @@
 from app.helpers import *
 
 
-def generateRHData(file_name: str, machineries: list):
+def generateRHData(file_name: str, machineries: list, debugMode: bool):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        console.print("\n:file_folder: File: " + file_name)
+        console.print("\n\n:file_folder: File: " + file_name)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -20,7 +20,14 @@ def generateRHData(file_name: str, machineries: list):
 
         vessel = str(data[keys[12]].iloc[0, 2])
 
-        for key in keys:
+        warnings_errors = False
+
+        processing_icon = ":clockwise_vertical_arrows:"
+        in_key = track(keys, description=processing_icon + " [green]Processing")
+        if debugMode:
+            in_key = keys
+
+        for key in in_key:
             if key not in not_included:
                 machinery_id = str(data[key].iloc[2, 5])
 
@@ -33,9 +40,12 @@ def generateRHData(file_name: str, machineries: list):
                 )
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
-                    console.print(
-                        ":clockwise_vertical_arrows: Processing " + machinery + "..."
-                    )
+                    if debugMode:
+                        console.print(
+                            ":clockwise_vertical_arrows: Processing "
+                            + machinery
+                            + "..."
+                        )
 
                     valid = True
 
@@ -61,9 +71,11 @@ def generateRHData(file_name: str, machineries: list):
                         )
                         sheet.append(rowData)
                 else:
-                    console.print(
-                        ":x: Error: Vessel name or machinery code is missing."
-                    )
+                    warnings_errors = True
+                    if debugMode:
+                        console.print(
+                            ":x: Error: Vessel name or machinery code is missing."
+                        )
 
         # create_name = str(file_name[: len(file_name) - 5]).strip()
         # creation_folder = "./res/running_hours/" + create_name + "/"
@@ -76,12 +88,15 @@ def generateRHData(file_name: str, machineries: list):
             os.makedirs(creation_folder)
         book.save(creation_folder + _filename)
 
-        console.print(":ok_hand: Done\n")
+        if warnings_errors and not debugMode:
+            console.print("⚠️ Warnings or Errors found, refer to the bin folder.")
+
+        console.print(":ok_hand: Done\n\n")
     except Exception as e:
         console.print(":x: Error: " + str(e))
 
 
-def running_hours():
+def running_hours(debugMode: bool):
     processDone = isError = False
     while True:
         try:
@@ -95,28 +110,28 @@ def running_hours():
             files_count = len(files)
 
             if isError:
-                console.print("\n:x: Error: " + "You selected an invalid option.")
-                file_key = Prompt.ask(
-                    ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
-                )
-            else:
-                file_key = Prompt.ask(
-                    "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
-                )
+                console.print(":x: Error: " + "You selected an invalid option.")
+
+            if debugMode:
+                console.print("🛠️ Debug Mode: Activated", style="secondary")
+
+            file_key = Prompt.ask(
+                ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+            )
 
             machineries = getMachineries()
 
             isError: False
-            if file_key == "A":
+            if file_key == "A" or file_key == "a":
                 for _file in files:
-                    generateRHData(_file, machineries)
+                    generateRHData(_file, machineries, debugMode)
                 processDone = True
                 isError = False
-            elif file_key == "G":
+            elif file_key == "G" or file_key == "g":
                 break
             elif int(file_key) >= 1 and int(file_key) <= files_count:
                 file_name = files[int(file_key) - 1]
-                generateRHData(file_name, machineries)
+                generateRHData(file_name, machineries, debugMode)
                 processDone = True
                 isError = False
             else:

@@ -16,6 +16,7 @@ from rich.console import Console
 from rich.prompt import Prompt
 from rich.theme import Theme
 from rich.table import Table
+from rich.progress import track
 
 
 # from rich import console.print
@@ -25,7 +26,7 @@ custom_theme = Theme(
         "primary": "bold cyan",
         "secondary": "bold green",
         "info": "cyan",
-        "warning": "blink yellow",
+        "warning": "yellow",
         "danger": "red",
     }
 )
@@ -33,31 +34,42 @@ custom_theme = Theme(
 console = Console(theme=custom_theme)
 
 
+def debugging():
+    global debugMode
+    debugMode = not debugMode
+    return debugMode
+
+
 def createBin(file_name: str, mode: str, key: str, desc: str):
-    creation_name = (
-        "/" + str(file_name[: len(file_name) - 5]).strip() + " (Bin)" + ".xlsx"
-    )
-    creation_path = "./bin/" + mode
+    try:
+        creation_name = (
+            "/" + str(file_name[: len(file_name) - 5]).strip() + " (Bin)" + ".xlsx"
+        )
+        creation_path = "./bin/" + mode
 
-    if not os.path.exists(creation_path):
-        os.makedirs(creation_path)
+        if not os.path.exists(creation_path):
+            os.makedirs(creation_path)
 
-    if not exists(creation_path + creation_name):
-        writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
-        writer.save()
+        if not exists(creation_path + creation_name):
+            writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
+            writer.save()
+            book = load_workbook(creation_path + creation_name)
+            sheet = book.active
+            sheet.append(bin_header)
+            book.save(creation_path + creation_name)
+
         book = load_workbook(creation_path + creation_name)
         sheet = book.active
-        sheet.append(bin_header)
+
+        rowData = (key, desc)
+        sheet.append(rowData)
         book.save(creation_path + creation_name)
 
-    book = load_workbook(creation_path + creation_name)
-    sheet = book.active
-
-    rowData = (key, desc)
-    sheet.append(rowData)
-    book.save(creation_path + creation_name)
-
-    console.print(desc)
+        if debugMode:
+            console.print(desc, style="warning")
+    except Exception as e:
+        if debugMode:
+            console.print(":x: Error: " + str(e), style="danger")
 
 
 def getMachineries():
@@ -74,7 +86,8 @@ def getMachineries():
 
         return machineries
     except Exception as e:
-        console.print(":x: Error: " + str(e))
+        if debugMode:
+            console.print(":x: Error: " + str(e), style="danger")
 
 
 def getMachinery(
@@ -96,13 +109,16 @@ def getMachinery(
             file_name,
             mode,
             key,
-            ":warning: Warning: No machinery ( " + machinery_id + " ) found for " + key,
+            "⚠️ Warning: No machinery ( " + machinery_id + " ) found for " + key,
         )
 
         return "N/A"
 
     except Exception as e:
-        console.print(":x: Error: " + str(e) + " (" + key + ": " + machinery_id + ")")
+        if debugMode:
+            console.print(
+                ":x: Error: " + str(e) + " (" + key + ": " + machinery_id + ")"
+            )
 
 
 def getCodes():
@@ -119,7 +135,8 @@ def getCodes():
 
         return codes
     except Exception as e:
-        console.print(":x: Error: " + str(e))
+        if debugMode:
+            console.print(":x: Error: " + str(e), style="danger")
 
 
 def getCode(
@@ -141,15 +158,16 @@ def getCode(
             file_name,
             mode,
             key,
-            ":warning: Warning: No machinery code ( "
-            + machinery_name
-            + " ) found for "
-            + key,
+            "⚠️ Warning: No machinery code ( " + machinery_name + " ) found for " + key,
         )
 
         return "N/A"
     except Exception as e:
-        console.print(":x: Error: " + str(e) + " (" + key + ": " + machinery_name + ")")
+        if debugMode:
+            console.print(
+                ":x: Error: " + str(e) + " (" + key + ": " + machinery_name + ")",
+                style="warning",
+            )
 
 
 def getIntervals():
@@ -170,7 +188,8 @@ def getIntervals():
 
         return intervals
     except Exception as e:
-        console.print(":x: Error: " + str(e))
+        if debugMode:
+            console.print(":x: Error: " + str(e), style="danger")
 
 
 def getInterval(
@@ -192,16 +211,24 @@ def getInterval(
             file_name,
             mode,
             key,
-            ":warning: Warning: No interval ( " + interval_id + " ) found for " + key,
+            "⚠️ Warning: No interval ( " + interval_id + " ) found for " + key,
         )
 
         return "N/A"
     except Exception as e:
-        console.print(":x: Error: " + str(e) + " (" + key + ": " + interval_id + ")")
+        if debugMode:
+            console.print(
+                ":x: Error: " + str(e) + " (" + key + ": " + interval_id + ")",
+                style="warning",
+            )
 
 
 def has_numbers(inputString: str):
-    return bool(re.search(r"\d", inputString))
+    try:
+        return bool(re.search(r"\d", inputString))
+    except Exception as e:
+        if debugMode:
+            console.print(":x: Error: " + str(e), style="danger")
 
 
 def header():
@@ -234,7 +261,7 @@ def processSrc(mode: str, title: str):
             "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
         )
         table.add_column(
-            "[cyan]Excel File[/cyan]", justify="left", style="cyan", no_wrap=True
+            "[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True
         )
 
         files = []
@@ -247,17 +274,18 @@ def processSrc(mode: str, title: str):
                 i += 1
 
         if len(files) == 0:
-            console.print(":warning: No data found in src directory.", style="warning")
+            console.print("⚠️ No data found in src directory.", style="warning")
             time.sleep(5)
             sys.exit(0)
 
         table.add_row("A", "Select All")
         table.add_row("G", "Go Back")
-        console.print(table)
+        console.print("\n", table, "\n")
 
         return files
     except Exception as e:
-        console.print(":x: Error: " + str(e))
+        if debugMode:
+            console.print(":x: Error: " + str(e), style="danger")
 
 
 def isEmpty(data: any):
@@ -312,7 +340,7 @@ def promptExit():
     console.print(table)
 
     opt = Prompt.ask(
-        "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
+        "\n\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
     )
 
     if opt == "C":

@@ -8,6 +8,9 @@ from app.update_jobs_controller import *
 def py_encoder():
     try:
         isError = False
+
+        global debugMode
+
         while True:
             clear()
             header()
@@ -23,31 +26,41 @@ def py_encoder():
             table.add_row("R", "Running Hours")
             table.add_row("S", "Sub Categories")
             table.add_row("U", "Update Jobs")
+            if debugMode:
+                table.add_row("D", "Deactivate Debug Mode")
+            else:
+                table.add_row("D", "Activate Debug Mode")
             table.add_row("E", "Exit")
 
-            console.print(table)
+            console.print("\n", table, "\n")
 
             if isError:
-                console.print("\n:x: Error: " + "You selected an invalid option.")
-                file_key = Prompt.ask(
-                    ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
+                console.print(
+                    ":x: Error: " + "You have selected an invalid option.",
+                    style="danger",
                 )
-            else:
-                file_key = Prompt.ask(
-                    "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
-                )
+
+            if debugMode:
+                console.print("🛠️ Debug Mode: Activated", style="secondary")
+
+            file_key = Prompt.ask(
+                ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]"
+            )
 
             isError = False
-            if file_key == "R":
-                running_hours()
+            if file_key == "R" or file_key == "r":
+                running_hours(debugMode)
 
-            elif file_key == "S":
-                sub_categories()
+            elif file_key == "S" or file_key == "s":
+                sub_categories(debugMode)
 
-            elif file_key == "U":
-                update_jobs()
+            elif file_key == "U" or file_key == "u":
+                update_jobs(debugMode)
 
-            elif file_key == "E":
+            elif file_key == "D" or file_key == "d":
+                debugMode = debugging()
+
+            elif file_key == "E" or file_key == "e":
                 break
 
             else:

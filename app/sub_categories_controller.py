@@ -1,13 +1,15 @@
 from app.helpers import *
 
 
-def generateSCData(file_name: str, machineries: list, codes: list, intervals: list):
+def generateSCData(
+    file_name: str, machineries: list, codes: list, intervals: list, debugMode: bool
+):
     try:
         if not os.path.exists("./data"):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        console.print("\n:file_folder: File: " + file_name)
+        console.print("\n\n:file_folder: File: " + file_name)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -20,7 +22,14 @@ def generateSCData(file_name: str, machineries: list, codes: list, intervals: li
 
         vessel = str(data[keys[12]].iloc[0, 2])
 
-        for key in keys:
+        warnings_errors = False
+
+        processing_icon = ":clockwise_vertical_arrows:"
+        in_key = track(keys, description=processing_icon + " [green]Processing")
+        if debugMode:
+            in_key = keys
+
+        for key in in_key:
             if key not in not_included:
                 machinery_id = str(data[key].iloc[2, 5]).strip()
 
@@ -45,9 +54,12 @@ def generateSCData(file_name: str, machineries: list, codes: list, intervals: li
                     and not isEmpty(machinery)
                     and not isEmpty(machinery_code)
                 ):
-                    console.print(
-                        ":clockwise_vertical_arrows: Processing " + machinery + "..."
-                    )
+                    if debugMode:
+                        console.print(
+                            ":clockwise_vertical_arrows: Processing "
+                            + machinery
+                            + "..."
+                        )
                     row = 7
 
                     # Prepare the sheets
@@ -59,6 +71,7 @@ def generateSCData(file_name: str, machineries: list, codes: list, intervals: li
 
                         code = data[key].iloc[row, 0]
                         if not isValid(code):
+                            # warnings_errors = True
                             break
                         else:
                             if "-" in code:
@@ -103,6 +116,9 @@ def generateSCData(file_name: str, machineries: list, codes: list, intervals: li
                                 intervals,
                             )
 
+                            if isEmpty(interval):
+                                warnings_errors = True
+
                         commissioning_date = data[key].iloc[row, 4]
                         if isEmpty(commissioning_date):
                             commissioning_date = ""
@@ -146,11 +162,13 @@ def generateSCData(file_name: str, machineries: list, codes: list, intervals: li
                     # book.save(creation_folder + "/" + name_key + ".xlsx")
 
                 else:
-                    console.print(
-                        ':x: Error: Vessel name or machinery code is missing for sheet "'
-                        + key
-                        + '"'
-                    )
+                    warnings_errors = True
+                    if debugMode:
+                        console.print(
+                            ':x: Error: Vessel name or machinery code is missing for sheet "'
+                            + key
+                            + '"'
+                        )
 
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Sub Categories)" + ".xlsx"
@@ -160,12 +178,15 @@ def generateSCData(file_name: str, machineries: list, codes: list, intervals: li
             os.makedirs(creation_folder)
         book.save(creation_folder + _filename)
 
-        console.print(":ok_hand: Done\n")
+        if warnings_errors and not debugMode:
+            console.print("⚠️ Warnings or Errors found, refer to the bin folder.")
+
+        console.print(":ok_hand: Done\n\n")
     except Exception as e:
         console.print(":x: Error: " + str(e))
 
 
-def sub_categories():
+def sub_categories(debugMode: bool):
     processDone = isError = False
     while True:
         try:
@@ -179,30 +200,30 @@ def sub_categories():
             files_count = len(files)
 
             if isError:
-                console.print("\n:x: Error: " + "You selected an invalid option.")
-                file_key = Prompt.ask(
-                    ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
-                )
-            else:
-                file_key = Prompt.ask(
-                    "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
-                )
+                console.print(":x: Error: " + "You selected an invalid option.")
+
+            if debugMode:
+                console.print("🛠️ Debug Mode: Activated", style="secondary")
+
+            file_key = Prompt.ask(
+                ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+            )
 
             machineries = getMachineries()
             codes = getCodes()
             intervals = getIntervals()
 
             isError: False
-            if file_key == "A":
+            if file_key == "A" or file_key == "a":
                 for _file in files:
-                    generateSCData(_file, machineries, codes, intervals)
+                    generateSCData(_file, machineries, codes, intervals, debugMode)
                 processDone = True
                 isError = False
-            elif file_key == "G":
+            elif file_key == "G" or file_key == "g":
                 break
             elif int(file_key) >= 1 and int(file_key) <= files_count:
                 file_name = files[int(file_key) - 1]
-                generateSCData(file_name, machineries, codes, intervals)
+                generateSCData(file_name, machineries, codes, intervals, debugMode)
                 processDone = True
                 isError = False
             else:
