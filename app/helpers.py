@@ -1,13 +1,39 @@
-from os.path import exists
+# from py_encoder import main
+
+import pandas as pd
 import sys
 import time
+import os
+import re
+import pyfiglet
+
+from os import system, name
+from os.path import exists
 from app.definitions import *
 from openpyxl import Workbook
 from openpyxl import load_workbook
 from datetime import datetime
-import pandas as pd
-import os
-import re
+
+
+from rich.console import Console
+from rich.prompt import Prompt
+from rich.theme import Theme
+from rich.table import Table
+
+
+# from rich import console.print
+
+custom_theme = Theme(
+    {
+        "primary": "bold cyan",
+        "secondary": "bold green",
+        "info": "cyan",
+        "warning": "blink yellow",
+        "danger": "red",
+    }
+)
+
+console = Console(theme=custom_theme)
 
 
 def createBin(file_name: str, mode: str, key: str, desc: str):
@@ -34,7 +60,7 @@ def createBin(file_name: str, mode: str, key: str, desc: str):
     sheet.append(rowData)
     book.save(creation_path + creation_name)
 
-    print(desc)
+    console.print(desc)
 
 
 def getMachineries():
@@ -51,7 +77,7 @@ def getMachineries():
 
         return machineries
     except Exception as e:
-        print("❌ Error: " + str(e))
+        console.print(":x: Error: " + str(e))
 
 
 def getMachinery(
@@ -73,13 +99,13 @@ def getMachinery(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No machinery ( " + machinery_id + " ) found for " + key,
+            ":warning: Warning: No machinery ( " + machinery_id + " ) found for " + key,
         )
 
         return "N/A"
 
     except Exception as e:
-        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_id + ")")
+        console.print(":x: Error: " + str(e) + " (" + key + ": " + machinery_id + ")")
 
 
 def getCodes():
@@ -96,7 +122,7 @@ def getCodes():
 
         return codes
     except Exception as e:
-        print("❌ Error: " + str(e))
+        console.print(":x: Error: " + str(e))
 
 
 def getCode(
@@ -118,12 +144,15 @@ def getCode(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No machinery code ( " + machinery_name + " ) found for " + key,
+            ":warning: Warning: No machinery code ( "
+            + machinery_name
+            + " ) found for "
+            + key,
         )
 
         return "N/A"
     except Exception as e:
-        print("❌ Error: " + str(e) + " (" + key + ": " + machinery_name + ")")
+        console.print(":x: Error: " + str(e) + " (" + key + ": " + machinery_name + ")")
 
 
 def getIntervals():
@@ -144,7 +173,7 @@ def getIntervals():
 
         return intervals
     except Exception as e:
-        print("❌ Error: " + str(e))
+        console.print(":x: Error: " + str(e))
 
 
 def getInterval(
@@ -166,34 +195,29 @@ def getInterval(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No interval ( " + interval_id + " ) found for " + key,
+            ":warning: Warning: No interval ( " + interval_id + " ) found for " + key,
         )
 
         return "N/A"
     except Exception as e:
-        print("❌ Error: " + str(e) + " (" + key + ": " + interval_id + ")")
+        console.print(":x: Error: " + str(e) + " (" + key + ": " + interval_id + ")")
 
 
 def has_numbers(inputString: str):
     return bool(re.search(r"\d", inputString))
 
 
-def header(title: str):
-    print(
-        r"""
-____              _____                     _           
-|  _ \ _   _      | ____|_ __   ___ ___   __| | ___ _ __ 
-| |_) | | | |_____|  _| | '_ \ / __/ _ \ / _` |/ _ \ '__|
-|  __/| |_| |_____| |___| | | | (_| (_) | (_| |  __/ |   
-|_|    \__, |     |_____|_| |_|\___\___/ \__,_|\___|_|   
-        |___/                                             
-            """
+def header():
+
+    title = pyfiglet.figlet_format("Py-Encoder", font="slant")
+
+    console.print(
+        title,
+        style="cyan",
     )
 
-    print(title + "\n")
 
-
-def processSrc(mode: str):
+def processSrc(mode: str, title: str):
     try:
         mode_path = "./res/" + mode
         if not os.path.exists(mode_path):
@@ -202,24 +226,35 @@ def processSrc(mode: str):
         if not os.path.exists("./src"):
             os.makedirs("./src")
 
+        table = Table(title=title, style="magenta")
+        table.add_column(
+            "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
+        )
+        table.add_column(
+            "[cyan]Excel File[/cyan]", justify="left", style="cyan", no_wrap=True
+        )
+
         files = []
-        i = 0
+        i = 1
+
         for excel in os.listdir("./src"):
             if excel.endswith(".xlsx"):
                 files.append(excel)
-                print(i, "-", excel)
+                table.add_row(str(i), str(excel))
                 i += 1
 
         if len(files) == 0:
-            print("No data found in src directory.")
+            console.print(":warning: No data found in src directory.", style="warning")
             time.sleep(5)
             sys.exit(0)
 
-        print("A - All")
+        table.add_row("A", "Select All")
+        table.add_row("G", "Go Back")
+        console.print(table)
 
         return files
     except Exception as e:
-        print("❌ Error: " + str(e))
+        console.print(":x: Error: " + str(e))
 
 
 def isEmpty(data: any):
@@ -249,9 +284,37 @@ def isValid(data: any):
         return True
 
 
-def exitApp():
-    isContinue = input("\n🟢 Input 1 to continue: ")
-    if isContinue == "1":
+def clear():
+
+    # for windows
+    if name == "nt":
+        _ = system("cls")
+
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system("clear")
+
+
+def promptExit():
+
+    table = Table(style="magenta")
+    table.add_column(
+        "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
+    )
+    table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
+
+    table.add_row("C", "Continue")
+    table.add_row("G", "Go Back")
+
+    console.print(table)
+
+    opt = Prompt.ask(
+        "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+        default="C",
+    )
+
+    if opt == "C":
         return False
+
     else:
         return True

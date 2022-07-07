@@ -7,7 +7,7 @@ def generateRHData(file_name: str, machineries: list):
             os.makedirs("./data")
 
         path = "src/" + file_name
-        print("\n📁 File: " + file_name)
+        console.print("\n:file_folder: File: " + file_name)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -33,7 +33,9 @@ def generateRHData(file_name: str, machineries: list):
                 )
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
-                    print("🔃 Processing " + machinery + "...")
+                    console.print(
+                        ":clockwise_vertical_arrows: Processing " + machinery + "..."
+                    )
 
                     valid = True
 
@@ -59,7 +61,9 @@ def generateRHData(file_name: str, machineries: list):
                         )
                         sheet.append(rowData)
                 else:
-                    print("❌ Error: Vessel name or machinery code is missing.")
+                    console.print(
+                        ":x: Error: Vessel name or machinery code is missing."
+                    )
 
         # create_name = str(file_name[: len(file_name) - 5]).strip()
         # creation_folder = "./res/running_hours/" + create_name + "/"
@@ -72,31 +76,52 @@ def generateRHData(file_name: str, machineries: list):
             os.makedirs(creation_folder)
         book.save(creation_folder + _filename)
 
-        print("👌 Done")
+        console.print(":ok_hand: Done\n")
     except Exception as e:
-        print("❌ Error: " + str(e))
+        console.print(":x: Error: " + str(e))
 
 
 def running_hours():
-    try:
-        while True:
-            header("⏳ Running Hours")
+    processDone = isError = False
+    while True:
+        try:
+            clear()
+            header()
 
-            files = processSrc("running_hours")
+            files = processSrc(
+                "running_hours", ":running: [yellow]Running Hours[/yellow]"
+            )
 
-            file_key = input("\n👉 Select an option: ")
+            files_count = len(files)
+
+            if isError:
+                console.print("\n:x: Error: " + "You selected an invalid option.")
+                file_key = Prompt.ask(
+                    ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+                )
+            else:
+                file_key = Prompt.ask(
+                    "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+                )
 
             machineries = getMachineries()
 
-            if file_key != "A":
-                file_name = files[int(file_key)]
-                generateRHData(file_name, machineries)
-            else:
+            isError: False
+            if file_key == "A":
                 for _file in files:
                     generateRHData(_file, machineries)
-
-            if exitApp():
+                processDone = True
+            elif file_key == "G":
                 break
+            elif int(file_key) >= 1 and int(file_key) <= files_count:
+                file_name = files[int(file_key) - 1]
+                generateRHData(file_name, machineries)
+                processDone = True
+            else:
+                isError = True
 
-    except Exception as e:
-        print("❌ Error: " + str(e))
+            if processDone and promptExit():
+                break
+        except Exception as e:
+            isError = True
+            console.print(":x: Error: " + str(e))

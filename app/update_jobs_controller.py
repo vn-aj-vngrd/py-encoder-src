@@ -7,7 +7,7 @@ def generateUJData(file_name: str, machineries: list, codes: list, intervals: li
             os.makedirs("./data")
 
         path = "src/" + file_name
-        print("\n📁 File: " + file_name)
+        console.print("\n:file_folder: File: " + file_name)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -45,7 +45,9 @@ def generateUJData(file_name: str, machineries: list, codes: list, intervals: li
                     and not isEmpty(machinery)
                     and not isEmpty(machinery_code)
                 ):
-                    print("🔃 Processing " + machinery + "...")
+                    console.print(
+                        ":clockwise_vertical_arrows: Processing " + machinery + "..."
+                    )
                     row = 7
 
                     # Prepare the sheets
@@ -154,8 +156,8 @@ def generateUJData(file_name: str, machineries: list, codes: list, intervals: li
                     # book.save(creation_folder + "/" + name_key + ".xlsx")
 
                 else:
-                    print(
-                        '❌ Error: Vessel name or machinery code is missing for sheet "'
+                    console.print(
+                        ':x: Error: Vessel name or machinery code is missing for sheet "'
                         + key
                         + '"'
                     )
@@ -171,34 +173,53 @@ def generateUJData(file_name: str, machineries: list, codes: list, intervals: li
             os.makedirs(creation_folder)
         book.save(creation_folder + _filename)
 
-        print("👌 Done")
+        console.print(":ok_hand: Done\n")
     except Exception as e:
-        print("❌ Error: " + str(e))
+        console.print(":x: Error: " + str(e))
 
 
 def update_jobs():
-    try:
-        while True:
-            header("👷 Update Jobs")
+    processDone = isError = False
+    while True:
+        try:
+            clear()
+            header()
 
-            files = processSrc("update_jobs")
+            files = processSrc(
+                "sub_categories",
+                ":man_construction_worker: [yellow]Update Jobs[/yellow]",
+            )
 
-            file_key = input("\n👉 Select an option: ")
+            files_count = len(files)
+
+            if isError:
+                console.print("\n:x: Error: " + "You selected an invalid option.")
+                file_key = Prompt.ask(
+                    ":backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+                )
+            else:
+                file_key = Prompt.ask(
+                    "\n:backhand_index_pointing_right:[yellow blink] Select an option[/yellow blink]",
+                )
 
             machineries = getMachineries()
             codes = getCodes()
             intervals = getIntervals()
 
-            if file_key != "A":
-                file_name = str(files[int(file_key)])
-                generateUJData(file_name, machineries, codes, intervals)
-
-            else:
+            isError: False
+            if file_key == "A":
                 for _file in files:
                     generateUJData(_file, machineries, codes, intervals)
+                processDone = True
+            elif int(file_key) >= 1 and int(file_key) <= files_count:
+                file_name = files[int(file_key) - 1]
+                generateUJData(file_name, machineries, codes, intervals)
+                processDone = True
+            else:
+                isError: True
 
-            if exitApp():
+            if processDone and promptExit():
                 break
-
-    except Exception as e:
-        print("❌ Error: " + str(e))
+        except Exception as e:
+            isError = True
+            console.print(":x: Error: " + str(e))
