@@ -48,25 +48,25 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
 
                     running_hours = data[key].iloc[3, 5]
                     if isEmpty(running_hours):
-                        valid = False
-                        # running_hours = ""
+                        # valid = False
+                        running_hours = "0"
 
                     updating_date = data[key].iloc[4, 5]
                     if isEmpty(updating_date):
-                        valid = False
-                        # updating_date = ""
+                        # valid = False
+                        updating_date = ""
 
                     if isinstance(updating_date, datetime):
                         updating_date = updating_date.strftime("%d-%b-%y")
 
-                    if valid:
-                        rowData = (
-                            vessel,
-                            machinery,
-                            str(running_hours).strip(),
-                            str(updating_date).strip(),
-                        )
-                        sheet.append(rowData)
+                    # if valid:
+                    rowData = (
+                        vessel,
+                        machinery,
+                        str(running_hours).strip(),
+                        str(updating_date).strip(),
+                    )
+                    sheet.append(rowData)
                 else:
                     warnings_errors = True
                     if debugMode:
