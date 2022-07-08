@@ -75,7 +75,7 @@ def py_encoder():
                 for _ in track(
                     range(100), description="[bright_red]🔴 Exiting[/bright_red]\n\n"
                 ):
-                    time.sleep(0.05)
+                    time.sleep(0.01)
 
                 sys.exit(0)
             else:
