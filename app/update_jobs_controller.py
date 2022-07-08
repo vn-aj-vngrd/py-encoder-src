@@ -24,7 +24,7 @@ def generateUJData(
 
         warnings_errors = False
 
-        in_key = track(keys, description="🟢 [success]Processing")
+        in_key = track(keys, description="🟢 [bold green]Processing[/bold green]")
         if debugMode:
             in_key = keys
 
@@ -54,7 +54,9 @@ def generateUJData(
                     and not isEmpty(machinery_code)
                 ):
                     if debugMode:
-                        console.print("🟢 [success]Processing: [/success]" + machinery)
+                        console.print(
+                            "🟢 [bold green]Processing: [/bold green]" + machinery
+                        )
                     row = 7
 
                     # Prepare the sheets
@@ -109,10 +111,12 @@ def generateUJData(
                                 "update_jobs",
                                 file_name,
                                 intervals,
+                                str(code),
                             )
 
                             if isEmpty(interval):
                                 warnings_errors = True
+                                interval = ""
 
                         commissioning_date = data[key].iloc[row, 4]
                         if isEmpty(commissioning_date):
@@ -189,7 +193,7 @@ def generateUJData(
                 "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
             )
 
-        console.print("📥 Done")
+        console.print("📥 Done", style="info")
     except Exception as e:
         console.print("❌ " + str(e), style="danger")
 

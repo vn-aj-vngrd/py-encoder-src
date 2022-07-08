@@ -22,7 +22,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
 
         warnings_errors = False
 
-        in_key = track(keys, description="🟢 [success]Processing")
+        in_key = track(keys, description="🟢 [bold green]Processing[/bold green]")
         if debugMode:
             in_key = keys
 
@@ -40,7 +40,9 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
                     if debugMode:
-                        console.print("🟢 [success]Processing: [/success]" + machinery)
+                        console.print(
+                            "🟢 [bold green]Processing: [/bold green]" + machinery
+                        )
 
                     valid = True
 

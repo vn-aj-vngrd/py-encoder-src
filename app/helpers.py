@@ -110,7 +110,11 @@ def getMachinery(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No machinery ( " + machinery_id + " ) found for " + key,
+            "⚠️ Warning: No machinery name found for "
+            + key
+            + " ( "
+            + machinery_id
+            + " ) ",
         )
 
         return "N/A"
@@ -159,7 +163,11 @@ def getCode(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No machinery code ( " + machinery_name + " ) found for " + key,
+            "⚠️ Warning: No machinery code found for "
+            + key
+            + " ( "
+            + machinery_name
+            + " ) ",
         )
 
         return "N/A"
@@ -199,6 +207,7 @@ def getInterval(
     mode: str,
     file_name: str,
     intervals: list,
+    code: str,
 ):
     try:
         if not pd.isna(interval_id) or interval_id != "":
@@ -212,7 +221,13 @@ def getInterval(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No interval ( " + interval_id + " ) found for " + key,
+            '⚠️ Warning: No interval "'
+            + interval_id
+            + '" found for '
+            + key
+            + " ( "
+            + code
+            + " ) ",
         )
 
         return "N/A"

@@ -9,6 +9,10 @@ not_included = [
     "Fuel Valve Monitoring",
     "Sheet1",
     "Details",
+    " ME Exhaust Valve Monitoring (1",
+    " ME Exhaust Valve Monitoring (1)",
+    "ME Exhaust Valve Monitoring (1",
+    "ME Exhaust Valve Monitoring (1)",
 ]
 
 sc_header = (
