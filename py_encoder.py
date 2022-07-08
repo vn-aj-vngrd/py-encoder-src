@@ -72,7 +72,11 @@ def py_encoder():
                     "💛 Created by: " + "[warning]Van AJ B. Vanguardia[/warning]\n\n"
                 )
 
-                time.sleep(10)
+                for _ in track(
+                    range(100), description="[success]Exiting[/success]\n\n"
+                ):
+                    time.sleep(0.05)
+
                 sys.exit(0)
             else:
                 isError = True
