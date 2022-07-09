@@ -239,6 +239,12 @@ def getInterval(
             )
 
 
+def saveExcelFile(book: Workbook, _filename: str, creation_folder: str):
+    if not os.path.exists(creation_folder):
+        os.makedirs(creation_folder)
+    book.save(creation_folder + _filename)
+
+
 def has_numbers(inputString: str):
     try:
         return bool(re.search(r"\d", inputString))
@@ -248,6 +254,7 @@ def has_numbers(inputString: str):
 
 
 def header():
+    clear()
 
     console.print(
         r"""
@@ -260,11 +267,31 @@ def header():
     """,
         style="cyan",
     )
-    # blink
+
+
+def mainMenu():
+    table = Table(style="magenta")
+    table.add_column(
+        "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
+    )
+    table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
+
+    table.add_row("R", "Running Hours")
+    table.add_row("S", "Sub Categories")
+    table.add_row("U", "Update Jobs")
+    # if debugMode:
+    #     table.add_row("D", "Disable Debug Mode")
+    # else:
+    #     table.add_row("D", "Enable Debug Mode")
+    table.add_row("X", "Exit")
+
+    console.print("", table, "\n")
 
 
 def processSrc(mode: str, title: str):
     try:
+        header()
+
         mode_path = "./res/" + mode
         if not os.path.exists(mode_path):
             os.makedirs(mode_path)
@@ -279,14 +306,35 @@ def processSrc(mode: str, title: str):
         table.add_column(
             "[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True
         )
+        table.add_column(
+            "[cyan]Type[/cyan]", justify="left", style="cyan", no_wrap=True
+        )
 
         files = []
         i = 1
+        max_mode_length = 0
 
-        for excel in os.listdir("./src"):
+        console.print("\n")
+        for excel in track(
+            os.listdir("./src"), description="🟢 [bold green]Loading Files[/bold green]"
+        ):
             if excel.endswith(".xlsx"):
-                files.append(excel)
-                table.add_row(str(i), str(excel))
+                xl = pd.ExcelFile("./src/" + excel)
+                keys = xl.sheet_names
+
+                if "Hatch Cover" in keys:
+                    table.add_row(str(i), excel, "Deck")
+                    file_type = "deck"
+                elif "Running Hours" in keys:
+                    table.add_row(str(i), excel, "Engine")
+                    file_type = "engine"
+                else:
+                    table.add_row(str(i), excel, "Other")
+                    file_type = "other"
+
+                max_mode_length = max(max_mode_length, len(excel))
+
+                files.append({"key": file_type, "excelFile": excel})
                 i += 1
 
         if len(files) == 0:
@@ -294,11 +342,14 @@ def processSrc(mode: str, title: str):
             time.sleep(10)
             sys.exit(0)
 
-        table.add_row("A", "Select All")
-        table.add_row("G", "Go Back")
-        console.print("\n", table, "\n")
+        table.add_row("------", "-" * max_mode_length, "------")
+        table.add_row("A", "Select All", "  💯")
+        table.add_row("D", "Select Deck Only", "  ⚓")
+        table.add_row("E", "Select Engine Only", "  🤖")
+        table.add_row("G", "Go Back", "  🔙")
+        table.add_row("R", "Refresh", "  🔃")
 
-        return files
+        return {"files": files, "table": table}
     except Exception as e:
         if debugMode:
             console.print(":x: Error: " + str(e), style="danger")
@@ -332,14 +383,26 @@ def isValid(data: any):
 
 
 def clear():
-
     # for windows
     if name == "nt":
         _ = system("cls")
-
     # for mac and linux(here, os.name is 'posix')
     else:
         _ = system("clear")
+
+
+def showExitCredits():
+    header()
+
+    console.print(
+        "\n\n💻 Source: " + "[url]https://github.com/vn-aj-vngrd/py-encoder[/url]"
+    )
+    console.print("💛 Created by: " + "[warning]Van AJ B. Vanguardia[/warning]\n\n")
+
+    for _ in track(range(100), description="[bright_red]🔴 Exiting[/bright_red]\n\n"):
+        time.sleep(0.01)
+
+    sys.exit(0)
 
 
 def promptExit():

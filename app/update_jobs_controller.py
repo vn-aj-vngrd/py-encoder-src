@@ -1,13 +1,10 @@
-from app.helpers import *
+from app.utils import *
 
 
 def generateUJData(
     file_name: str, machineries: list, codes: list, intervals: list, debugMode: bool
 ):
     try:
-        if not os.path.exists("./data"):
-            os.makedirs("./data")
-
         path = "src/" + file_name
         console.print("\n\n📝 " + file_name)
 
@@ -58,11 +55,6 @@ def generateUJData(
                             "🟢 [bold green]Processing: [/bold green]" + machinery
                         )
                     row = 7
-
-                    # Prepare the sheets
-                    # book = Workbook()
-                    # sheet = book.active
-                    # sheet.append(main_header)
 
                     while True:
 
@@ -163,13 +155,6 @@ def generateUJData(
                         sheet.append(rowData)
                         row += 1
 
-                    # create_name = str(file_name[: len(file_name) - 5]).strip()
-                    # creation_folder = "./res/update_jobs/" + create_name
-                    # if not os.path.exists(creation_folder):
-                    #     os.makedirs(creation_folder)
-                    # name_key = str(key).strip()
-                    # book.save(creation_folder + "/" + name_key + ".xlsx")
-
                 else:
                     warnings_errors = True
                     if debugMode:
@@ -184,9 +169,7 @@ def generateUJData(
             str(file_name[: len(file_name) - 5]).strip() + " (Update Jobs)" + ".xlsx"
         )
         creation_folder = "./res/update_jobs/"
-        if not os.path.exists(creation_folder):
-            os.makedirs(creation_folder)
-        book.save(creation_folder + _filename)
+        saveExcelFile(book, _filename, creation_folder)
 
         if warnings_errors and not debugMode:
             console.print(
@@ -194,23 +177,29 @@ def generateUJData(
             )
 
         console.print("📥 Done", style="info")
+        return True
+
     except Exception as e:
         console.print("❌ " + str(e), style="danger")
 
 
 def update_jobs(debugMode: bool):
-    processDone = isError = False
+    refresh = True
+    processDone = isError = isExceptionError = False
     while True:
         try:
-            clear()
+            if refresh:
+                srcData = processSrc(
+                    "update_jobs",
+                    "⛏️ [yellow]Update Jobs[/yellow]",
+                )
+                refresh = False
+
             header()
+            console.print("", srcData["table"], "\n")
 
-            files = processSrc(
-                "sub_categories",
-                "🛠️ [yellow]Update Jobs[/yellow]",
-            )
-
-            files_count = len(files)
+            if isExceptionError and debugMode:
+                console.print("❌ " + exceptionMsg, style="danger")
 
             if isError:
                 console.print(
@@ -219,9 +208,9 @@ def update_jobs(debugMode: bool):
                 )
 
             if debugMode:
-                console.print("🍏 Debug Mode: On", style="success")
+                console.print("🛠️ Debug Mode: On", style="success")
 
-            file_key = Prompt.ask(
+            user_input = Prompt.ask(
                 "[blink yellow]👉 Select an option[/blink yellow]",
             )
 
@@ -229,26 +218,47 @@ def update_jobs(debugMode: bool):
             codes = getCodes()
             intervals = getIntervals()
 
-            isError: False
-            if file_key == "A" or file_key == "a":
-                for _file in files:
-                    generateUJData(_file, machineries, codes, intervals, debugMode)
-                processDone = True
-                isError = False
-            elif file_key == "G" or file_key == "g":
+            if user_input.upper() == "A":
+                for _file in srcData["files"]:
+                    processDone = generateUJData(
+                        _file["excelFile"], machineries, codes, intervals, debugMode
+                    )
+            elif user_input.upper() == "D":
+                for _file in srcData["files"]:
+                    if _file["key"] == "deck":
+                        processDone = generateUJData(
+                            _file["excelFile"], machineries, codes, intervals, debugMode
+                        )
+            elif user_input.upper() == "E":
+                for _file in srcData["files"]:
+                    if _file["key"] == "engine":
+                        processDone = generateUJData(
+                            _file["excelFile"], machineries, codes, intervals, debugMode
+                        )
+            elif user_input.upper() == "G":
                 break
-            elif int(file_key) >= 1 and int(file_key) <= files_count:
-                file_name = files[int(file_key) - 1]
-                generateUJData(file_name, machineries, codes, intervals, debugMode)
-                processDone = True
-                isError = False
+            elif user_input.upper() == "R":
+                refresh = True
+            elif (
+                user_input.isdigit()
+                and int(user_input) >= 1
+                and int(user_input) <= len(srcData["files"])
+            ):
+                processDone = generateUJData(
+                    srcData["files"][int(user_input) - 1]["excelFile"],
+                    machineries,
+                    codes,
+                    intervals,
+                    debugMode,
+                )
             else:
                 isError = True
 
-            if processDone and promptExit():
+            if processDone:
                 isError = processDone = False
-                break
+                if promptExit():
+                    break
+
         except Exception as e:
-            isError = True
-            if debugMode:
-                console.print("❌ " + str(e), style="danger")
+            isExceptionError = True
+            exceptionMsg = str(e)

@@ -1,11 +1,8 @@
-from app.helpers import *
+from app.utils import *
 
 
 def generateRHData(file_name: str, machineries: list, debugMode: bool):
     try:
-        if not os.path.exists("./data"):
-            os.makedirs("./data")
-
         path = "src/" + file_name
         console.print("\n\n📝 " + file_name)
 
@@ -75,16 +72,11 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
                             style="danger",
                         )
 
-        # create_name = str(file_name[: len(file_name) - 5]).strip()
-        # creation_folder = "./res/running_hours/" + create_name + "/"
-
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
         )
         creation_folder = "./res/running_hours/"
-        if not os.path.exists(creation_folder):
-            os.makedirs(creation_folder)
-        book.save(creation_folder + _filename)
+        saveExcelFile(book, _filename, creation_folder)
 
         if warnings_errors and not debugMode:
             console.print(
@@ -92,22 +84,25 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
             )
 
         console.print("📥 Done", style="info")
+        return True
+
     except Exception as e:
         console.print("❌ Error: " + str(e), style="danger")
 
 
 def running_hours(debugMode: bool):
-    processDone = isError = False
+    refresh = True
+    processDone = isError = isExceptionError = False
     while True:
         try:
-            clear()
+            if refresh:
+                srcData = processSrc(
+                    "running_hours", "🏃 [yellow]Running Hours[/yellow]"
+                )
+                refresh = False
+
             header()
-
-            files = processSrc(
-                "running_hours", ":running: [yellow]Running Hours[/yellow]"
-            )
-
-            files_count = len(files)
+            console.print("", srcData["table"], "\n")
 
             if isError:
                 console.print(
@@ -115,35 +110,58 @@ def running_hours(debugMode: bool):
                     style="danger",
                 )
 
-            if debugMode:
-                console.print("🍏 Debug Mode: On", style="success")
+            if isExceptionError and debugMode:
+                console.print("❌ " + exceptionMsg, style="danger")
 
-            file_key = Prompt.ask(
+            if debugMode:
+                console.print("🛠️ Debug Mode: On", style="success")
+
+            user_input = Prompt.ask(
                 "[blink yellow]👉 Select an option[/blink yellow]",
             )
 
             machineries = getMachineries()
 
-            isError: False
-            if file_key == "A" or file_key == "a":
-                for _file in files:
-                    generateRHData(_file, machineries, debugMode)
-                processDone = True
-                isError = False
-            elif file_key == "G" or file_key == "g":
+            if user_input.upper() == "A":
+                for _file in srcData["files"]:
+                    processDone = generateRHData(
+                        _file["excelFile"], machineries, debugMode
+                    )
+            elif user_input.upper() == "D":
+                for _file in srcData["files"]:
+                    if _file["key"] == "deck":
+                        processDone = generateRHData(
+                            _file["excelFile"], machineries, debugMode
+                        )
+            elif user_input.upper() == "E":
+                for _file in srcData["files"]:
+                    if _file["key"] == "engine":
+                        processDone = generateRHData(
+                            _file["excelFile"], machineries, debugMode
+                        )
+            elif user_input.upper() == "G":
                 break
-            elif int(file_key) >= 1 and int(file_key) <= files_count:
-                file_name = files[int(file_key) - 1]
-                generateRHData(file_name, machineries, debugMode)
-                processDone = True
-                isError = False
+            elif user_input.upper() == "R":
+                refresh = True
+            elif (
+                user_input.isdigit()
+                and int(user_input) >= 1
+                and int(user_input) <= len(srcData["files"])
+            ):
+                processDone = generateRHData(
+                    srcData["files"][int(user_input) - 1]["excelFile"],
+                    machineries,
+                    debugMode,
+                )
             else:
+                console.print("sdasdada")
                 isError = True
 
-            if processDone and promptExit():
+            if processDone:
                 isError = processDone = False
-                break
+                if promptExit():
+                    break
+
         except Exception as e:
-            isError = True
-            if debugMode:
-                console.print("❌ Error: " + str(e), style="danger")
+            isExceptionError = True
+            exceptionMsg = str(e)
