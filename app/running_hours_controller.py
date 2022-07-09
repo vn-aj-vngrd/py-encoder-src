@@ -4,7 +4,7 @@ from app.utils import *
 def generateRHData(file_name: str, machineries: list, debugMode: bool):
     try:
         path = "src/" + file_name
-        console.print("\n\n📝 " + file_name)
+        console.print("\n\n📂 " + file_name, style="warning")
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -83,7 +83,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
                 "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
             )
 
-        console.print("📥 Done", style="info")
+        console.print("📥 Completed", style="info")
         return True
 
     except Exception as e:

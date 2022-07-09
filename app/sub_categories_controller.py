@@ -6,7 +6,7 @@ def generateSCData(
 ):
     try:
         path = "src/" + file_name
-        console.print("\n\n📝 " + file_name)
+        console.print("\n\n📂 " + file_name, style="warning")
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -166,7 +166,7 @@ def generateSCData(
                 "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
             )
 
-        console.print("📥 Done", style="info")
+        console.print("📥 Completed", style="info")
         return True
 
     except Exception as e:
@@ -180,7 +180,7 @@ def sub_categories(debugMode: bool):
         try:
             if refresh:
                 srcData = processSrc(
-                    "sub_categories", "🚢 [yellow]Sub Categories[/yellow]"
+                    "sub_categories", "📚 [yellow]Sub Categories[/yellow]"
                 )
                 refresh = False
 

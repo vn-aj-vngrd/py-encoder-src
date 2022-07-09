@@ -270,20 +270,21 @@ def header():
 
 
 def mainMenu():
-    table = Table(style="magenta")
+    table = Table(title="[yellow] Main Menu[/yellow]", style="magenta")
     table.add_column(
         "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
     )
     table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
+    table.add_column("[cyan]Type  [/cyan]", justify="center", style="cyan", no_wrap=True)
 
-    table.add_row("R", "Running Hours")
-    table.add_row("S", "Sub Categories")
-    table.add_row("U", "Update Jobs")
+    table.add_row("R", "Running Hours", "🏃")
+    table.add_row("S", "Sub Categories", "📚")
+    table.add_row("U", "Update Jobs", "📝")
     # if debugMode:
     #     table.add_row("D", "Disable Debug Mode")
     # else:
     #     table.add_row("D", "Enable Debug Mode")
-    table.add_row("X", "Exit")
+    table.add_row("X", "Exit", "🚫")
 
     console.print("", table, "\n")
 

@@ -6,7 +6,7 @@ def generateUJData(
 ):
     try:
         path = "src/" + file_name
-        console.print("\n\n📝 " + file_name)
+        console.print("\n\n📂 " + file_name, style="warning")
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -176,7 +176,7 @@ def generateUJData(
                 "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
             )
 
-        console.print("📥 Done", style="info")
+        console.print("📥 Completed", style="info")
         return True
 
     except Exception as e:
@@ -191,7 +191,7 @@ def update_jobs(debugMode: bool):
             if refresh:
                 srcData = processSrc(
                     "update_jobs",
-                    "⛏️ [yellow]Update Jobs[/yellow]",
+                    "📝 [yellow]Update Jobs[/yellow]",
                 )
                 refresh = False
 
