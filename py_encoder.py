@@ -1,4 +1,3 @@
-from black import main
 from app.middleware import *
 from app.utils import *
 from app.running_hours_controller import *
