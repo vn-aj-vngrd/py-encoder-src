@@ -96,11 +96,13 @@ def generateUJData(
                         if isEmpty(interval):
                             interval = ""
                         else:
-                            if not (re.search("[a-zA-Z]", str(interval))):
+                            if not re.search(
+                                "[a-zA-Z]", str(interval)
+                            ) and not isinstance(interval, datetime):
                                 interval = str(interval) + " Hours"
 
                             interval = getInterval(
-                                interval,
+                                str(interval),
                                 key,
                                 "update_jobs",
                                 file_name,

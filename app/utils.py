@@ -3,6 +3,7 @@ import sys
 import time
 import os
 import re
+import logging
 
 from os import system, name
 from os.path import exists
@@ -33,6 +34,7 @@ custom_theme = Theme(
 )
 
 console = Console(theme=custom_theme)
+logger = logging.getLogger()
 
 
 def debugging():
@@ -70,7 +72,7 @@ def createBin(file_name: str, mode: str, key: str, desc: str):
             console.print(desc, style="warning")
     except Exception as e:
         if debugMode:
-            console.print(":x: Error: " + str(e), style="danger")
+            logger.exception(e, stack_info=True)
 
 
 def getMachineries():
@@ -88,7 +90,7 @@ def getMachineries():
         return machineries
     except Exception as e:
         if debugMode:
-            console.print(":x: Error: " + str(e), style="danger")
+            logger.exception(e, stack_info=True)
 
 
 def getMachinery(
@@ -121,9 +123,7 @@ def getMachinery(
 
     except Exception as e:
         if debugMode:
-            console.print(
-                ":x: Error: " + str(e) + " (" + key + ": " + machinery_id + ")"
-            )
+            logger.exception(e, stack_info=True)
 
 
 def getCodes():
@@ -141,7 +141,7 @@ def getCodes():
         return codes
     except Exception as e:
         if debugMode:
-            console.print(":x: Error: " + str(e), style="danger")
+            logger.exception(e, stack_info=True)
 
 
 def getCode(
@@ -163,7 +163,7 @@ def getCode(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No machinery code found for "
+            "⚠️ Warning: No machinery code found of sheet "
             + key
             + " ( "
             + machinery_name
@@ -173,10 +173,7 @@ def getCode(
         return "N/A"
     except Exception as e:
         if debugMode:
-            console.print(
-                ":x: Error: " + str(e) + " (" + key + ": " + machinery_name + ")",
-                style="warning",
-            )
+            logger.exception(e, stack_info=True)
 
 
 def getIntervals():
@@ -198,7 +195,7 @@ def getIntervals():
         return intervals
     except Exception as e:
         if debugMode:
-            console.print(":x: Error: " + str(e), style="danger")
+            logger.exception(e, stack_info=True)
 
 
 def getInterval(
@@ -223,7 +220,7 @@ def getInterval(
             key,
             '⚠️ Warning: No interval "'
             + interval_id
-            + '" found for '
+            + '" found of sheet '
             + key
             + " ( "
             + code
@@ -233,10 +230,7 @@ def getInterval(
         return "N/A"
     except Exception as e:
         if debugMode:
-            console.print(
-                ":x: Error: " + str(e) + " (" + key + ": " + interval_id + ")",
-                style="warning",
-            )
+            logger.exception(e, stack_info=True)
 
 
 def saveExcelFile(book: Workbook, _filename: str, creation_folder: str):
@@ -250,7 +244,7 @@ def has_numbers(inputString: str):
         return bool(re.search(r"\d", inputString))
     except Exception as e:
         if debugMode:
-            console.print(":x: Error: " + str(e), style="danger")
+            logger.exception(e, stack_info=True)
 
 
 def header():
@@ -357,9 +351,10 @@ def processSrc(mode: str, title: str):
         table.add_row("R", "Refresh", "  🔃")
 
         return {"files": files, "table": table}
+    
     except Exception as e:
         if debugMode:
-            console.print(":x: Error: " + str(e), style="danger")
+            logger.exception(e, stack_info=True)
 
 
 def isEmpty(data: any):

@@ -154,7 +154,6 @@ def running_hours(debugMode: bool):
                     srcData["files"][int(user_input) - 1]["keys"],
                 )
             else:
-                console.print("sdasdada")
                 isError = True
 
             if processDone:
