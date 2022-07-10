@@ -13,6 +13,9 @@ def py_encoder():
         if not os.path.exists("./data"):
             os.makedirs("./data")
 
+        if not os.path.exists("./src"):
+            os.makedirs("./src")
+
         while True:
             header()
             mainMenu()

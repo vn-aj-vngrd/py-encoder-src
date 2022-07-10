@@ -298,9 +298,6 @@ def processSrc(mode: str, title: str):
         if not os.path.exists(mode_path):
             os.makedirs(mode_path)
 
-        if not os.path.exists("./src"):
-            os.makedirs("./src")
-
         table = Table(title=title, style="magenta")
         table.add_column(
             "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
