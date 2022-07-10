@@ -275,7 +275,9 @@ def mainMenu():
         "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
     )
     table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
-    table.add_column("[cyan]Type  [/cyan]", justify="center", style="cyan", no_wrap=True)
+    table.add_column(
+        "[cyan]Type  [/cyan]", justify="center", style="cyan", no_wrap=True
+    )
 
     table.add_row("R", "Running Hours", "🏃")
     table.add_row("S", "Sub Categories", "📚")
@@ -287,6 +289,11 @@ def mainMenu():
     table.add_row("X", "Exit", "🚫")
 
     console.print("", table, "\n")
+
+
+def getSheetNames(filepath):
+    wb = load_workbook(filepath, read_only=True, keep_links=False)
+    return wb.sheetnames
 
 
 def processSrc(mode: str, title: str):
@@ -320,8 +327,7 @@ def processSrc(mode: str, title: str):
             os.listdir("./src"), description="🟢 [bold green]Loading Files[/bold green]"
         ):
             if excel.endswith(".xlsx"):
-                xl = pd.ExcelFile("./src/" + excel)
-                keys = xl.sheet_names
+                keys = getSheetNames("./src/" + excel)
 
                 if "Hatch Cover" in keys:
                     table.add_row(str(i), excel, "Deck")
@@ -335,7 +341,7 @@ def processSrc(mode: str, title: str):
 
                 max_mode_length = max(max_mode_length, len(excel))
 
-                files.append({"key": file_type, "excelFile": excel})
+                files.append({"type": file_type, "keys": keys, "excelFile": excel})
                 i += 1
 
         if len(files) == 0:

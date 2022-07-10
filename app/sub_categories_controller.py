@@ -2,16 +2,18 @@ from app.utils import *
 
 
 def generateSCData(
-    file_name: str, machineries: list, codes: list, intervals: list, debugMode: bool
+    file_name: str,
+    machineries: list,
+    codes: list,
+    intervals: list,
+    debugMode: bool,
+    keys: list,
 ):
     try:
         path = "src/" + file_name
         console.print("\n\n📂 " + file_name, style="warning")
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
-
-        xl = pd.ExcelFile(path)
-        keys = xl.sheet_names
 
         book = Workbook()
         sheet = book.active
@@ -149,12 +151,11 @@ def generateSCData(
                     warnings_errors = True
                     if debugMode:
                         console.print(
-                            '❌ Vessel name or machinery code is missing for sheet "'
+                            '❌ Vessel name or machinery code is empty for sheet "'
                             + key
                             + '"',
                             style="danger",
                         )
-
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Sub Categories)" + ".xlsx"
         )
@@ -210,19 +211,34 @@ def sub_categories(debugMode: bool):
             if user_input.upper() == "A":
                 for _file in srcData["files"]:
                     processDone = generateSCData(
-                        _file["excelFile"], machineries, codes, intervals, debugMode
+                        _file["excelFile"],
+                        machineries,
+                        codes,
+                        intervals,
+                        debugMode,
+                        _file["keys"],
                     )
             elif user_input.upper() == "D":
                 for _file in srcData["files"]:
-                    if _file["key"] == "deck":
+                    if _file["type"] == "deck":
                         processDone = generateSCData(
-                            _file["excelFile"], machineries, codes, intervals, debugMode
+                            _file["excelFile"],
+                            machineries,
+                            codes,
+                            intervals,
+                            debugMode,
+                            _file["keys"],
                         )
             elif user_input.upper() == "E":
                 for _file in srcData["files"]:
-                    if _file["key"] == "engine":
+                    if _file["type"] == "engine":
                         processDone = generateSCData(
-                            _file["excelFile"], machineries, codes, intervals, debugMode
+                            _file["excelFile"],
+                            machineries,
+                            codes,
+                            intervals,
+                            debugMode,
+                            _file["keys"],
                         )
             elif user_input.upper() == "G":
                 break
@@ -239,6 +255,7 @@ def sub_categories(debugMode: bool):
                     codes,
                     intervals,
                     debugMode,
+                    srcData["files"][int(user_input) - 1]["keys"],
                 )
             else:
                 isError = True

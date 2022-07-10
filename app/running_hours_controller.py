@@ -1,15 +1,12 @@
 from app.utils import *
 
 
-def generateRHData(file_name: str, machineries: list, debugMode: bool):
+def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: list):
     try:
         path = "src/" + file_name
         console.print("\n\n📂 " + file_name, style="warning")
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
-
-        xl = pd.ExcelFile(path)
-        keys = xl.sheet_names
 
         book = Workbook()
         sheet = book.active
@@ -68,7 +65,9 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool):
                     warnings_errors = True
                     if debugMode:
                         console.print(
-                            "❌ Error: Vessel name or machinery code is missing.",
+                            '❌ Vessel name or machinery code is empty for sheet "'
+                            + key
+                            + '"',
                             style="danger",
                         )
 
@@ -125,19 +124,19 @@ def running_hours(debugMode: bool):
             if user_input.upper() == "A":
                 for _file in srcData["files"]:
                     processDone = generateRHData(
-                        _file["excelFile"], machineries, debugMode
+                        _file["excelFile"], machineries, debugMode, _file["keys"]
                     )
             elif user_input.upper() == "D":
                 for _file in srcData["files"]:
-                    if _file["key"] == "deck":
+                    if _file["type"] == "deck":
                         processDone = generateRHData(
-                            _file["excelFile"], machineries, debugMode
+                            _file["excelFile"], machineries, debugMode, _file["keys"]
                         )
             elif user_input.upper() == "E":
                 for _file in srcData["files"]:
-                    if _file["key"] == "engine":
+                    if _file["type"] == "engine":
                         processDone = generateRHData(
-                            _file["excelFile"], machineries, debugMode
+                            _file["excelFile"], machineries, debugMode, _file["keys"]
                         )
             elif user_input.upper() == "G":
                 break
@@ -152,6 +151,7 @@ def running_hours(debugMode: bool):
                     srcData["files"][int(user_input) - 1]["excelFile"],
                     machineries,
                     debugMode,
+                    srcData["files"][int(user_input) - 1]["keys"],
                 )
             else:
                 console.print("sdasdada")
