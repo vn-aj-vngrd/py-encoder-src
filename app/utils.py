@@ -52,14 +52,16 @@ def getFormattedDate(
             day = str(split_date[1])
             month = str(months[int(split_date[0]) - 1])
             year = str(split_date[2][2:])
-            return str(day + "-" + month + "-" + year)
+            if len(year) == 2:
+                return str(day + "-" + month + "-" + year)
 
         if date.count("/") == 1:
             split_date = date.split("/")
             day = str(split_date[1][:2])
             month = str(months[int(split_date[0]) - 1])
             year = str(split_date[1][2:][2:])
-            return str(day + "-" + month + "-" + year)
+            if len(year) == 2:
+                return str(day + "-" + month + "-" + year)
 
     if date == "19-cot-2019":
         return "19-Oct-19"
