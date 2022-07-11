@@ -45,31 +45,40 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                         # valid = False
                         running_hours = "0"
 
-                    if str(running_hours).isdigit() == False:
+                    if not isfloat(str(running_hours)):
                         warnings_errors = True
                         createBin(
                             file_name,
                             "running_hours",
                             key,
-                            '❌ Running Hours "' + running_hours + '" is invalid ' + key,
+                            '❌ Running Hours "'
+                            + str(running_hours)
+                            + '" is invalid of sheet '
+                            + str(key),
                         )
+
+                        running_hours = "0"
 
                     updating_date = data[key].iloc[4, 5]
 
                     if isEmpty(updating_date):
                         # valid = False
                         updating_date = ""
-
-                    if isinstance(updating_date, datetime):
-                        updating_date = updating_date.strftime("%d-%b-%y")
                     else:
-                        warnings_errors = True
-                        createBin(
-                            file_name,
-                            "running_hours",
-                            key,
-                            '❌ Updating date "' + updating_date + '" is invalid ' + key,
-                        )
+                        if isinstance(updating_date, datetime):
+                            updating_date = updating_date.strftime("%d-%b-%y")
+                        else:
+                            warnings_errors = True
+                            createBin(
+                                file_name,
+                                "running_hours",
+                                key,
+                                '❌ Updating date "'
+                                + str(updating_date)
+                                + '" is invalid of sheet '
+                                + str(key),
+                            )
+                            updating_date = ""
 
                     # if valid:
                     rowData = (
@@ -85,7 +94,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                         file_name,
                         "update_jobs",
                         key,
-                        "❌ Vessel name or machinery code is empty of sheet " + key,
+                        "❌ Vessel name or machinery code is empty of sheet " + str(key),
                     )
 
         _filename = (
