@@ -46,8 +46,6 @@ def debugging():
 def getFormattedDate(
     key: str, code: str, mode: str, file_name: str, date: str, datetype: str
 ):
-    date = date.strip()
-
     if "/" in date:
         if date.count("/") == 2:
             split_date = date.split("/")
@@ -404,30 +402,36 @@ def processSrc(mode: str, title: str):
 
 
 def isEmpty(data: any):
-    if (
-        (pd.isna(data))
-        or (data == "")
-        or (data == " ")
-        or (data == "nan")
-        or (data == "N/A")
-    ):
-        return True
-    else:
-        return False
+    try:
+        if (
+            (pd.isna(data))
+            or (str(data).strip() == "")
+            or (data == "nan")
+            or (data == "N/A")
+        ):
+            return True
+        else:
+            return False
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
 
 
 def isValid(data: any):
-    if (
-        (pd.isna(data))
-        or (data == "")
-        or (data == " ")
-        or (data == "Note:")
-        or (data == "nan")
-        or not (has_numbers(data))
-    ):
-        return False
-    else:
-        return True
+    try:
+        if (
+            (pd.isna(data))
+            or (str(data).strip() == "")
+            or (data == "Note:")
+            or (data == "nan")
+            or not (has_numbers(data))
+        ):
+            return False
+        else:
+            return True
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
 
 
 def clear():
@@ -475,6 +479,7 @@ def promptExit():
 
     else:
         return True
+
 
 def isfloat(num):
     try:
