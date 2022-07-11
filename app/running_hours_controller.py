@@ -40,6 +40,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
 
                     # valid = True
 
+                    # Running Hours
                     running_hours = data[key].iloc[3, 5]
                     if isEmpty(running_hours):
                         # valid = False
@@ -60,8 +61,8 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                             )
                             running_hours = "0"
 
+                    # Updating Date
                     updating_date = data[key].iloc[4, 5]
-
                     if isEmpty(updating_date):
                         # valid = False
                         updating_date = ""

@@ -409,7 +409,7 @@ def isEmpty(data: any):
             (pd.isna(data))
             or (str(data).strip() == "")
             or (data == "nan")
-            or (data == "N/A")
+            # or (data == "N/A")
         ):
             return True
         else:

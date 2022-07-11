@@ -63,6 +63,7 @@ def generateUJData(
 
                     while True:
 
+                        # Code
                         code = data[key].iloc[row, 0]
                         if not isValid(code):
                             # warnings_errors = True
@@ -84,6 +85,7 @@ def generateUJData(
                                         + col_key[1].lstrip()
                                     )
 
+                        # Name
                         name = data[key].iloc[row, 1]
                         if isEmpty(name):
                             name = ""
@@ -91,10 +93,12 @@ def generateUJData(
                         if str(code) == "RE-009":
                             name = "EPIRB"
 
+                        # Description
                         description = data[key].iloc[row, 2]
                         if isEmpty(description):
                             description = ""
 
+                        # Interval
                         interval = data[key].iloc[row, 3]
                         if isEmpty(interval):
                             interval = ""
@@ -117,6 +121,7 @@ def generateUJData(
                                 warnings_errors = True
                                 interval = ""
 
+                        # Commissioning Date
                         commissioning_date = data[key].iloc[row, 4]
                         if isEmpty(commissioning_date):
                             commissioning_date = ""
@@ -126,18 +131,22 @@ def generateUJData(
                                     "%d-%b-%y"
                                 )
                             else:
-                                commissioning_date = getFormattedDate(
-                                    key,
-                                    code,
-                                    "update_jobs",
-                                    file_name,
-                                    str(commissioning_date),
-                                    "Commissioning date",
-                                )
+                                if str(last_done_date).strip().tolower() == "since new":
+                                    last_done_date = commissioning_date
+                                else:
+                                    commissioning_date = getFormattedDate(
+                                        key,
+                                        code,
+                                        "update_jobs",
+                                        file_name,
+                                        str(commissioning_date),
+                                        "Commissioning date",
+                                    )
 
-                                if isEmpty(commissioning_date):
-                                    warnings_errors = True
+                                    if isEmpty(commissioning_date):
+                                        warnings_errors = True
 
+                        # Last Done Date
                         last_done_date = data[key].iloc[row, 5]
                         if isEmpty(last_done_date):
                             last_done_date = ""
@@ -145,30 +154,37 @@ def generateUJData(
                             if isinstance(last_done_date, datetime):
                                 last_done_date = last_done_date.strftime("%d-%b-%y")
                             else:
-                                last_done_date = getFormattedDate(
-                                    key,
-                                    code,
-                                    "update_jobs",
-                                    file_name,
-                                    str(last_done_date),
-                                    "Last done date",
-                                )
+                                if str(last_done_date).strip().lower() == "since new":
+                                    last_done_date = commissioning_date
+                                else:
+                                    last_done_date = getFormattedDate(
+                                        key,
+                                        code,
+                                        "update_jobs",
+                                        file_name,
+                                        str(last_done_date),
+                                        "Last done date",
+                                    )
 
-                                if isEmpty(last_done_date):
-                                    warnings_errors = True
+                                    if isEmpty(last_done_date):
+                                        warnings_errors = True
 
+                        # Last Done Running Hours
                         last_done_running_hours = data[key].iloc[row, 6]
                         if isEmpty(last_done_running_hours):
                             last_done_running_hours = ""
 
+                        # Instructions
                         instructions = data[key].iloc[row, 10]
                         if isEmpty(instructions):
                             instructions = ""
 
+                        # Remarks
                         remarks = data[key].iloc[row, 11]
                         if isEmpty(remarks):
                             remarks = ""
 
+                        # Insertion
                         rowData = (
                             vessel,
                             machinery,
