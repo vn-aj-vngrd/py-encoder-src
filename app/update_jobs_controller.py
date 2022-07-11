@@ -131,20 +131,17 @@ def generateUJData(
                                     "%d-%b-%y"
                                 )
                             else:
-                                if str(last_done_date).strip().tolower() == "since new":
-                                    last_done_date = commissioning_date
-                                else:
-                                    commissioning_date = getFormattedDate(
-                                        key,
-                                        code,
-                                        "update_jobs",
-                                        file_name,
-                                        str(commissioning_date),
-                                        "Commissioning date",
-                                    )
+                                commissioning_date = getFormattedDate(
+                                    key,
+                                    code,
+                                    "update_jobs",
+                                    file_name,
+                                    str(commissioning_date),
+                                    "Commissioning date",
+                                )
 
-                                    if isEmpty(commissioning_date):
-                                        warnings_errors = True
+                                if isEmpty(commissioning_date):
+                                    warnings_errors = True
 
                         # Last Done Date
                         last_done_date = data[key].iloc[row, 5]
