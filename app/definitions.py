@@ -1,3 +1,6 @@
+from ensurepip import version
+
+
 not_included = [
     "Main Menu",
     "Running Hours",
@@ -64,3 +67,5 @@ months = [
 ]
 
 cleaned_log_list = []
+
+version = "1.0.0"
