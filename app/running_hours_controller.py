@@ -81,12 +81,6 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     sheet.append(rowData)
                 else:
                     warnings_errors = True
-                    if debugMode:
-                        console.print(
-                            "❌ Vessel name or machinery code is empty of sheet " + key,
-                            style="danger",
-                        )
-
                     createBin(
                         file_name,
                         "update_jobs",

@@ -175,12 +175,6 @@ def generateSCData(
 
                 else:
                     warnings_errors = True
-                    if debugMode:
-                        console.print(
-                            "❌ Vessel name or machinery code is empty of sheet " + key,
-                            style="danger",
-                        )
-
                     createBin(
                         file_name,
                         "update_jobs",

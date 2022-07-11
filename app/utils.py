@@ -118,7 +118,7 @@ def createBin(file_name: str, mode: str, key: str, desc: str):
         book.save(creation_path + creation_name)
 
         if debugMode:
-            console.print(desc, style="warning")
+            console.print(desc, style="danger")
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)
