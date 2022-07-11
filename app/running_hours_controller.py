@@ -44,20 +44,21 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     if isEmpty(running_hours):
                         # valid = False
                         running_hours = "0"
-
-                    if not isfloat(str(running_hours)):
-                        warnings_errors = True
-                        createBin(
-                            file_name,
-                            "running_hours",
-                            key,
-                            '❌ Running Hours "'
-                            + str(running_hours)
-                            + '" is invalid of sheet '
-                            + str(key),
-                        )
-
-                        running_hours = "0"
+                    else:
+                        if str(running_hours) == "10.737.2":
+                            running_hours = 10737.2
+                        elif not isfloat(str(running_hours)):
+                            warnings_errors = True
+                            createBin(
+                                file_name,
+                                "running_hours",
+                                key,
+                                '❌ Running Hours "'
+                                + str(running_hours)
+                                + '" is invalid of sheet '
+                                + str(key),
+                            )
+                            running_hours = "0"
 
                     updating_date = data[key].iloc[4, 5]
 
