@@ -43,6 +43,50 @@ def debugging():
     return debugMode
 
 
+def getFormattedDate(
+    key: str, code: str, mode: str, file_name: str, date: str, datetype: str
+):
+    date = date.strip()
+
+    if "/" in date:
+        if date.count("/") == 2:
+            split_date = date.split("/")
+            day = str(split_date[1])
+            month = str(months[int(split_date[0]) - 1])
+            year = str(split_date[2][2:])
+            return str(day + "-" + month + "-" + year)
+
+        if date.count("/") == 1:
+            split_date = date.split("/")
+            day = str(split_date[1][:2])
+            month = str(months[int(split_date[0]) - 1])
+            year = str(split_date[1][2:][2:])
+            return str(day + "-" + month + "-" + year)
+
+    if date == "19-cot-2019":
+        return "19-Oct-19"
+
+    if date == "20-cot-2019":
+        return "20-Oct-19"
+
+    createBin(
+        file_name,
+        mode,
+        key,
+        "⚠️ Warning: "
+        + datetype
+        + ' "'
+        + date
+        + '" is invalid of sheet '
+        + key
+        + " ( "
+        + code
+        + " ) ",
+    )
+
+    return ""
+
+
 def createBin(file_name: str, mode: str, key: str, desc: str):
     try:
         creation_name = (
@@ -63,6 +107,11 @@ def createBin(file_name: str, mode: str, key: str, desc: str):
 
         book = load_workbook(creation_path + creation_name)
         sheet = book.active
+
+        global cleaned_bin_list
+        if file_name not in cleaned_bin_list:
+            sheet.delete_rows(1, sheet.max_row + 1)
+            cleaned_bin_list.append(file_name)
 
         rowData = (key, desc)
         sheet.append(rowData)
@@ -112,7 +161,7 @@ def getMachinery(
             file_name,
             mode,
             key,
-            "⚠️ Warning: No machinery name found for "
+            "⚠️ Warning: No machinery name found of sheet "
             + key
             + " ( "
             + machinery_id
@@ -348,7 +397,7 @@ def processSrc(mode: str, title: str):
         table.add_row("R", "Refresh", "  🔃")
 
         return {"files": files, "table": table}
-    
+
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)

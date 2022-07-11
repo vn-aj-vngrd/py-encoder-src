@@ -38,20 +38,38 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                             "🟢 [bold green]Processing: [/bold green]" + machinery
                         )
 
-                    valid = True
+                    # valid = True
 
                     running_hours = data[key].iloc[3, 5]
                     if isEmpty(running_hours):
                         # valid = False
                         running_hours = "0"
 
+                    if str(running_hours).isdigit() == False:
+                        warnings_errors = True
+                        createBin(
+                            file_name,
+                            "running_hours",
+                            key,
+                            '❌ Running Hours "' + running_hours + '" is invalid ' + key,
+                        )
+
                     updating_date = data[key].iloc[4, 5]
+
                     if isEmpty(updating_date):
                         # valid = False
                         updating_date = ""
 
                     if isinstance(updating_date, datetime):
                         updating_date = updating_date.strftime("%d-%b-%y")
+                    else:
+                        warnings_errors = True
+                        createBin(
+                            file_name,
+                            "running_hours",
+                            key,
+                            '❌ Updating date "' + updating_date + '" is invalid ' + key,
+                        )
 
                     # if valid:
                     rowData = (
@@ -65,11 +83,16 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     warnings_errors = True
                     if debugMode:
                         console.print(
-                            '❌ Vessel name or machinery code is empty for sheet "'
-                            + key
-                            + '"',
+                            "❌ Vessel name or machinery code is empty of sheet " + key,
                             style="danger",
                         )
+
+                    createBin(
+                        file_name,
+                        "update_jobs",
+                        key,
+                        "❌ Vessel name or machinery code is empty of sheet " + key,
+                    )
 
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
@@ -79,7 +102,8 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
 
         if warnings_errors and not debugMode:
             console.print(
-                "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
+                "❌ Errors or warnings found, refer to the bin folder for more information.",
+                style="danger",
             )
 
         console.print("📥 Completed", style="info")
@@ -94,6 +118,9 @@ def running_hours(debugMode: bool):
     processDone = isError = isExceptionError = False
     while True:
         try:
+            global cleaned_bin_list
+            cleaned_bin_list.clear()
+
             if refresh:
                 srcData = processSrc(
                     "running_hours", "🏃 [yellow]Running Hours[/yellow]"

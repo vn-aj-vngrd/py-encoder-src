@@ -48,3 +48,7 @@ interval_header = ("vessel", "machinery", "interval")
 bin_header = ("sheet_name", "description")
 
 debugMode = False
+
+months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+cleaned_bin_list = []

@@ -122,6 +122,18 @@ def generateSCData(
                                 commissioning_date = commissioning_date.strftime(
                                     "%d-%b-%y"
                                 )
+                            else:
+                                commissioning_date = getFormattedDate(
+                                    key,
+                                    code,
+                                    "sub_categories",
+                                    file_name,
+                                    str(commissioning_date),
+                                    "Commissioning date",
+                                )
+
+                                if isEmpty(commissioning_date):
+                                    warnings_errors = True
 
                         last_done_date = data[key].iloc[row, 5]
                         if isEmpty(last_done_date):
@@ -129,6 +141,18 @@ def generateSCData(
                         else:
                             if isinstance(last_done_date, datetime):
                                 last_done_date = last_done_date.strftime("%d-%b-%y")
+                            else:
+                                last_done_date = getFormattedDate(
+                                    key,
+                                    code,
+                                    "sub_categories",
+                                    file_name,
+                                    str(last_done_date),
+                                    "Last done date",
+                                )
+
+                                if isEmpty(last_done_date):
+                                    warnings_errors = True
 
                         last_done_running_hours = data[key].iloc[row, 6]
                         if isEmpty(last_done_running_hours):
@@ -153,11 +177,17 @@ def generateSCData(
                     warnings_errors = True
                     if debugMode:
                         console.print(
-                            '❌ Vessel name or machinery code is empty for sheet "'
-                            + key
-                            + '"',
+                            "❌ Vessel name or machinery code is empty of sheet " + key,
                             style="danger",
                         )
+
+                    createBin(
+                        file_name,
+                        "update_jobs",
+                        key,
+                        "❌ Vessel name or machinery code is empty of sheet " + key,
+                    )
+                    
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Sub Categories)" + ".xlsx"
         )
@@ -166,7 +196,8 @@ def generateSCData(
 
         if warnings_errors and not debugMode:
             console.print(
-                "⚠️ Warnings or Errors found, refer to the bin folder.", style="warning"
+                "❌ Errors or warnings found, refer to the bin folder for more information.",
+                style="danger",
             )
 
         console.print("📥 Completed", style="info")
@@ -181,6 +212,9 @@ def sub_categories(debugMode: bool):
     processDone = isError = isExceptionError = False
     while True:
         try:
+            global cleaned_bin_list
+            cleaned_bin_list.clear()
+
             if refresh:
                 srcData = processSrc(
                     "sub_categories", "📚 [yellow]Sub Categories[/yellow]"
