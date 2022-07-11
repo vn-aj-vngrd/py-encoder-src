@@ -39,6 +39,7 @@ uj_header = (
     "last_done_running_hours",
     "instructions",
     "remarks",
+    "details",
 )
 
 rh_header = ("vessel", "machinery", "running_hours", "updating_date")

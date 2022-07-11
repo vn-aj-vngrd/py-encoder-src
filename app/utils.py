@@ -81,7 +81,8 @@ def getFormattedDate(
     key: str, code: str, mode: str, file_name: str, date: str, datetype: str
 ):
     if "/" in date:
-        if date.count("/") == 2:
+        if date.count("/") == 2 and len(date) >= 8 and len(date) <= 10:
+            print(date)
             split_date = date.split("/")
             day = str(split_date[1])
             month = str(months[int(split_date[0]) - 1])
@@ -89,13 +90,13 @@ def getFormattedDate(
             if len(year) == 2:
                 return str(day + "-" + month + "-" + year)
 
-        if date.count("/") == 1:
-            split_date = date.split("/")
-            day = str(split_date[1][:2])
-            month = str(months[int(split_date[0]) - 1])
-            year = str(split_date[1][2:][2:])
-            if len(year) == 2:
-                return str(day + "-" + month + "-" + year)
+        # if date.count("/") == 1 and len(date) <= 10:
+        #     split_date = date.split("/")
+        #     day = str(split_date[1][:2])
+        #     month = str(months[int(split_date[0]) - 1])
+        #     year = str(split_date[1][2:][2:])
+        #     if len(year) == 2:
+        #         return str(day + "-" + month + "-" + year)
 
     if date == "19-cot-2019":
         return "19-Oct-19"

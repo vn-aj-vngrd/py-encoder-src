@@ -208,7 +208,7 @@ def generateUJData(
 
         if error and not debugMode:
             console.print(
-                "❌ Error(s) found, refer to the bin folder for more information.",
+                "❌ Error(s) found, refer to the log folder for more information.",
                 style="danger",
             )
 
