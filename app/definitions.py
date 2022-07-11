@@ -45,10 +45,21 @@ rh_header = ("vessel", "machinery", "running_hours", "updating_date")
 
 interval_header = ("vessel", "machinery", "interval")
 
-bin_header = ("sheet_name", "description")
-
 debugMode = False
 
-months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+]
 
-cleaned_bin_list = []
+cleaned_log_list = []

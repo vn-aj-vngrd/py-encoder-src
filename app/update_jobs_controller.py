@@ -10,9 +10,6 @@ def generateUJData(
     keys: list,
 ):
     try:
-        global cleaned_bin_list
-        cleaned_bin_list.clear()
-
         path = "src/" + file_name
         console.print("\n\n📂 " + file_name, style="warning")
 
@@ -24,13 +21,9 @@ def generateUJData(
 
         vessel = str(data[keys[12]].iloc[0, 2])
 
-        warnings_errors = False
+        error = False
 
-        in_key = track(keys, description="🟢 [bold green]Processing[/bold green]")
-        if debugMode:
-            in_key = keys
-
-        for key in in_key:
+        for key in track(keys, description="🟢 [bold green]Processing[/bold green]"):
             if key not in not_included:
                 machinery_id = str(data[key].iloc[2, 5]).strip()
 
@@ -55,10 +48,6 @@ def generateUJData(
                     and not isEmpty(machinery)
                     and not isEmpty(machinery_code)
                 ):
-                    if debugMode:
-                        console.print(
-                            "🟢 [bold green]Processing: [/bold green]" + machinery
-                        )
                     row = 7
 
                     while True:
@@ -66,7 +55,6 @@ def generateUJData(
                         # Code
                         code = data[key].iloc[row, 0]
                         if not isValid(code):
-                            # warnings_errors = True
                             break
                         else:
                             if "-" in code:
@@ -118,7 +106,7 @@ def generateUJData(
                             )
 
                             if isEmpty(interval):
-                                warnings_errors = True
+                                error = True
                                 interval = ""
 
                         # Commissioning Date
@@ -141,7 +129,7 @@ def generateUJData(
                                 )
 
                                 if isEmpty(commissioning_date):
-                                    warnings_errors = True
+                                    error = True
 
                         # Last Done Date
                         last_done_date = data[key].iloc[row, 5]
@@ -164,7 +152,7 @@ def generateUJData(
                                     )
 
                                     if isEmpty(last_done_date):
-                                        warnings_errors = True
+                                        error = True
 
                         # Last Done Running Hours
                         last_done_running_hours = data[key].iloc[row, 6]
@@ -200,12 +188,16 @@ def generateUJData(
                         row += 1
 
                 else:
-                    warnings_errors = True
-                    createBin(
+                    error = True
+                    createLog(
                         file_name,
                         "update_jobs",
-                        key,
-                        "❌ Vessel name or machinery code is empty of sheet " + key,
+                        "❌ Vessel name or machinery code is empty "
+                        + "(File: "
+                        + file_name
+                        + ", Sheet: "
+                        + str(key)
+                        + ")",
                     )
 
         _filename = (
@@ -214,9 +206,9 @@ def generateUJData(
         creation_folder = "./res/update_jobs/"
         saveExcelFile(book, _filename, creation_folder)
 
-        if warnings_errors and not debugMode:
+        if error and not debugMode:
             console.print(
-                "❌ Errors or warnings found, refer to the bin folder for more information.",
+                "❌ Error(s) found, refer to the bin folder for more information.",
                 style="danger",
             )
 
@@ -232,8 +224,8 @@ def update_jobs(debugMode: bool):
     processDone = isError = isExceptionError = False
     while True:
         try:
-            global cleaned_bin_list
-            cleaned_bin_list.clear()
+            global cleaned_log_list
+            cleaned_log_list.clear()
 
             if refresh:
                 srcData = processSrc(

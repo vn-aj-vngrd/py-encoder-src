@@ -14,13 +14,9 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
 
         vessel = str(data[keys[12]].iloc[0, 2])
 
-        warnings_errors = False
+        error = False
 
-        in_key = track(keys, description="🟢 [bold green]Processing[/bold green]")
-        if debugMode:
-            in_key = keys
-
-        for key in in_key:
+        for key in track(keys, description="🟢 [bold green]Processing[/bold green]"):
             if key not in not_included:
                 machinery_id = str(data[key].iloc[2, 5])
 
@@ -33,56 +29,58 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                 )
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
-                    if debugMode:
-                        console.print(
-                            "🟢 [bold green]Processing: [/bold green]" + machinery
-                        )
-
-                    # valid = True
 
                     # Running Hours
                     running_hours = data[key].iloc[3, 5]
                     if isEmpty(running_hours):
-                        # valid = False
                         running_hours = "0"
                     else:
                         if str(running_hours) == "10.737.2":
                             running_hours = 10737.2
                         elif not isfloat(str(running_hours)):
-                            warnings_errors = True
-                            createBin(
+                            error = True
+
+                            createLog(
                                 file_name,
                                 "running_hours",
-                                key,
                                 '❌ Running Hours "'
                                 + str(running_hours)
-                                + '" is invalid of sheet '
-                                + str(key),
+                                + '" is invalid '
+                                + "(File: "
+                                + str(file_name)
+                                + ", Sheet: "
+                                + str(key)
+                                + ", Machinery: "
+                                + str(machinery)
+                                + ")",
                             )
                             running_hours = "0"
 
                     # Updating Date
                     updating_date = data[key].iloc[4, 5]
                     if isEmpty(updating_date):
-                        # valid = False
                         updating_date = ""
                     else:
                         if isinstance(updating_date, datetime):
                             updating_date = updating_date.strftime("%d-%b-%y")
                         else:
-                            warnings_errors = True
-                            createBin(
+                            error = True
+                            createLog(
                                 file_name,
                                 "running_hours",
-                                key,
                                 '❌ Updating date "'
                                 + str(updating_date)
-                                + '" is invalid of sheet '
-                                + str(key),
+                                + '" is invalid '
+                                + "(File: "
+                                + file_name
+                                + ", Sheet: "
+                                + str(key)
+                                + ", Machinery: "
+                                + machinery
+                                + ")",
                             )
                             updating_date = ""
 
-                    # if valid:
                     rowData = (
                         vessel,
                         machinery,
@@ -91,12 +89,16 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     )
                     sheet.append(rowData)
                 else:
-                    warnings_errors = True
-                    createBin(
+                    error = True
+                    createLog(
                         file_name,
-                        "update_jobs",
-                        key,
-                        "❌ Vessel name or machinery code is empty of sheet " + str(key),
+                        "running_hours",
+                        "❌ Vessel name or machinery code is empty "
+                        + "(File: "
+                        + file_name
+                        + ", Sheet: "
+                        + str(key)
+                        + ")",
                     )
 
         _filename = (
@@ -105,9 +107,9 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
         creation_folder = "./res/running_hours/"
         saveExcelFile(book, _filename, creation_folder)
 
-        if warnings_errors and not debugMode:
+        if error and not debugMode:
             console.print(
-                "❌ Errors or warnings found, refer to the bin folder for more information.",
+                "❌ Error(s) found, refer to the bin folder for more information.",
                 style="danger",
             )
 
@@ -123,8 +125,8 @@ def running_hours(debugMode: bool):
     processDone = isError = isExceptionError = False
     while True:
         try:
-            global cleaned_bin_list
-            cleaned_bin_list.clear()
+            global cleaned_log_list
+            cleaned_log_list.clear()
 
             if refresh:
                 srcData = processSrc(

@@ -1,3 +1,4 @@
+from fileinput import filename
 import pandas as pd
 import sys
 import time
@@ -43,6 +44,39 @@ def debugging():
     return debugMode
 
 
+def createLog(file_name: str, mode: str, desc: str):
+    try:
+        creation_name = (
+            "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
+        )
+        creation_path = "./log/" + mode
+
+        if not os.path.exists(creation_path):
+            os.makedirs(creation_path)
+
+        if not exists(creation_path + creation_name):
+            writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
+            writer.save()
+
+        book = load_workbook(creation_path + creation_name)
+        sheet = book.active
+
+        global cleaned_log_list
+        if file_name not in cleaned_log_list:
+            sheet.delete_rows(1, sheet.max_row + 1)
+            cleaned_log_list.append(file_name)
+
+        rowData = (desc,)
+        sheet.append(rowData)
+        book.save(creation_path + creation_name)
+
+        if debugMode:
+            console.print("\n" + desc, style="danger")
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
 def getFormattedDate(
     key: str, code: str, mode: str, file_name: str, date: str, datetype: str
 ):
@@ -69,59 +103,24 @@ def getFormattedDate(
     if date == "20-cot-2019":
         return "20-Oct-19"
 
-    createBin(
+    createLog(
         file_name,
         mode,
-        key,
-        "⚠️ Warning: "
+        "❌ "
         + datetype
         + ' "'
         + date
-        + '" is invalid of sheet '
+        + '" is invalid '
+        + "(File: "
+        + file_name
+        + ", Sheet: "
         + key
-        + " ( "
+        + ", Code: "
         + code
-        + " ) ",
+        + ")",
     )
 
     return ""
-
-
-def createBin(file_name: str, mode: str, key: str, desc: str):
-    try:
-        creation_name = (
-            "/" + str(file_name[: len(file_name) - 5]).strip() + " (Bin)" + ".xlsx"
-        )
-        creation_path = "./bin/" + mode
-
-        if not os.path.exists(creation_path):
-            os.makedirs(creation_path)
-
-        if not exists(creation_path + creation_name):
-            writer = pd.ExcelWriter(creation_path + creation_name, engine="xlsxwriter")
-            writer.save()
-            book = load_workbook(creation_path + creation_name)
-            sheet = book.active
-            sheet.append(bin_header)
-            book.save(creation_path + creation_name)
-
-        book = load_workbook(creation_path + creation_name)
-        sheet = book.active
-
-        global cleaned_bin_list
-        if file_name not in cleaned_bin_list:
-            sheet.delete_rows(1, sheet.max_row + 1)
-            cleaned_bin_list.append(file_name)
-
-        rowData = (key, desc)
-        sheet.append(rowData)
-        book.save(creation_path + creation_name)
-
-        if debugMode:
-            console.print(desc, style="danger")
-    except Exception as e:
-        if debugMode:
-            logger.exception(e, stack_info=True)
 
 
 def getMachineries():
@@ -157,15 +156,15 @@ def getMachinery(
             if machinery[1] == machinery_id or machinery[1] == key:
                 return str(machinery[0])
 
-        createBin(
+        createLog(
             file_name,
             mode,
-            key,
-            "⚠️ Warning: No machinery name found of sheet "
+            "❌ No machinery name found "
+            + "(File: "
+            + file_name
+            + ", Sheet: "
             + key
-            + " ( "
-            + machinery_id
-            + " ) ",
+            + ")",
         )
 
         return "N/A"
@@ -208,15 +207,17 @@ def getCode(
             if code[1] == machinery_name or code[1] == key:
                 return str(code[0])
 
-        createBin(
+        createLog(
             file_name,
             mode,
-            key,
-            "⚠️ Warning: No machinery code found of sheet "
+            "❌ No machinery code found "
+            + "(File: "
+            + file_name
+            + ", Sheet: "
             + key
-            + " ( "
+            + ", Machinery: "
             + machinery_name
-            + " ) ",
+            + ")",
         )
 
         return "N/A"
@@ -263,17 +264,19 @@ def getInterval(
             if interval[1] == interval_id or interval[1] == key:
                 return str(interval[0])
 
-        createBin(
+        createLog(
             file_name,
             mode,
-            key,
-            '⚠️ Warning: No interval "'
+            '❌ No interval "'
             + interval_id
-            + '" found of sheet '
+            + '" found '
+            + "(File: "
+            + file_name
+            + ", Sheet: "
             + key
-            + " ( "
+            + ", Code: "
             + code
-            + " ) ",
+            + ")",
         )
 
         return "N/A"
@@ -288,7 +291,7 @@ def saveExcelFile(book: Workbook, _filename: str, creation_folder: str):
     book.save(creation_folder + _filename)
 
 
-def has_numbers(inputString: str):
+def hasNumbers(inputString: str):
     try:
         return bool(re.search(r"\d", inputString))
     except Exception as e:
@@ -408,8 +411,9 @@ def isEmpty(data: any):
         if (
             (pd.isna(data))
             or (str(data).strip() == "")
-            or (data == "nan")
-            # or (data == "N/A")
+            or (str(data) == "nan")
+            or (str(data) == "N/A")
+            or (str(data) == "NIL")
         ):
             return True
         else:
@@ -424,9 +428,9 @@ def isValid(data: any):
         if (
             (pd.isna(data))
             or (str(data).strip() == "")
-            or (data == "Note:")
-            or (data == "nan")
-            or not (has_numbers(data))
+            or (str(data) == "Note:")
+            or (str(data) == "nan")
+            or not (hasNumbers(str(data)))
         ):
             return False
         else:
