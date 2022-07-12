@@ -104,6 +104,9 @@ def getFormattedDate(
     if date == "20-cot-2019":
         return "20-Oct-19"
 
+    if date == "10-FE4B-22":
+        return "10-Feb-22"
+
     createLog(
         file_name,
         mode,
