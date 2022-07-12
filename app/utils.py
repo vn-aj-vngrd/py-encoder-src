@@ -81,6 +81,8 @@ def createLog(file_name: str, mode: str, desc: str):
 def getFormattedDate(
     key: str, code: str, mode: str, file_name: str, date: str, datetype: str
 ):
+    date = date.strip()
+
     if "/" in date:
         if date.count("/") == 2 and len(date) >= 8 and len(date) <= 10:
             split_date = date.split("/")
@@ -107,6 +109,12 @@ def getFormattedDate(
 
     if date == "10-FE4B-22":
         return "10-Feb-22"
+
+    if date == "2022-51":
+        return "01-May-22"
+
+    if date == "12/23/202":
+        return "23-Dec-20"
 
     createLog(
         file_name,
@@ -314,7 +322,7 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      Version: 1.2  
+      /____/      Version: 1.3  
     """,
         style="cyan",
     )
