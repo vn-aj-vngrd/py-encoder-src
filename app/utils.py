@@ -6,6 +6,7 @@ import time
 import os
 import re
 import logging
+import types
 
 from os import system, name
 from os.path import exists

@@ -159,12 +159,15 @@ def generateUJData(
                         if isEmpty(last_done_running_hours):
                             last_done_running_hours = 0
                         else:
-                            if not isFloat(last_done_running_hours):
+                            if (
+                                not isFloat(last_done_running_hours)
+                                or last_done_running_hours == True
+                            ):
                                 createLog(
                                     file_name,
                                     "update_jobs",
                                     '❌ Last done running hours "'
-                                    + last_done_running_hours
+                                    + str(last_done_running_hours)
                                     + '" is invalid'
                                     + "(File: "
                                     + file_name
