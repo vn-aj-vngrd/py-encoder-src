@@ -37,7 +37,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     else:
                         if str(running_hours) == "10.737.2":
                             running_hours = 10737.2
-                        elif not isfloat(str(running_hours)):
+                        elif not isFloat(str(running_hours)):
                             error = True
 
                             createLog(

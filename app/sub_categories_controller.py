@@ -157,7 +157,26 @@ def generateSCData(
                         # Last Done Running Hours
                         last_done_running_hours = data[key].iloc[row, 6]
                         if isEmpty(last_done_running_hours):
-                            last_done_running_hours = ""
+                            last_done_running_hours = 0
+                        else:
+                            if not isFloat(last_done_running_hours):
+                                createLog(
+                                    file_name,
+                                    "update_jobs",
+                                    '❌ Last done running hours "'
+                                    + last_done_running_hours
+                                    + '" is invalid'
+                                    + "(File: "
+                                    + file_name
+                                    + ", Sheet: "
+                                    + str(key)
+                                    + ", Machinery: "
+                                    + str(machinery)
+                                    + ", Code: "
+                                    + str(code)
+                                    + ")",
+                                )
+                                error = True
 
                         #  Insertion
                         rowData = (

@@ -505,7 +505,7 @@ def promptExit():
         return True
 
 
-def isfloat(num):
+def isFloat(num):
     try:
         float(num)
         return True
