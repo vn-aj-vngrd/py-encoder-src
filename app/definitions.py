@@ -71,4 +71,5 @@ cleaned_log_list = []
 version_history = [
     "Version 1.0: Initial release (7/11/2022)",
     "Version 1.1: Added functionalities: cleaning the res and log, view version history (7/12/2022)",
+    "Version 1.2: Added Error handling: last done hours of sub catergories and update jobs (7/12/2022)",
 ]
