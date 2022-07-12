@@ -1,4 +1,5 @@
 from fileinput import filename
+import shutil
 import pandas as pd
 import sys
 import time
@@ -313,10 +314,20 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      Version: 1.0  
+      /____/      Version: 1.1  
     """,
         style="cyan",
     )
+
+
+def clean():
+    if os.path.exists("./log"):
+        shutil.rmtree("./log")
+
+    if os.path.exists("./res"):
+        shutil.rmtree("./res")
+
+    return True
 
 
 def mainMenu():
@@ -332,10 +343,13 @@ def mainMenu():
     table.add_row("R", "Running Hours", "🏃")
     table.add_row("S", "Sub Categories", "📚")
     table.add_row("U", "Update Jobs", "📝")
-    # if debugMode:
-    #     table.add_row("D", "Disable Debug Mode")
-    # else:
-    #     table.add_row("D", "Enable Debug Mode")
+    table.add_row("------", "------------------", "-------")
+    table.add_row("C", "Clean", "🧹")
+    if debugMode:
+        table.add_row("D", "Disable Debug Mode", "💻")
+    else:
+        table.add_row("D", "Enable Debug Mode", "💻")
+    table.add_row("V", "Version History", "🕓")
     table.add_row("X", "Exit", "🚫")
 
     console.print("", table, "\n")
@@ -497,3 +511,25 @@ def isfloat(num):
         return True
     except ValueError:
         return False
+
+
+def displayVersionHistory():
+    header()
+
+    console.print("\n🕓 Version History\n", style="warning")
+
+    for ver in version_history:
+        console.print(ver)
+        
+    table = Table(style="magenta")
+    table.add_column(
+        "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
+    )
+    table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
+
+    table.add_row("G", "Go Back")
+    console.print("\n", table, "\n")
+
+    _ = Prompt.ask(
+        ":backhand_index_pointing_right:[blink yellow] Select an option[/blink yellow]"
+    )

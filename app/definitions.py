@@ -67,3 +67,8 @@ months = [
 ]
 
 cleaned_log_list = []
+
+version_history = [
+    "Version 1.0: Initial release",
+    "Version 1.1: Added functionality for cleaning the res and log, and view version history",
+]
