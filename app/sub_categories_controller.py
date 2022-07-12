@@ -162,7 +162,7 @@ def generateSCData(
                             if not isFloat(last_done_running_hours):
                                 createLog(
                                     file_name,
-                                    "update_jobs",
+                                    "sub_categories",
                                     '❌ Last done running hours "'
                                     + last_done_running_hours
                                     + '" is invalid'
