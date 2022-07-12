@@ -177,6 +177,7 @@ def generateUJData(
                                     + ")",
                                 )
                                 error = True
+                                last_done_running_hours = 0
 
                         # Instructions
                         instructions = data[key].iloc[row, 10]

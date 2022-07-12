@@ -177,6 +177,7 @@ def generateSCData(
                                     + ")",
                                 )
                                 error = True
+                                last_done_running_hours = 0
 
                         #  Insertion
                         rowData = (
