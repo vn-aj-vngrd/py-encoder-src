@@ -429,9 +429,9 @@ def isEmpty(data: any):
         if (
             (pd.isna(data))
             or (str(data).strip() == "")
-            or (str(data) == "nan")
-            or (str(data) == "N/A")
-            or (str(data) == "NIL")
+            or (str(data).strip() == "nan")
+            or (str(data).strip() == "N/A")
+            or (str(data).strip() == "NIL")
         ):
             return True
         else:
@@ -446,8 +446,8 @@ def isValid(data: any):
         if (
             (pd.isna(data))
             or (str(data).strip() == "")
-            or (str(data) == "Note:")
-            or (str(data) == "nan")
+            or (str(data).strip() == "Note:")
+            or (str(data).strip() == "nan")
             or not (hasNumbers(str(data)))
         ):
             return False
