@@ -11,7 +11,7 @@ def generateUJData(
 ):
     try:
         path = "src/" + file_name
-        console.print("\n\n📂 " + file_name, style="warning")
+        console.print("\n\n📂 " + file_name, style="warning", highlight=False)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -161,7 +161,8 @@ def generateUJData(
                         else:
                             if (
                                 not isFloat(last_done_running_hours)
-                                or last_done_running_hours == True
+                                or str(last_done_running_hours) == "True"
+                                or str(last_done_running_hours) == "False"
                             ):
                                 createLog(
                                     file_name,

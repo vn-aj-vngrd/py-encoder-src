@@ -73,4 +73,7 @@ version_history = [
     "Version 1.1: Added functionalities: cleaning the res and log, view version history (7/12/2022)",
     "Version 1.2: Added Error handling: last done hours of sub catergories and update jobs (7/12/2022)",
     "Version 1.3: Fixed: code and date formatting, boolean value in last done running hours (7/12/2022)",
+    "Version 1.4: Added functionalities: cleaning src folder (7/12/2022)",
+    "Version 1.5: Fixed: ui colors and formatting (7/12/2022)",
+    
 ]

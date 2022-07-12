@@ -6,7 +6,6 @@ import time
 import os
 import re
 import logging
-import types
 
 from os import system, name
 from os.path import exists
@@ -329,14 +328,34 @@ def header():
     )
 
 
-def clean():
-    if os.path.exists("./log"):
-        shutil.rmtree("./log")
+def cleanResLog():
+    try:
+        isClean = False
 
-    if os.path.exists("./res"):
-        shutil.rmtree("./res")
+        if os.path.exists("./log"):
+            shutil.rmtree("./log")
+            isClean = True
 
-    return True
+        if os.path.exists("./res"):
+            shutil.rmtree("./res")
+            isClean = True
+
+        return isClean
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
+def emptySrc():
+    try:
+        if os.path.exists("./src"):
+            for file in os.scandir("./src"):
+                os.remove(file.path)
+            return True
+        return False
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
 
 
 def mainMenu():
@@ -353,13 +372,15 @@ def mainMenu():
     table.add_row("S", "Sub Categories", "📚")
     table.add_row("U", "Update Jobs", "📝")
     table.add_row("------", "------------------", "-------")
-    table.add_row("C", "Clean", "🧹")
+    table.add_row("C", "Clean Res & Log", "🧹")
+    table.add_row("E", "Empty Src Folder", "📂")
+    table.add_row("------", "------------------", "-------")
     if debugMode:
         table.add_row("D", "Disable Debug Mode", "💻")
     else:
         table.add_row("D", "Enable Debug Mode", "💻")
     table.add_row("V", "Version History", "🕓")
-    table.add_row("X", "Exit", "🚫")
+    table.add_row("X", "Exit", "❌")
 
     console.print("", table, "\n")
 

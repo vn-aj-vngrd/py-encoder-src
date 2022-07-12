@@ -11,7 +11,7 @@ def generateSCData(
 ):
     try:
         path = "src/" + file_name
-        console.print("\n\n📂 " + file_name, style="warning")
+        console.print("\n\n📂 " + file_name, style="warning", highlight=False)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -161,14 +161,15 @@ def generateSCData(
                         else:
                             if (
                                 not isFloat(last_done_running_hours)
-                                or last_done_running_hours == True
+                                or str(last_done_running_hours) == "True"
+                                or str(last_done_running_hours) == "False"
                             ):
                                 createLog(
                                     file_name,
                                     "sub_categories",
                                     '❌ Last done running hours "'
                                     + str(last_done_running_hours)
-                                    + '" is invalid'
+                                    + '" is invalid '
                                     + "(File: "
                                     + file_name
                                     + ", Sheet: "

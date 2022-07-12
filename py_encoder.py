@@ -8,7 +8,7 @@ from app.update_jobs_controller import *
 def py_encoder():
     try:
         global debugMode
-        isError = isExceptionError = isClean = False
+        isError = isExceptionError = isClean = isEmpty = False
 
         if not os.path.exists("./data"):
             os.makedirs("./data")
@@ -30,8 +30,12 @@ def py_encoder():
                 )
 
             if isClean:
-                console.print("✅ Cleaned up successfully.", style="success")
+                console.print("✅ Res and log folder cleaned", style="success")
                 isClean = False
+
+            if isEmpty:
+                console.print("✅ Src folder emptied", style="success")
+                isEmpty = False
 
             if debugMode:
                 console.print("🛠️ Debug Mode: On", style="success")
@@ -48,9 +52,11 @@ def py_encoder():
             elif file_key.upper() == "U":
                 update_jobs(debugMode)
             elif file_key.upper() == "C":
-                isClean = clean()
+                isClean = cleanResLog()
             elif file_key.upper() == "D":
                 debugMode = debugging()
+            elif file_key.upper() == "E":
+                isEmpty = emptySrc()
             elif file_key.upper() == "V":
                 displayVersionHistory()
             elif file_key.upper() == "X":
