@@ -11,7 +11,7 @@ def generateUJData(
 ):
     try:
         path = "src/" + file_name
-        console.print("\n\n📂 " + file_name, style="warning", highlight=False)
+        console.print("\n\n📑 " + file_name, style="white", highlight=False)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -224,6 +224,9 @@ def generateUJData(
                         + ")",
                     )
 
+        if not os.path.exists("./res/update_jobs"):
+            os.makedirs("./res/update_jobs")
+
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Update Jobs)" + ".xlsx"
         )
@@ -234,6 +237,7 @@ def generateUJData(
             console.print(
                 "❌ Error(s) found, refer to the log folder for more information.",
                 style="danger",
+                highlight=False,
             )
 
         console.print("📥 Completed", style="info")
@@ -253,8 +257,8 @@ def update_jobs(debugMode: bool):
 
             if refresh:
                 srcData = processSrc(
-                    "update_jobs",
                     "📝 [yellow]Update Jobs[/yellow]",
+                    True,
                 )
                 refresh = False
 
@@ -335,9 +339,35 @@ def update_jobs(debugMode: bool):
 
             if processDone:
                 isError = processDone = False
-                if promptExit():
+                if promptExitorContinue():
                     break
 
         except Exception as e:
             isExceptionError = True
             exceptionMsg = str(e)
+
+
+def update_jobs_all(
+    srcData: dict, machineries: list, codes: list, intervals: list, debugMode: bool
+):
+    try:
+        global cleaned_log_list
+        cleaned_log_list.clear()
+
+        console.print("\n\n" + "[magenta]-[/magenta]" * 67)
+        console.print("📝 [yellow]Update Jobs[/yellow]")
+        console.print("[magenta]-[/magenta]" * 67)
+
+        for _file in srcData["files"]:
+            _ = generateUJData(
+                _file["excelFile"],
+                machineries,
+                codes,
+                intervals,
+                debugMode,
+                _file["keys"],
+            )
+
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)

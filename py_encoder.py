@@ -5,6 +5,26 @@ from app.sub_categories_controller import *
 from app.update_jobs_controller import *
 
 
+def executeAll(debugMode: bool):
+    # Show header and table
+    srcData = processSrc("💯 [yellow]All[/yellow]", False)
+    header()
+    console.print("", srcData["table"], "\n")
+
+    # Get data
+    machineries = getMachineries()
+    codes = getCodes()
+    intervals = getIntervals()
+
+    # Execute the modes
+    running_hours_all(srcData, machineries, debugMode)
+    sub_categories_all(srcData, machineries, codes, intervals, debugMode)
+    update_jobs_all(srcData, machineries, codes, intervals, debugMode)
+
+    # Prompt for exit
+    promptExit()
+
+
 def py_encoder():
     try:
         global debugMode
@@ -30,11 +50,13 @@ def py_encoder():
                 )
 
             if isClean:
-                console.print("✅ Res and log folder cleaned", style="success")
+                console.print(
+                    "✅ Res and log folder cleaned successfully.", style="success"
+                )
                 isClean = False
 
             if isEmpty:
-                console.print("✅ Src folder emptied", style="success")
+                console.print("✅ Src folder emptied successfully.", style="success")
                 isEmpty = False
 
             if debugMode:
@@ -45,7 +67,9 @@ def py_encoder():
             )
 
             isError = False
-            if file_key.upper() == "R":
+            if file_key.upper() == "A":
+                executeAll(debugMode)
+            elif file_key.upper() == "R":
                 running_hours(debugMode)
             elif file_key.upper() == "S":
                 sub_categories(debugMode)

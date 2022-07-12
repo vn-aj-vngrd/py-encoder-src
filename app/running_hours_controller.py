@@ -4,7 +4,7 @@ from app.utils import *
 def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: list):
     try:
         path = "src/" + file_name
-        console.print("\n\n📂 " + file_name, style="warning", highlight=False)
+        console.print("\n\n📑 " + file_name, style="white", highlight=False)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -101,6 +101,9 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                         + ")",
                     )
 
+        if not os.path.exists("./res/running_hours"):
+            os.makedirs("./res/running_hours")
+
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
         )
@@ -111,6 +114,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
             console.print(
                 "❌ Error(s) found, refer to the log folder for more information.",
                 style="danger",
+                highlight=False,
             )
 
         console.print("📥 Completed", style="info")
@@ -129,9 +133,7 @@ def running_hours(debugMode: bool):
             cleaned_log_list.clear()
 
             if refresh:
-                srcData = processSrc(
-                    "running_hours", "🏃 [yellow]Running Hours[/yellow]"
-                )
+                srcData = processSrc("🏃 [yellow]Running Hours[/yellow]", True)
                 refresh = False
 
             header()
@@ -192,9 +194,28 @@ def running_hours(debugMode: bool):
 
             if processDone:
                 isError = processDone = False
-                if promptExit():
+                if promptExitorContinue():
                     break
 
         except Exception as e:
             isExceptionError = True
             exceptionMsg = str(e)
+
+
+def running_hours_all(srcData: dict, machineries: list, debugMode: bool):
+    try:
+        global cleaned_log_list
+        cleaned_log_list.clear()
+
+        console.print("[magenta]-[/magenta]" * 67)
+        console.print("🏃 [yellow]Running Hours[/yellow]")
+        console.print("[magenta]-[/magenta]" * 67)
+
+        for _file in srcData["files"]:
+            _ = generateRHData(
+                _file["excelFile"], machineries, debugMode, _file["keys"]
+            )
+
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)

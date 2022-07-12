@@ -39,6 +39,22 @@ console = Console(theme=custom_theme)
 logger = logging.getLogger()
 
 
+def header():
+    clear()
+
+    console.print(
+        r"""
+    ____              ______                     __         
+   / __ \__  __      / ____/___  _________  ____/ /__  _____
+  / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
+ / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
+/_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
+      /____/      Version: 1.5  
+    """,
+        style="cyan",
+    )
+
+
 def debugging():
     global debugMode
     debugMode = not debugMode
@@ -312,22 +328,6 @@ def hasNumbers(inputString: str):
             logger.exception(e, stack_info=True)
 
 
-def header():
-    clear()
-
-    console.print(
-        r"""
-    ____              ______                     __         
-   / __ \__  __      / ____/___  _________  ____/ /__  _____
-  / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
- / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
-/_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      Version: 1.3  
-    """,
-        style="cyan",
-    )
-
-
 def cleanResLog():
     try:
         isClean = False
@@ -372,6 +372,7 @@ def mainMenu():
     table.add_row("S", "Sub Categories", "📚")
     table.add_row("U", "Update Jobs", "📝")
     table.add_row("------", "------------------", "-------")
+    table.add_row("A", "Encode All", "💯")
     table.add_row("C", "Clean Res & Log", "🧹")
     table.add_row("E", "Empty Src Folder", "📂")
     table.add_row("------", "------------------", "-------")
@@ -390,13 +391,9 @@ def getSheetNames(filepath):
     return wb.sheetnames
 
 
-def processSrc(mode: str, title: str):
+def processSrc(title: str, showExtraMenu: bool):
     try:
         header()
-
-        mode_path = "./res/" + mode
-        if not os.path.exists(mode_path):
-            os.makedirs(mode_path)
 
         table = Table(title=title, style="magenta")
         table.add_column(
@@ -440,12 +437,13 @@ def processSrc(mode: str, title: str):
             time.sleep(10)
             sys.exit(0)
 
-        table.add_row("------", "-" * max_mode_length, "------")
-        table.add_row("A", "Select All", "  💯")
-        table.add_row("D", "Select Deck Only", "  ⚓")
-        table.add_row("E", "Select Engine Only", "  🤖")
-        table.add_row("G", "Go Back", "  🔙")
-        table.add_row("R", "Refresh", "  🔃")
+        if showExtraMenu:
+            table.add_row("------", "-" * max_mode_length, "------")
+            table.add_row("A", "Select All", "  💯")
+            table.add_row("D", "Select Deck Only", "  ⚓")
+            table.add_row("E", "Select Engine Only", "  🤖")
+            table.add_row("G", "Go Back", "  🔙")
+            table.add_row("R", "Refresh", "  🔃")
 
         return {"files": files, "table": table}
 
@@ -511,7 +509,7 @@ def showExitCredits():
     sys.exit(0)
 
 
-def promptExit():
+def promptExitorContinue():
 
     table = Table(style="magenta")
     table.add_column(
@@ -535,6 +533,21 @@ def promptExit():
         return True
 
 
+def promptExit():
+    table = Table(style="magenta")
+    table.add_column(
+        "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
+    )
+    table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
+
+    table.add_row("G", "Go Back")
+    console.print("\n", table, "\n")
+
+    _ = Prompt.ask(
+        ":backhand_index_pointing_right:[blink yellow] Select an option[/blink yellow]"
+    )
+
+
 def isFloat(num):
     try:
         float(num)
@@ -551,15 +564,4 @@ def displayVersionHistory():
     for ver in version_history:
         console.print(ver)
 
-    table = Table(style="magenta")
-    table.add_column(
-        "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
-    )
-    table.add_column("[cyan]Mode[/cyan]", justify="left", style="cyan", no_wrap=True)
-
-    table.add_row("G", "Go Back")
-    console.print("\n", table, "\n")
-
-    _ = Prompt.ask(
-        ":backhand_index_pointing_right:[blink yellow] Select an option[/blink yellow]"
-    )
+    promptExit()
