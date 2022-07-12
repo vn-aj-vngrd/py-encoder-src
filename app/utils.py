@@ -82,7 +82,6 @@ def getFormattedDate(
 ):
     if "/" in date:
         if date.count("/") == 2 and len(date) >= 8 and len(date) <= 10:
-            print(date)
             split_date = date.split("/")
             day = str(split_date[1])
             month = str(months[int(split_date[0]) - 1])
@@ -311,7 +310,8 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/     Version: 1.0  """,
+      /____/      Version: 1.0  
+    """,
         style="cyan",
     )
 

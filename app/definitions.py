@@ -67,5 +67,3 @@ months = [
 ]
 
 cleaned_log_list = []
-
-version = "1.0.0"
