@@ -516,11 +516,11 @@ def isfloat(num):
 def displayVersionHistory():
     header()
 
-    console.print("\n🕓 Version History\n", style="warning")
+    console.print("\n🕓 Version History\n\n", style="warning")
 
     for ver in version_history:
         console.print(ver)
-        
+
     table = Table(style="magenta")
     table.add_column(
         "[cyan]Option[/cyan]", justify="center", style="cyan", no_wrap=True
