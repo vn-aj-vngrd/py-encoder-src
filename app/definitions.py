@@ -76,4 +76,5 @@ version_history = [
     "Version 1.4: Added functionalities: cleaning src folder (7/12/2022)",
     "Version 1.5: Fixed: ui colors and formatting; Added: encode all modes and new output directory (7/13/2022)",
     "Version 1.6: Fixed: BWMS, BWT, BWMS code (7/13/2022)",
+    "Version 1.7: Fixed: simplify encode all ui (7/13/2022)",
 ]

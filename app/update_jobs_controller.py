@@ -9,10 +9,12 @@ def generateUJData(
     debugMode: bool,
     keys: list,
     _type: bool,
+    showExtraInfo: bool = True,
 ):
     try:
         path = "src/" + file_name
-        console.print("\n\n📑 " + file_name, style="white", highlight=False)
+        if showExtraInfo:
+            console.print("\n\n📑 " + file_name, style="white", highlight=False)
 
         data = pd.read_excel(path, sheet_name=None, index_col=None, header=None)
 
@@ -24,7 +26,11 @@ def generateUJData(
 
         error = False
 
-        for key in track(keys, description="🟢 [bold green]Processing[/bold green]"):
+        in_key = keys
+        if showExtraInfo:
+            in_key = track(keys, description="🟢 [bold green]Processing[/bold green]")
+
+        for key in in_key:
             if key not in not_included:
                 machinery_id = str(data[key].iloc[2, 5]).strip()
 
@@ -245,14 +251,14 @@ def generateUJData(
 
         saveExcelFile(book, _filename, creation_folder)
 
-        if error and not debugMode:
+        if error and not debugMode and showExtraInfo:
             console.print(
                 "❌ Error(s) found, refer to the log folder for more information.",
                 style="danger",
                 highlight=False,
             )
-
-        console.print("📥 Completed", style="info")
+        if showExtraInfo:
+            console.print("📥 Completed", style="info")
         return True
 
     except Exception as e:
@@ -370,11 +376,12 @@ def update_jobs_all(
         global cleaned_log_list
         cleaned_log_list.clear()
 
-        console.print("\n\n" + "[magenta]-[/magenta]" * 67)
-        console.print("📝 [yellow]Update Jobs[/yellow]")
-        console.print("[magenta]-[/magenta]" * 67)
+        console.print("\n📝 Update Jobs")
 
-        for _file in srcData["files"]:
+        for _file in track(
+            srcData["files"],
+            description="🟢 [bold green]Processing [/bold green]",
+        ):
             _ = generateUJData(
                 _file["excelFile"],
                 machineries,
@@ -383,8 +390,10 @@ def update_jobs_all(
                 debugMode,
                 _file["keys"],
                 _file["type"],
+                False,
             )
 
+        console.print("📥 Completed", style="info")
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)
