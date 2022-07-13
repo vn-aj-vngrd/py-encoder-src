@@ -376,7 +376,7 @@ def update_jobs_all(
         global cleaned_log_list
         cleaned_log_list.clear()
 
-        console.print("\n📝 Update Jobs")
+        console.print("\n\n📝 Update Jobs")
 
         for _file in track(
             srcData["files"],

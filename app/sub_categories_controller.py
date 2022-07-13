@@ -362,7 +362,7 @@ def sub_categories_all(
         global cleaned_log_list
         cleaned_log_list.clear()
 
-        console.print("\n📚 Sub Categories")
+        console.print("\n\n📚 Sub Categories")
 
         for _file in track(
             srcData["files"],
