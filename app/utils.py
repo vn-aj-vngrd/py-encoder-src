@@ -60,12 +60,12 @@ def debugging():
     return debugMode
 
 
-def createLog(file_name: str, mode: str, desc: str):
+def createLog(file_name: str, vessel: str, mode: str, desc: str):
     try:
         creation_name = (
             "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
         )
-        creation_path = "./log/" + mode
+        creation_path = "./res/" + vessel + "/" + mode + "/log/"
 
         if not os.path.exists(creation_path):
             os.makedirs(creation_path)
@@ -94,7 +94,13 @@ def createLog(file_name: str, mode: str, desc: str):
 
 
 def getFormattedDate(
-    key: str, code: str, mode: str, file_name: str, date: str, datetype: str
+    key: str,
+    code: str,
+    mode: str,
+    file_name: str,
+    date: str,
+    datetype: str,
+    vessel: str,
 ):
     date = date.strip()
 
@@ -133,6 +139,7 @@ def getFormattedDate(
 
     createLog(
         file_name,
+        vessel,
         mode,
         "❌ "
         + datetype
@@ -175,6 +182,7 @@ def getMachinery(
     mode: str,
     file_name: str,
     machineries: list,
+    vessel: str,
 ):
     try:
         if not pd.isna(machinery_id) or machinery_id != "":
@@ -186,6 +194,7 @@ def getMachinery(
 
         createLog(
             file_name,
+            vessel,
             mode,
             "❌ No machinery name found "
             + "(File: "
@@ -226,6 +235,7 @@ def getCode(
     mode: str,
     file_name: str,
     codes: list,
+    vessel: str,
 ):
     try:
         if not pd.isna(machinery_name) or machinery_name != "":
@@ -237,6 +247,7 @@ def getCode(
 
         createLog(
             file_name,
+            vessel,
             mode,
             "❌ No machinery code found "
             + "(File: "
@@ -283,6 +294,7 @@ def getInterval(
     file_name: str,
     intervals: list,
     code: str,
+    vessel: str,
 ):
     try:
         if not pd.isna(interval_id) or interval_id != "":
@@ -294,6 +306,7 @@ def getInterval(
 
         createLog(
             file_name,
+            vessel,
             mode,
             '❌ No interval "'
             + interval_id

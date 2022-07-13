@@ -33,6 +33,7 @@ def generateUJData(
                     "update_jobs",
                     file_name,
                     machineries,
+                    vessel,
                 )
 
                 machinery_code = getCode(
@@ -41,6 +42,7 @@ def generateUJData(
                     "update_jobs",
                     file_name,
                     codes,
+                    vessel,
                 )
 
                 if (
@@ -103,6 +105,7 @@ def generateUJData(
                                 file_name,
                                 intervals,
                                 str(code),
+                                vessel,
                             )
 
                             if isEmpty(interval):
@@ -126,6 +129,7 @@ def generateUJData(
                                     file_name,
                                     str(commissioning_date),
                                     "Commissioning date",
+                                    vessel,
                                 )
 
                                 if isEmpty(commissioning_date):
@@ -149,6 +153,7 @@ def generateUJData(
                                         file_name,
                                         str(last_done_date),
                                         "Last done date",
+                                        vessel,
                                     )
 
                                     if isEmpty(last_done_date):
@@ -166,6 +171,7 @@ def generateUJData(
                             ):
                                 createLog(
                                     file_name,
+                                    vessel,
                                     "update_jobs",
                                     '❌ Last done running hours "'
                                     + str(last_done_running_hours)
@@ -215,6 +221,7 @@ def generateUJData(
                     error = True
                     createLog(
                         file_name,
+                        vessel,
                         "update_jobs",
                         "❌ Vessel name or machinery code is empty "
                         + "(File: "
@@ -224,13 +231,14 @@ def generateUJData(
                         + ")",
                     )
 
-        if not os.path.exists("./res/update_jobs"):
-            os.makedirs("./res/update_jobs")
+        creation_folder = "./res/" + vessel + "/update_jobs/"
+        if not os.path.exists(creation_folder):
+            os.makedirs(creation_folder)
 
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Update Jobs)" + ".xlsx"
         )
-        creation_folder = "./res/update_jobs/"
+
         saveExcelFile(book, _filename, creation_folder)
 
         if error and not debugMode:

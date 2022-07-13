@@ -1,3 +1,4 @@
+import certifi
 from app.utils import *
 
 
@@ -33,6 +34,7 @@ def generateSCData(
                     "sub_categories",
                     file_name,
                     machineries,
+                    vessel,
                 )
 
                 machinery_code = getCode(
@@ -41,6 +43,7 @@ def generateSCData(
                     "sub_categories",
                     file_name,
                     codes,
+                    vessel,
                 )
 
                 if (
@@ -103,6 +106,7 @@ def generateSCData(
                                 file_name,
                                 intervals,
                                 str(code),
+                                vessel,
                             )
 
                             if isEmpty(interval):
@@ -126,6 +130,7 @@ def generateSCData(
                                     file_name,
                                     str(commissioning_date),
                                     "Commissioning date",
+                                    vessel,
                                 )
 
                                 if isEmpty(commissioning_date):
@@ -149,6 +154,7 @@ def generateSCData(
                                         file_name,
                                         str(last_done_date),
                                         "Last done date",
+                                        vessel,
                                     )
 
                                     if isEmpty(last_done_date):
@@ -166,6 +172,7 @@ def generateSCData(
                             ):
                                 createLog(
                                     file_name,
+                                    vessel,
                                     "sub_categories",
                                     '❌ Last done running hours "'
                                     + str(last_done_running_hours)
@@ -203,6 +210,7 @@ def generateSCData(
                     error = True
                     createLog(
                         file_name,
+                        vessel,
                         "sub_categories",
                         "❌ Vessel name or machinery code is empty "
                         + "(File: "
@@ -212,13 +220,14 @@ def generateSCData(
                         + ")",
                     )
 
-        if not os.path.exists("./res/sub_categories"):
-            os.makedirs("./res/sub_categories")
+        creation_folder = "./res/" + vessel + "/sub_categories/"
+        if not os.path.exists(creation_folder):
+            os.makedirs(creation_folder)
 
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Sub Categories)" + ".xlsx"
         )
-        creation_folder = "./res/sub_categories/"
+
         saveExcelFile(book, _filename, creation_folder)
 
         if error and not debugMode:

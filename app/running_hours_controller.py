@@ -26,6 +26,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     "running_hours",
                     file_name,
                     machineries,
+                    vessel,
                 )
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
@@ -42,6 +43,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
 
                             createLog(
                                 file_name,
+                                vessel,
                                 "running_hours",
                                 '❌ Running Hours "'
                                 + str(running_hours)
@@ -67,6 +69,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                             error = True
                             createLog(
                                 file_name,
+                                vessel,
                                 "running_hours",
                                 '❌ Updating date "'
                                 + str(updating_date)
@@ -92,6 +95,7 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     error = True
                     createLog(
                         file_name,
+                        vessel,
                         "running_hours",
                         "❌ Vessel name or machinery code is empty "
                         + "(File: "
@@ -100,14 +104,14 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                         + str(key)
                         + ")",
                     )
-
-        if not os.path.exists("./res/running_hours"):
-            os.makedirs("./res/running_hours")
+        creation_folder = "./res/" + vessel + "/running_hours/"
+        if not os.path.exists(creation_folder):
+            os.makedirs(creation_folder)
 
         _filename = (
             str(file_name[: len(file_name) - 5]).strip() + " (Running Hours)" + ".xlsx"
         )
-        creation_folder = "./res/running_hours/"
+
         saveExcelFile(book, _filename, creation_folder)
 
         if error and not debugMode:
