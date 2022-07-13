@@ -8,6 +8,7 @@ def generateUJData(
     intervals: list,
     debugMode: bool,
     keys: list,
+    _type: bool,
 ):
     try:
         path = "src/" + file_name
@@ -35,6 +36,9 @@ def generateUJData(
                     machineries,
                     vessel,
                 )
+
+                if machinery == "Ballast Water Management System" and _type == "engine":
+                    machinery = "Ballast Water Treatment System"
 
                 machinery_code = getCode(
                     machinery,
@@ -302,6 +306,7 @@ def update_jobs(debugMode: bool):
                         intervals,
                         debugMode,
                         _file["keys"],
+                        _file["type"],
                     )
             elif user_input.upper() == "D":
                 for _file in srcData["files"]:
@@ -313,6 +318,7 @@ def update_jobs(debugMode: bool):
                             intervals,
                             debugMode,
                             _file["keys"],
+                            _file["type"],
                         )
             elif user_input.upper() == "E":
                 for _file in srcData["files"]:
@@ -324,6 +330,7 @@ def update_jobs(debugMode: bool):
                             intervals,
                             debugMode,
                             _file["keys"],
+                            _file["type"],
                         )
             elif user_input.upper() == "G":
                 break
@@ -341,6 +348,7 @@ def update_jobs(debugMode: bool):
                     intervals,
                     debugMode,
                     srcData["files"][int(user_input) - 1]["keys"],
+                    srcData["files"][int(user_input) - 1]["type"],
                 )
             else:
                 isError = True
@@ -374,6 +382,7 @@ def update_jobs_all(
                 intervals,
                 debugMode,
                 _file["keys"],
+                _file["type"],
             )
 
     except Exception as e:

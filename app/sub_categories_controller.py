@@ -1,4 +1,3 @@
-import certifi
 from app.utils import *
 
 
@@ -9,6 +8,7 @@ def generateSCData(
     intervals: list,
     debugMode: bool,
     keys: list,
+    _type: bool,
 ):
     try:
         path = "src/" + file_name
@@ -36,6 +36,9 @@ def generateSCData(
                     machineries,
                     vessel,
                 )
+
+                if machinery == "Ballast Water Management System" and _type == "engine":
+                    machinery = "Ballast Water Treatment System"
 
                 machinery_code = getCode(
                     machinery,
@@ -288,6 +291,7 @@ def sub_categories(debugMode: bool):
                         intervals,
                         debugMode,
                         _file["keys"],
+                        _file["type"],
                     )
             elif user_input.upper() == "D":
                 for _file in srcData["files"]:
@@ -299,6 +303,7 @@ def sub_categories(debugMode: bool):
                             intervals,
                             debugMode,
                             _file["keys"],
+                            _file["type"],
                         )
             elif user_input.upper() == "E":
                 for _file in srcData["files"]:
@@ -310,6 +315,7 @@ def sub_categories(debugMode: bool):
                             intervals,
                             debugMode,
                             _file["keys"],
+                            _file["type"],
                         )
             elif user_input.upper() == "G":
                 break
@@ -327,6 +333,7 @@ def sub_categories(debugMode: bool):
                     intervals,
                     debugMode,
                     srcData["files"][int(user_input) - 1]["keys"],
+                    srcData["files"][int(user_input) - 1]["type"],
                 )
             else:
                 isError = True
@@ -360,6 +367,7 @@ def sub_categories_all(
                 intervals,
                 debugMode,
                 _file["keys"],
+                _file["type"],
             )
 
     except Exception as e:

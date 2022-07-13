@@ -1,7 +1,9 @@
 from app.utils import *
 
 
-def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: list):
+def generateRHData(
+    file_name: str, machineries: list, debugMode: bool, keys: list, _type: str
+):
     try:
         path = "src/" + file_name
         console.print("\n\n📑 " + file_name, style="white", highlight=False)
@@ -28,6 +30,9 @@ def generateRHData(file_name: str, machineries: list, debugMode: bool, keys: lis
                     machineries,
                     vessel,
                 )
+
+                if machinery == "Ballast Water Management System" and _type == "engine":
+                    machinery = "Ballast Water Treatment System"
 
                 if not isEmpty(vessel) and not isEmpty(machinery):
 
@@ -164,19 +169,31 @@ def running_hours(debugMode: bool):
             if user_input.upper() == "A":
                 for _file in srcData["files"]:
                     processDone = generateRHData(
-                        _file["excelFile"], machineries, debugMode, _file["keys"]
+                        _file["excelFile"],
+                        machineries,
+                        debugMode,
+                        _file["keys"],
+                        _file["type"],
                     )
             elif user_input.upper() == "D":
                 for _file in srcData["files"]:
                     if _file["type"] == "deck":
                         processDone = generateRHData(
-                            _file["excelFile"], machineries, debugMode, _file["keys"]
+                            _file["excelFile"],
+                            machineries,
+                            debugMode,
+                            _file["keys"],
+                            _file["type"],
                         )
             elif user_input.upper() == "E":
                 for _file in srcData["files"]:
                     if _file["type"] == "engine":
                         processDone = generateRHData(
-                            _file["excelFile"], machineries, debugMode, _file["keys"]
+                            _file["excelFile"],
+                            machineries,
+                            debugMode,
+                            _file["keys"],
+                            _file["type"],
                         )
             elif user_input.upper() == "G":
                 break
@@ -192,6 +209,7 @@ def running_hours(debugMode: bool):
                     machineries,
                     debugMode,
                     srcData["files"][int(user_input) - 1]["keys"],
+                    srcData["files"][int(user_input) - 1]["type"],
                 )
             else:
                 isError = True
@@ -217,7 +235,7 @@ def running_hours_all(srcData: dict, machineries: list, debugMode: bool):
 
         for _file in srcData["files"]:
             _ = generateRHData(
-                _file["excelFile"], machineries, debugMode, _file["keys"]
+                _file["excelFile"], machineries, debugMode, _file["keys"], _file["type"]
             )
 
     except Exception as e:
