@@ -76,7 +76,7 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      [bold magenta]Version:[/bold magenta] [bold cyan]2.0[/bold cyan]
+      /____/      [bold cyan]Version: 2.0[/bold cyan]
     """,
         style="cyan",
     )
