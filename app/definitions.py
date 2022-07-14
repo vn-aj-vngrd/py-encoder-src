@@ -79,3 +79,9 @@ version_history = [
 ]
 
 global_AIO = False
+
+global_rh_count = 0
+
+global_sc_count = 0
+
+global_uj_count = 0

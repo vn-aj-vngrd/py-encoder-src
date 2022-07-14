@@ -1,4 +1,5 @@
 import shutil
+import numpy as np
 import pandas as pd
 import sys
 import time
@@ -642,3 +643,13 @@ def displayVersionHistory():
         console.print(ver)
 
     promptExit()
+
+
+def splitAIO(file_name: str):
+    chunksize = 50000
+    df = pd.read_excel(file_name)
+
+    i = 0
+    for chunk in np.split(df, len(df) // chunksize):
+        chunk.to_excel("/path/to/file_{:02d}.xlsx".format(i), index=False)
+        i += 1

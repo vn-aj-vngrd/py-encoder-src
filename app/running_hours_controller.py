@@ -151,6 +151,9 @@ def generateRHData(
                         else:
                             _sheet.append(rowData)
 
+                        global global_rh_count
+                        global_rh_count += 1
+
             if separateExcel:
                 creation_folder = "./res/" + vessel + "/running_hours/"
                 if not os.path.exists(creation_folder):
@@ -308,6 +311,9 @@ def running_hours_all(srcData: dict, vessels: list, machineries: list, debugMode
         _filename = "AIO (Running Hours)" + ".xlsx"
 
         saveExcelFile(book, _filename, creation_folder)
+
+        global global_rh_count
+        print("🔢 Encoded:" + str(global_rh_count) + " Rows")
 
         console.print("📥 Completed", style="info")
     except Exception as e:

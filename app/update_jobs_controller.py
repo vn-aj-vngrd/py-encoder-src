@@ -258,6 +258,9 @@ def generateUJData(
                             else:
                                 _sheet.append(rowData)
                             row += 1
+
+                            global global_uj_count
+                            global_uj_count += 1
                     else:
                         error = True
                         createLog(
@@ -448,6 +451,9 @@ def update_jobs_all(
             os.makedirs(creation_folder)
         _filename = "AIO (Update Jobs)" + ".xlsx"
         saveExcelFile(book, _filename, creation_folder)
+
+        global global_uj_count
+        print("🔢 Encoded: " + str(global_uj_count) + " Rows")
 
         console.print("📥 Completed", style="info")
     except Exception as e:

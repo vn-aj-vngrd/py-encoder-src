@@ -247,6 +247,8 @@ def generateSCData(
                                 _sheet.append(rowData)
                             row += 1
 
+                            global global_sc_count
+                            global_sc_count += 1
                     else:
                         error = True
                         createLog(
@@ -435,6 +437,9 @@ def sub_categories_all(
             os.makedirs(creation_folder)
         _filename = "AIO (Sub Categories)" + ".xlsx"
         saveExcelFile(book, _filename, creation_folder)
+
+        global global_sc_count
+        print("🔢 Encoded: " + str(global_sc_count) + " Rows")
 
         console.print("📥 Completed", style="info")
     except Exception as e:
