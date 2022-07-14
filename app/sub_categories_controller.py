@@ -438,7 +438,7 @@ def sub_categories_all(
 
         global sc_count
         console.print(
-            "🔵 Total Encoded Data: " + str(sc_count) + " Row(s)",
+            "🔵 Total Data Encoded: " + str(sc_count) + " Row(s)",
             style="bold cyan",
             highlight=False,
         )

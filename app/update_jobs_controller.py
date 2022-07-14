@@ -452,7 +452,7 @@ def update_jobs_all(
 
         global uj_count
         console.print(
-            "🔵 Total Encoded Data: " + str(uj_count) + " Row(s)",
+            "🔵 Total Data Encoded: " + str(uj_count) + " Row(s)",
             style="bold cyan",
             highlight=False,
         )

@@ -309,7 +309,7 @@ def running_hours_all(
 
         global rh_count
         console.print(
-            "🔵 Total Encoded Data: " + str(rh_count) + " Row(s)",
+            "🔵 Total Data Encoded: " + str(rh_count) + " Row(s)",
             style="bold cyan",
             highlight=False,
         )
