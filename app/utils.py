@@ -40,13 +40,30 @@ logger = logging.getLogger()
 
 
 def enable_globalAIO():
-    global global_AIO
-    global_AIO = True
+    global isAIO
+    isAIO = True
 
 
 def disable_globalAIO():
-    global global_AIO
-    global_AIO = True
+    global isAIO
+    isAIO = True
+
+
+def updateFolderName(name: str):
+    global folder_name
+    folder_name = name
+
+
+def resetCleanedList():
+    global cleaned_log_list
+    cleaned_log_list.clear()
+
+
+def resetFolderName():
+    global folder_name
+    now = datetime.now()
+    dt = now.strftime("%d%m%Y%H%M%S")
+    folder_name = "Unkwnown (" + dt + ")"
 
 
 def header():
@@ -59,7 +76,7 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      Version: 1.8
+      /____/      [bold magenta]Version:[/bold magenta] [bold cyan]2.0[/bold cyan]
     """,
         style="cyan",
     )
@@ -73,12 +90,13 @@ def debugging():
 
 def createLog(file_name: str, vessel: str, mode: str, desc: str):
     try:
-        global global_AIO
-        if global_AIO:
+        global folder_name
+        global isAIO
+        if isAIO:
             creation_name = (
                 "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
             )
-            creation_path = "./res/AIO/" + mode + "/log/"
+            creation_path = "./res/AIO/" + folder_name + "/" + mode + "/log/"
         else:
             creation_name = (
                 "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
@@ -95,17 +113,17 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
         book = load_workbook(creation_path + creation_name)
         sheet = book.active
 
-        global global_cleaned_log_list
-        if file_name not in global_cleaned_log_list:
+        global cleaned_log_list
+        if file_name not in cleaned_log_list:
             sheet.delete_rows(1, sheet.max_row + 1)
-            global_cleaned_log_list.append(file_name)
+            cleaned_log_list.append(file_name)
 
         rowData = (desc,)
         sheet.append(rowData)
         book.save(creation_path + creation_name)
 
         if debugMode:
-            console.print("\n" + desc, style="danger")
+            console.print("\n" + desc, style="danger", highlight=False)
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)
@@ -391,9 +409,13 @@ def getInterval(
 
 
 def saveExcelFile(book: Workbook, _filename: str, creation_folder: str):
-    if not os.path.exists(creation_folder):
-        os.makedirs(creation_folder)
-    book.save(creation_folder + _filename)
+    try:
+        if not os.path.exists(creation_folder):
+            os.makedirs(creation_folder)
+        book.save(creation_folder + _filename)
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
 
 
 def hasNumbers(inputString: str):
@@ -448,7 +470,7 @@ def mainMenu():
     table.add_row("S", "Sub Categories", "📚")
     table.add_row("U", "Update Jobs", "📝")
     table.add_row("------", "------------------", "-------")
-    table.add_row("A", "Encode All", "💯")
+    table.add_row("A", "All-in-One", "💯")
     table.add_row("C", "Clean Res & Log", "🧹")
     table.add_row("E", "Empty Src Folder", "📂")
     table.add_row("------", "------------------", "-------")
@@ -509,7 +531,11 @@ def processSrc(title: str, showExtraMenu: bool):
                 i += 1
 
         if len(files) == 0:
-            console.print("\n\n⚠️ No data found in src directory.\n\n", style="warning")
+            console.print(
+                "\n\n⚠️ No data found in src directory.\n\n",
+                style="warning",
+                highlight=False,
+            )
             time.sleep(10)
             sys.exit(0)
 
@@ -645,11 +671,34 @@ def displayVersionHistory():
     promptExit()
 
 
-def splitAIO(file_name: str):
-    chunksize = 50000
-    df = pd.read_excel(file_name)
+def splitAIO(_dir: str, file_name: str, mode: str, chunksize: int):
+    try:
+        df = pd.read_excel(_dir + file_name)
 
-    i = 0
-    for chunk in np.split(df, len(df) // chunksize):
-        chunk.to_excel("/path/to/file_{:02d}.xlsx".format(i), index=False)
-        i += 1
+        i = 0
+        for chunk in np.array_split(df, len(df) // chunksize):
+            chunk.to_excel(
+                _dir + "/AIO_{:02d}".format(i) + " (" + mode + ").xlsx",
+                index=False,
+                header=True,
+            )
+            i += 1
+
+        return i
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
+def getMinVal(row_count: str):
+    spilt_n = 2
+    global base
+
+    if row_count >= base:
+        i = spilt_n
+        while True:
+            if (base * i) >= row_count:
+                return row_count / i
+            i += 1
+
+    return row_count

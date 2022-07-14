@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 not_included = [
     "Main Menu",
     "Running Hours",
@@ -63,7 +66,7 @@ months = [
     "Dec",
 ]
 
-global_cleaned_log_list = []
+cleaned_log_list = []
 
 
 version_history = [
@@ -76,12 +79,20 @@ version_history = [
     "Version 1.6: Fixed: BWMS, BWT, BWMS code (7/13/2022)",
     "Version 1.7: Fixed: simplify encode all ui (7/13/2022)",
     "Version 1.8: Added functionality: encode all modes in one excel file (AIO) (7/14/2022)",
+    "Version 1.9: Added functionality: split encode all (AIO) (7/14/2022)",
+    "Version 2.0: Added functionality: add file id to encode all (AIO) (7/14/2022)",
 ]
 
-global_AIO = False
+is_AIO = False
 
-global_rh_count = 0
+rh_count = 0
 
-global_sc_count = 0
+sc_count = 0
 
-global_uj_count = 0
+uj_count = 0
+
+base = 5000
+
+now = datetime.now()
+dt = now.strftime("%d%m%Y%H%M%S")
+folder_name = "Unkwnown (" + dt + ")"

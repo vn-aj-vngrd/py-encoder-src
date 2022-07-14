@@ -259,8 +259,8 @@ def generateUJData(
                                 _sheet.append(rowData)
                             row += 1
 
-                            global global_uj_count
-                            global_uj_count += 1
+                            global uj_count
+                            uj_count += 1
                     else:
                         error = True
                         createLog(
@@ -276,8 +276,6 @@ def generateUJData(
                         )
             if separateExcel:
                 creation_folder = "./res/" + vessel + "/update_jobs/"
-                if not os.path.exists(creation_folder):
-                    os.makedirs(creation_folder)
                 _filename = (
                     str(file_name[: len(file_name) - 5]).strip()
                     + " (Update Jobs)"
@@ -293,12 +291,12 @@ def generateUJData(
                 )
 
             if showExtraInfo:
-                console.print("📥 Completed", style="info")
+                console.print("📥 Completed", style="info", highlight=False)
 
         return True
 
     except Exception as e:
-        console.print("❌ " + str(e), style="danger")
+        console.print("❌ " + str(e), style="danger", highlight=False)
 
 
 def update_jobs(debugMode: bool):
@@ -306,8 +304,7 @@ def update_jobs(debugMode: bool):
     processDone = isError = isExceptionError = False
     while True:
         try:
-            global global_cleaned_log_list
-            global_cleaned_log_list.clear()
+            resetCleanedList()
 
             if refresh:
                 srcData = processSrc(
@@ -320,16 +317,17 @@ def update_jobs(debugMode: bool):
             console.print("", srcData["table"], "\n")
 
             if isExceptionError and debugMode:
-                console.print("❌ " + exceptionMsg, style="danger")
+                console.print("❌ " + exceptionMsg, style="danger", highlight=False)
 
             if isError:
                 console.print(
                     "❌ " + "You have selected an invalid option.",
                     style="danger",
+                    highlight=False,
                 )
 
             if debugMode:
-                console.print("🛠️ Debug Mode: On", style="success")
+                console.print("🛠️ Debug Mode: On", style="success", highlight=False)
 
             user_input = Prompt.ask(
                 "[blink yellow]👉 Select an option[/blink yellow]",
@@ -417,12 +415,12 @@ def update_jobs_all(
     codes: list,
     intervals: list,
     debugMode: bool,
+    folder_name: str,
 ):
     try:
-        global global_cleaned_log_list
-        global_cleaned_log_list.clear()
+        resetCleanedList()
 
-        console.print("\n\n📝 Update Jobs")
+        console.print("\n\n📝 Update Jobs", highlight=False)
 
         book = Workbook()
         sheet = book.active
@@ -446,16 +444,36 @@ def update_jobs_all(
                 sheet,
             )
 
-        creation_folder = "./res/AIO/update_jobs/"
+        creation_folder = "./res/AIO/" + folder_name + "/update_jobs/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
         _filename = "AIO (Update Jobs)" + ".xlsx"
         saveExcelFile(book, _filename, creation_folder)
 
-        global global_uj_count
-        print("🔢 Encoded: " + str(global_uj_count) + " Rows")
+        global uj_count
+        console.print(
+            "🔵 Total Encoded Data: " + str(uj_count) + " Row(s)",
+            style="bold cyan",
+            highlight=False,
+        )
+        value = getMinVal(uj_count)
+        console.print(
+            "🟣 Min Rows Per Excel: " + str(value) + " Row(s)",
+            style="bold magenta",
+            highlight=False,
+        )
 
-        console.print("📥 Completed", style="info")
+        excel_count = 1
+        global base
+        if uj_count >= base:
+            excel_count = splitAIO(creation_folder, _filename, "Update Jobs", value)
+
+        console.print(
+            "🟡 Total File Created: " + str(excel_count) + " File(s)",
+            style="bold yellow",
+            highlight=False,
+        )
+        console.print("📥 Completed", style="info", highlight=False)
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)

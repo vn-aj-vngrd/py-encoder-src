@@ -12,6 +12,12 @@ def executeAll(debugMode: bool):
     header()
     console.print("", srcData["table"], "\n")
 
+    folder_name = Prompt.ask(
+        ":backhand_index_pointing_right:[yellow blink] Enter AIO name[/yellow blink]"
+    )
+
+    updateFolderName(folder_name)
+
     # Get data
     vessels = getVessels()
     machineries = getMachineries()
@@ -19,13 +25,18 @@ def executeAll(debugMode: bool):
     intervals = getIntervals()
 
     # Execute the modes
-    running_hours_all(srcData, vessels, machineries, debugMode)
-    sub_categories_all(srcData, vessels, machineries, codes, intervals, debugMode)
-    update_jobs_all(srcData, vessels, machineries, codes, intervals, debugMode)
+    running_hours_all(srcData, vessels, machineries, debugMode, folder_name)
+    sub_categories_all(
+        srcData, vessels, machineries, codes, intervals, debugMode, folder_name
+    )
+    update_jobs_all(
+        srcData, vessels, machineries, codes, intervals, debugMode, folder_name
+    )
 
     # Prompt for exit
     promptExit()
     disable_globalAIO()
+    resetFolderName()
 
 
 def py_encoder():

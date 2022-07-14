@@ -151,13 +151,11 @@ def generateRHData(
                         else:
                             _sheet.append(rowData)
 
-                        global global_rh_count
-                        global_rh_count += 1
+                        global rh_count
+                        rh_count += 1
 
             if separateExcel:
                 creation_folder = "./res/" + vessel + "/running_hours/"
-                if not os.path.exists(creation_folder):
-                    os.makedirs(creation_folder)
                 _filename = (
                     str(file_name[: len(file_name) - 5]).strip()
                     + " (Running Hours)"
@@ -173,12 +171,12 @@ def generateRHData(
                 )
 
             if showExtraInfo:
-                console.print("📥 Completed", style="info")
+                console.print("📥 Completed", style="info", highlight=False)
 
         return True
 
     except Exception as e:
-        console.print("❌ Error: " + str(e), style="danger")
+        console.print("❌ Error: " + str(e), style="danger", highlight=False)
 
 
 def running_hours(debugMode: bool):
@@ -186,8 +184,7 @@ def running_hours(debugMode: bool):
     processDone = isError = isExceptionError = False
     while True:
         try:
-            global global_cleaned_log_list
-            global_cleaned_log_list.clear()
+            resetCleanedList()
 
             if refresh:
                 srcData = processSrc("🏃 [yellow]Running Hours[/yellow]", True)
@@ -200,13 +197,14 @@ def running_hours(debugMode: bool):
                 console.print(
                     "❌ Error: " + "You have selected an invalid option.",
                     style="danger",
+                    highlight=False,
                 )
 
             if isExceptionError and debugMode:
-                console.print("❌ " + exceptionMsg, style="danger")
+                console.print("❌ " + exceptionMsg, style="danger", highlight=False)
 
             if debugMode:
-                console.print("🛠️ Debug Mode: On", style="success")
+                console.print("🛠️ Debug Mode: On", style="success", highlight=False)
 
             user_input = Prompt.ask(
                 "[blink yellow]👉 Select an option[/blink yellow]",
@@ -277,12 +275,13 @@ def running_hours(debugMode: bool):
             exceptionMsg = str(e)
 
 
-def running_hours_all(srcData: dict, vessels: list, machineries: list, debugMode: bool):
+def running_hours_all(
+    srcData: dict, vessels: list, machineries: list, debugMode: bool, folder_name: str
+):
     try:
-        global global_cleaned_log_list
-        global_cleaned_log_list.clear()
+        resetCleanedList()
 
-        console.print("🏃 Running Hours")
+        console.print("\n\n🏃 Running Hours", highlight=False)
 
         book = Workbook()
         sheet = book.active
@@ -304,18 +303,34 @@ def running_hours_all(srcData: dict, vessels: list, machineries: list, debugMode
                 sheet,
             )
 
-        creation_folder = "./res/AIO/running_hours/"
-        if not os.path.exists(creation_folder):
-            os.makedirs(creation_folder)
-
+        creation_folder = "./res/AIO/" + folder_name + "/running_hours/"
         _filename = "AIO (Running Hours)" + ".xlsx"
-
         saveExcelFile(book, _filename, creation_folder)
 
-        global global_rh_count
-        print("🔢 Encoded:" + str(global_rh_count) + " Rows")
+        global rh_count
+        console.print(
+            "🔵 Total Encoded Data: " + str(rh_count) + " Row(s)",
+            style="bold cyan",
+            highlight=False,
+        )
+        value = getMinVal(rh_count)
+        console.print(
+            "🟣 Min Rows Per Excel: " + str(value) + " Row(s)",
+            style="bold magenta",
+            highlight=False,
+        )
 
-        console.print("📥 Completed", style="info")
+        excel_count = 1
+        global base
+        if rh_count >= base:
+            excel_count = splitAIO(creation_folder, _filename, "Running Hours", value)
+
+        console.print(
+            "🟡 Total File Created: " + str(excel_count) + " File(s)",
+            style="bold yellow",
+            highlight=False,
+        )
+        console.print("📥 Completed", style="info", highlight=False)
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)
