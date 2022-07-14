@@ -1,6 +1,3 @@
-from ensurepip import version
-
-
 not_included = [
     "Main Menu",
     "Running Hours",
@@ -66,7 +63,8 @@ months = [
     "Dec",
 ]
 
-cleaned_log_list = []
+global_cleaned_log_list = []
+
 
 version_history = [
     "Version 1.0: Initial release (7/11/2022)",
@@ -77,4 +75,7 @@ version_history = [
     "Version 1.5: Fixed: ui colors and formatting; Added: encode all modes and new output directory (7/13/2022)",
     "Version 1.6: Fixed: BWMS, BWT, BWMS code (7/13/2022)",
     "Version 1.7: Fixed: simplify encode all ui (7/13/2022)",
+    "Version 1.8: Added functionality: encode all modes in one excel file (AIO) (7/14/2022)",
 ]
+
+global_AIO = False

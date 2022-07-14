@@ -38,6 +38,16 @@ console = Console(theme=custom_theme)
 logger = logging.getLogger()
 
 
+def enable_globalAIO():
+    global global_AIO
+    global_AIO = True
+
+
+def disable_globalAIO():
+    global global_AIO
+    global_AIO = True
+
+
 def header():
     clear()
 
@@ -48,7 +58,7 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      Version: 1.7 
+      /____/      Version: 1.8
     """,
         style="cyan",
     )
@@ -62,10 +72,17 @@ def debugging():
 
 def createLog(file_name: str, vessel: str, mode: str, desc: str):
     try:
-        creation_name = (
-            "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
-        )
-        creation_path = "./res/" + vessel + "/" + mode + "/log/"
+        global global_AIO
+        if global_AIO:
+            creation_name = (
+                "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
+            )
+            creation_path = "./res/AIO/" + mode + "/log/"
+        else:
+            creation_name = (
+                "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
+            )
+            creation_path = "./res/" + vessel + "/" + mode + "/log/"
 
         if not os.path.exists(creation_path):
             os.makedirs(creation_path)
@@ -77,10 +94,10 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
         book = load_workbook(creation_path + creation_name)
         sheet = book.active
 
-        global cleaned_log_list
-        if file_name not in cleaned_log_list:
+        global global_cleaned_log_list
+        if file_name not in global_cleaned_log_list:
             sheet.delete_rows(1, sheet.max_row + 1)
-            cleaned_log_list.append(file_name)
+            global_cleaned_log_list.append(file_name)
 
         rowData = (desc,)
         sheet.append(rowData)
@@ -158,6 +175,52 @@ def getFormattedDate(
     return ""
 
 
+def getVessels():
+    try:
+        vessels: list = []
+
+        path = "./data/vessel_list.xlsx"
+        ves_list = pd.read_excel(path)
+
+        i = 0
+        while not pd.isna(ves_list.iloc[i, 1]) and ves_list.iloc[i, 1] != "END":
+            vessels.append([str(ves_list.iloc[i, 0]), str(ves_list.iloc[i, 1])])
+            i += 1
+
+        return vessels
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
+def getVessel(
+    vessel_id: str,
+    mode: str,
+    file_name: str,
+    vessels: list,
+):
+    try:
+        if not pd.isna(vessel_id) or vessel_id != "":
+            vessel_id = vessel_id.strip()
+
+        for vessel in vessels:
+            if vessel[1] == vessel_id:
+                return str(vessel[0])
+
+        createLog(
+            file_name,
+            vessel_id,
+            mode,
+            "❌ No vessel found " + "(File: " + file_name + ")",
+        )
+
+        return ""
+
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
 def getMachineries():
     try:
         machineries: list = []
@@ -204,7 +267,7 @@ def getMachinery(
             + ")",
         )
 
-        return "N/A"
+        return ""
 
     except Exception as e:
         if debugMode:
@@ -259,7 +322,7 @@ def getCode(
             + ")",
         )
 
-        return "N/A"
+        return ""
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)
@@ -320,7 +383,7 @@ def getInterval(
             + ")",
         )
 
-        return "N/A"
+        return ""
     except Exception as e:
         if debugMode:
             logger.exception(e, stack_info=True)
@@ -488,6 +551,8 @@ def isValid(data: any):
             or (str(data).strip() == "")
             or (str(data).strip().lower() == "note:")
             or (str(data).strip().lower() == "nan")
+            or (str(data).strip().lower() == "n/a")
+            or (str(data).strip().lower() == "nil")
             or not (hasNumbers(str(data)))
         ):
             return False

@@ -6,23 +6,26 @@ from app.update_jobs_controller import *
 
 
 def executeAll(debugMode: bool):
+    enable_globalAIO()
     # Show header and table
     srcData = processSrc("💯 [yellow]All[/yellow]", False)
     header()
     console.print("", srcData["table"], "\n")
 
     # Get data
+    vessels = getVessels()
     machineries = getMachineries()
     codes = getCodes()
     intervals = getIntervals()
 
     # Execute the modes
-    running_hours_all(srcData, machineries, debugMode)
-    sub_categories_all(srcData, machineries, codes, intervals, debugMode)
-    update_jobs_all(srcData, machineries, codes, intervals, debugMode)
+    running_hours_all(srcData, vessels, machineries, debugMode)
+    sub_categories_all(srcData, vessels, machineries, codes, intervals, debugMode)
+    update_jobs_all(srcData, vessels, machineries, codes, intervals, debugMode)
 
     # Prompt for exit
     promptExit()
+    disable_globalAIO()
 
 
 def py_encoder():
