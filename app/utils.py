@@ -676,7 +676,10 @@ def splitAIO(_dir: str, file_name: str, mode: str, chunksize: int):
         df = pd.read_excel(_dir + file_name)
 
         i = 0
-        for chunk in np.array_split(df, len(df) // chunksize):
+        for chunk in track(
+            np.array_split(df, len(df) // chunksize),
+            description="🟢 [bold green]Splitting  [/bold green]",
+        ):
             chunk.to_excel(
                 _dir + "/AIO_{:02d}".format(i) + " (" + mode + ").xlsx",
                 index=False,
