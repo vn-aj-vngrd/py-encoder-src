@@ -433,32 +433,56 @@ def sub_categories_all(
         creation_folder = "./res/AIO/" + folder_name + "/sub_categories/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        _filename = "AIO (Sub Categories)" + ".xlsx"
+        _filename = folder_name + " (Sub Categories)" + ".xlsx"
         saveExcelFile(book, _filename, creation_folder)
 
         global sc_count
-        console.print(
-            "🔵 Total Data Encoded: " + str(sc_count) + " Row(s)",
-            style="bold cyan",
-            highlight=False,
-        )
+        if sc_count > 1:
+            console.print(
+                "🔵 Total Data Encoded: " + str(sc_count) + " Rows",
+                style="bold cyan",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🔵 Total Data Encoded: " + str(sc_count) + " Row",
+                style="bold cyan",
+                highlight=False,
+            )
+
         value = getMinVal(sc_count)
-        console.print(
-            "🟣 Min Rows Per Excel: " + str(value) + " Row(s)",
-            style="bold magenta",
-            highlight=False,
-        )
+
+        if value > 1:
+            console.print(
+                "🟣 Min Rows Per Excel: " + str(value) + " Rows",
+                style="bold magenta",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🟣 Min Rows Per Excel: " + str(value) + " Row",
+                style="bold magenta",
+                highlight=False,
+            )
 
         excel_count = 1
         global base
         if sc_count >= base:
             excel_count = splitAIO(creation_folder, _filename, "Sub Categories", value)
 
-        console.print(
-            "🟡 Total File Created: " + str(excel_count) + " File(s)",
-            style="bold yellow",
-            highlight=False,
-        )
+        if excel_count > 1:
+            console.print(
+                "🟡 Total File Created: " + str(excel_count) + " Files",
+                style="bold yellow",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🟡 Total File Created: " + str(excel_count) + " File",
+                style="bold yellow",
+                highlight=False,
+            )
+
         console.print("📥 Completed", style="info", highlight=False)
     except Exception as e:
         if debugMode:

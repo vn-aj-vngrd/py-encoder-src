@@ -447,32 +447,56 @@ def update_jobs_all(
         creation_folder = "./res/AIO/" + folder_name + "/update_jobs/"
         if not os.path.exists(creation_folder):
             os.makedirs(creation_folder)
-        _filename = "AIO (Update Jobs)" + ".xlsx"
+        _filename = folder_name + " (Update Jobs)" + ".xlsx"
         saveExcelFile(book, _filename, creation_folder)
 
         global uj_count
-        console.print(
-            "🔵 Total Data Encoded: " + str(uj_count) + " Row(s)",
-            style="bold cyan",
-            highlight=False,
-        )
+        if uj_count > 0:
+            console.print(
+                "🔵 Total Data Encoded: " + str(uj_count) + " Rows",
+                style="bold cyan",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🔵 Total Data Encoded: " + str(uj_count) + " Row",
+                style="bold cyan",
+                highlight=False,
+            )
+
         value = getMinVal(uj_count)
-        console.print(
-            "🟣 Min Rows Per Excel: " + str(value) + " Row(s)",
-            style="bold magenta",
-            highlight=False,
-        )
+        if value > 0:
+            console.print(
+                "🟣 Min Rows Per Excel: " + str(value) + " Rows",
+                style="bold magenta",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🟣 Min Rows Per Excel: " + str(value) + " Row",
+                style="bold magenta",
+                highlight=False,
+            )
 
         excel_count = 1
+
         global base
         if uj_count >= base:
             excel_count = splitAIO(creation_folder, _filename, "Update Jobs", value)
 
-        console.print(
-            "🟡 Total File Created: " + str(excel_count) + " File(s)",
-            style="bold yellow",
-            highlight=False,
-        )
+        if excel_count > 0:
+            console.print(
+                "🟡 Total File Created: " + str(excel_count) + " Files",
+                style="bold yellow",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🟡 Total File Created: " + str(excel_count) + " File",
+                style="bold yellow",
+                highlight=False,
+            )
+
         console.print("📥 Completed", style="info", highlight=False)
     except Exception as e:
         if debugMode:

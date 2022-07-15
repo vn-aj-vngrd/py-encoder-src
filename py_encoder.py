@@ -37,6 +37,7 @@ def executeAll(debugMode: bool):
     promptExit()
     disable_globalAIO()
     resetFolderName()
+    # resetCleanedList()
 
 
 def py_encoder():

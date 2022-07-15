@@ -94,9 +94,14 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
         global isAIO
         if isAIO:
             creation_name = (
-                "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
+                # "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
+                "/"
+                + folder_name
+                + " (Log)"
+                + ".xlsx"
             )
-            creation_path = "./res/AIO/" + folder_name + "/" + mode + "/log/"
+            creation_path = "./res/AIO/" + folder_name + "/" + mode
+            # + "/log/"
         else:
             creation_name = (
                 "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
@@ -114,9 +119,14 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
         sheet = book.active
 
         global cleaned_log_list
-        if file_name not in cleaned_log_list:
-            sheet.delete_rows(1, sheet.max_row + 1)
-            cleaned_log_list.append(file_name)
+        if isAIO:
+            if folder_name not in cleaned_log_list:
+                sheet.delete_rows(1, sheet.max_row + 1)
+                cleaned_log_list.append(folder_name)
+        else:
+            if file_name not in cleaned_log_list:
+                sheet.delete_rows(1, sheet.max_row + 1)
+                cleaned_log_list.append(file_name)
 
         rowData = (desc,)
         sheet.append(rowData)
@@ -674,6 +684,7 @@ def displayVersionHistory():
 def splitAIO(_dir: str, file_name: str, mode: str, chunksize: int):
     try:
         df = pd.read_excel(_dir + file_name)
+        global folder_name
 
         i = 0
         for chunk in track(
@@ -681,7 +692,8 @@ def splitAIO(_dir: str, file_name: str, mode: str, chunksize: int):
             description="🟢 [bold green]Splitting  [/bold green]",
         ):
             chunk.to_excel(
-                _dir + "/AIO_{:02d}".format(i) + " (" + mode + ").xlsx",
+                # _dir + "/AIO_{:02d}".format(i) + " (" + mode + ").xlsx",
+                _dir + "/" + folder_name + "_{:02d}".format(i) + " (" + mode + ").xlsx",
                 index=False,
                 header=True,
             )
