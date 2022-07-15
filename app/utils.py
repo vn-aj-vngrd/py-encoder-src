@@ -93,11 +93,16 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
         global folder_name
         global isAIO
         if isAIO:
+            temp = mode.split("_")
+            first = temp[0].capitalize()
+            second = temp[1].capitalize()
+            _mode = first + " " + second
+            
             creation_name = (
                 # "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
                 "/"
                 + folder_name
-                + " (Log)"
+                + " (" + _mode +" - Log)"
                 + ".xlsx"
             )
             creation_path = "./res/AIO/" + folder_name + "/" + mode
