@@ -47,7 +47,7 @@ uj_header = (
 
 rh_header = ("vessel", "machinery", "running_hours", "updating_date")
 
-interval_header = ("vessel", "machinery", "interval")
+vm_header = ("vessel", "machinery", "incharge_rank", "model", "maker", "installed_date")
 
 debugMode = False
 
@@ -81,6 +81,7 @@ version_history = [
     "Version 1.8: Added functionality: encode all modes in one excel file (AIO) (7/14/2022)",
     "Version 1.9: Added functionality: split encode all (AIO) (7/14/2022)",
     "Version 2.0: Added functionality: add file id to encode all (AIO) (7/14/2022)",
+    "Version 2.1: Added functionality: new mode (vessel machinery); Fixed: such modes failed to create a log (7/20/2022)",
 ]
 
 is_AIO = False

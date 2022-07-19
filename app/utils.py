@@ -40,13 +40,13 @@ logger = logging.getLogger()
 
 
 def enable_globalAIO():
-    global isAIO
-    isAIO = True
+    global is_AIO
+    is_AIO = True
 
 
 def disable_globalAIO():
-    global isAIO
-    isAIO = True
+    global is_AIO
+    is_AIO = False
 
 
 def updateFolderName(name: str):
@@ -76,7 +76,7 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      [bold cyan]Version: 2.0[/bold cyan]
+      /____/      [bold cyan]Version: 2.1[/bold cyan]
     """,
         style="cyan",
     )
@@ -91,22 +91,15 @@ def debugging():
 def createLog(file_name: str, vessel: str, mode: str, desc: str):
     try:
         global folder_name
-        global isAIO
-        if isAIO:
+        global is_AIO
+        if is_AIO:
             temp = mode.split("_")
-            first = temp[0].capitalize()
-            second = temp[1].capitalize()
-            _mode = first + " " + second
-            
-            creation_name = (
-                # "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
-                "/"
-                + folder_name
-                + " (" + _mode +" - Log)"
-                + ".xlsx"
-            )
+            first = temp[0][0].upper()
+            second = temp[1][0].upper()
+            _mode = first + second
+
+            creation_name = "/" + folder_name + " (" + _mode + " - Log)" + ".xlsx"
             creation_path = "./res/AIO/" + folder_name + "/" + mode
-            # + "/log/"
         else:
             creation_name = (
                 "/" + str(file_name[: len(file_name) - 5]).strip() + " (Log)" + ".xlsx"
@@ -124,7 +117,7 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
         sheet = book.active
 
         global cleaned_log_list
-        if isAIO:
+        if is_AIO:
             if folder_name not in cleaned_log_list:
                 sheet.delete_rows(1, sheet.max_row + 1)
                 cleaned_log_list.append(folder_name)
@@ -216,10 +209,8 @@ def getVessels():
         path = "./data/vessel_list.xlsx"
         ves_list = pd.read_excel(path)
 
-        i = 0
-        while not pd.isna(ves_list.iloc[i, 1]) and ves_list.iloc[i, 1] != "END":
+        for i in range(len(ves_list.index)):
             vessels.append([str(ves_list.iloc[i, 0]), str(ves_list.iloc[i, 1])])
-            i += 1
 
         return vessels
     except Exception as e:
@@ -234,7 +225,7 @@ def getVessel(
     vessels: list,
 ):
     try:
-        if not pd.isna(vessel_id) or vessel_id != "":
+        if not isEmpty(vessel_id):
             vessel_id = vessel_id.strip()
 
         for vessel in vessels:
@@ -262,10 +253,8 @@ def getMachineries():
         path = "./data/name_list.xlsx"
         mach_list = pd.read_excel(path)
 
-        i = 0
-        while not pd.isna(mach_list.iloc[i, 1]) and mach_list.iloc[i, 1] != "END":
+        for i in range(len(mach_list.index)):
             machineries.append([str(mach_list.iloc[i, 0]), str(mach_list.iloc[i, 1])])
-            i += 1
 
         return machineries
     except Exception as e:
@@ -282,7 +271,7 @@ def getMachinery(
     vessel: str,
 ):
     try:
-        if not pd.isna(machinery_id) or machinery_id != "":
+        if not isEmpty(machinery_id):
             machinery_id = machinery_id.strip()
 
         for machinery in machineries:
@@ -315,10 +304,8 @@ def getCodes():
         path = "./data/code_list.xlsx"
         code_list = pd.read_excel(path)
 
-        i = 0
-        while not pd.isna(code_list.iloc[i, 1]) and code_list.iloc[i, 1] != "END":
+        for i in range(len(code_list.index)):
             codes.append([str(code_list.iloc[i, 0]), str(code_list.iloc[i, 1])])
-            i += 1
 
         return codes
     except Exception as e:
@@ -335,7 +322,7 @@ def getCode(
     vessel: str,
 ):
     try:
-        if not pd.isna(machinery_name) or machinery_name != "":
+        if not isEmpty(machinery_name):
             machinery_name = machinery_name.strip()
 
         for code in codes:
@@ -369,14 +356,10 @@ def getIntervals():
         path = "./data/interval_list.xlsx"
         interval_list = pd.read_excel(path)
 
-        i = 0
-        while (
-            not pd.isna(interval_list.iloc[i, 1]) and interval_list.iloc[i, 1] != "END"
-        ):
+        for i in range(len(interval_list.index)):
             intervals.append(
                 [str(interval_list.iloc[i, 0]), str(interval_list.iloc[i, 1])]
             )
-            i += 1
 
         return intervals
     except Exception as e:
@@ -394,7 +377,7 @@ def getInterval(
     vessel: str,
 ):
     try:
-        if not pd.isna(interval_id) or interval_id != "":
+        if not isEmpty(interval_id):
             interval_id = interval_id.strip()
 
         for interval in intervals:
@@ -414,6 +397,64 @@ def getInterval(
             + key
             + ", Code: "
             + code
+            + ")",
+        )
+
+        return ""
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
+def getIncharges(path: str):
+    try:
+        incharges: list = []
+
+        main_menu = pd.read_excel(path, sheet_name="Main Menu")
+
+        i = 1
+        while i < len(main_menu.index):
+            incharges.append(
+                [
+                    str(main_menu.iloc[i, 2]).strip(),
+                    str(main_menu.iloc[i, 1]).strip(),
+                ]
+            )
+            i += 1
+
+        return incharges
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
+def getIncharge(
+    machinery: str,
+    key: str,
+    mode: str,
+    file_name: str,
+    incharges: list,
+    vessel: str,
+):
+    try:
+        if not isEmpty(key):
+            key = key.strip()
+
+        for incharge in incharges:
+            if incharge[1] == machinery or incharge[1] == key:
+                return str(incharge[0])
+
+        createLog(
+            file_name,
+            vessel,
+            mode,
+            "❌ No incharge found "
+            + "(File: "
+            + file_name
+            + ", Sheet: "
+            + key
+            + ", Machinery: "
+            + machinery
             + ")",
         )
 
@@ -484,16 +525,18 @@ def mainMenu():
     table.add_row("R", "Running Hours", "🏃")
     table.add_row("S", "Sub Categories", "📚")
     table.add_row("U", "Update Jobs", "📝")
+    table.add_row("V", "Vessel Machineries", "⚓")
     table.add_row("------", "------------------", "-------")
     table.add_row("A", "All-in-One", "💯")
     table.add_row("C", "Clean Res & Log", "🧹")
     table.add_row("E", "Empty Src Folder", "📂")
     table.add_row("------", "------------------", "-------")
+
     if debugMode:
         table.add_row("D", "Disable Debug Mode", "💻")
     else:
         table.add_row("D", "Enable Debug Mode", "💻")
-    table.add_row("V", "Version History", "🕓")
+    table.add_row("P", "Version History", "🕓")
     table.add_row("X", "Exit", "❌")
 
     console.print("", table, "\n")

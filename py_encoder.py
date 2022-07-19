@@ -1,8 +1,9 @@
 from app.middleware import *
 from app.utils import *
-from app.running_hours_controller import *
-from app.sub_categories_controller import *
-from app.update_jobs_controller import *
+from app.running_hours import *
+from app.sub_categories import *
+from app.update_jobs import *
+from app.vessel_machineries import *
 
 
 def executeAll(debugMode: bool):
@@ -37,7 +38,6 @@ def executeAll(debugMode: bool):
     promptExit()
     disable_globalAIO()
     resetFolderName()
-    # resetCleanedList()
 
 
 def py_encoder():
@@ -90,13 +90,15 @@ def py_encoder():
                 sub_categories(debugMode)
             elif file_key.upper() == "U":
                 update_jobs(debugMode)
+            elif file_key.upper() == "V":
+                vessel_machineries(debugMode)
             elif file_key.upper() == "C":
                 isClean = cleanResLog()
             elif file_key.upper() == "D":
                 debugMode = debugging()
             elif file_key.upper() == "E":
                 isEmpty = emptySrc()
-            elif file_key.upper() == "V":
+            elif file_key.upper() == "P":
                 displayVersionHistory()
             elif file_key.upper() == "X":
                 showExitCredits()
