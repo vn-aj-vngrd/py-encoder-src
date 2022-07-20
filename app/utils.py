@@ -76,7 +76,7 @@ def header():
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      [bold cyan]Version: 2.2[/bold cyan]
+      /____/      [bold cyan]Version: 2.3[/bold cyan]
     """,
         style="cyan",
     )
@@ -146,7 +146,26 @@ def getFormattedDate(
     datetype: str,
     vessel: str,
 ):
-    date = date.strip()
+    if not isEmpty(date):
+        date = date.strip()
+
+    if date == "19-cot-2019":
+        return "19-Oct-19"
+
+    if date == "20-cot-2019":
+        return "20-Oct-19"
+
+    if date == "10-FE4B-22":
+        return "10-Feb-22"
+
+    if date == "2022-51":
+        return "01-May-22"
+
+    if date == "12/23/202":
+        return "23-Dec-20"
+
+    if date == "7103/2022":
+        return "10-Jul-22"
 
     if "/" in date:
         if date.count("/") == 2 and len(date) >= 8 and len(date) <= 10:
@@ -165,21 +184,6 @@ def getFormattedDate(
             year = str(split_date[1][2:][2:])
             if len(year) == 2:
                 return str(day + "-" + month + "-" + year)
-
-    if date == "19-cot-2019":
-        return "19-Oct-19"
-
-    if date == "20-cot-2019":
-        return "20-Oct-19"
-
-    if date == "10-FE4B-22":
-        return "10-Feb-22"
-
-    if date == "2022-51":
-        return "01-May-22"
-
-    if date == "12/23/202":
-        return "23-Dec-20"
 
     createLog(
         file_name,
