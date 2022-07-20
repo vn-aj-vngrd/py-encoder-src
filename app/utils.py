@@ -182,7 +182,11 @@ def getFormattedDate(
             day = str(split_date[1][:2])
             month = str(months[int(split_date[0]) - 1])
             year = str(split_date[1][2:][2:])
-            if len(year) == 2:
+            if (
+                len(year) == 2
+                and (day >= 1 and day <= 31)
+                and (month >= 1 and month <= 12)
+            ):
                 return str(day + "-" + month + "-" + year)
 
     createLog(
