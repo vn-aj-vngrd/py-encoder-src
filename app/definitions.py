@@ -82,6 +82,7 @@ version_history = [
     "Version 1.9: Added functionality: split encode all (AIO) (7/14/2022)",
     "Version 2.0: Added functionality: add file id to encode all (AIO) (7/14/2022)",
     "Version 2.1: Added functionality: new mode (vessel machinery); Fixed: such modes failed to create a log (7/20/2022)",
+    "Version 2.2: Added functionality: new mode (vessel machinery) added to AIO mode (7/20/2022)",
 ]
 
 is_AIO = False

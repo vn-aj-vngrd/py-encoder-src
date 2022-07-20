@@ -246,3 +246,87 @@ def vessel_machineries(debugMode: bool):
         except Exception as e:
             isExceptionError = True
             exceptionMsg = str(e)
+
+def vessel_machineries_all(
+    srcData: dict, vessels: list, machineries: list, debugMode: bool, folder_name: str
+):
+    try:
+        resetCleanedList()
+
+        console.print("\n\n⚓ Vessel Machineries", highlight=False)
+
+        book = Workbook()
+        sheet = book.active
+        sheet.append(vm_header)
+
+        for _file in track(
+            srcData["files"],
+            description="🟢 [bold green]Processing [/bold green]",
+        ):
+            _ = generateVMData(
+                _file["excelFile"],
+                vessels,
+                machineries,
+                debugMode,
+                _file["keys"],
+                _file["type"],
+                False,
+                False,
+                sheet,
+            )
+
+        creation_folder = "./res/AIO/" + folder_name + "/vessel_machineries/"
+        _filename = folder_name + " (Vessel Machineries)" + ".xlsx"
+        saveExcelFile(book, _filename, creation_folder)
+
+        global rh_count
+        if rh_count > 1:
+            console.print(
+                "🔵 Total Data Encoded: " + str(rh_count) + " Rows",
+                style="bold cyan",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🔵 Total Data Encoded: " + str(rh_count) + " Row",
+                style="bold cyan",
+                highlight=False,
+            )
+
+        value = getMinVal(rh_count)
+
+        if value > 1:
+            console.print(
+                "🟣 Min Rows Per Excel: " + str(value) + " Rows",
+                style="bold magenta",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🟣 Min Rows Per Excel: " + str(value) + " Row",
+                style="bold magenta",
+                highlight=False,
+            )
+
+        excel_count = 1
+        global base
+        if rh_count >= base:
+            excel_count = splitAIO(creation_folder, _filename, "Vessel Machineries", value)
+
+        if excel_count > 1:
+            console.print(
+                "🟡 Total File Created: " + str(excel_count) + " Files",
+                style="bold yellow",
+                highlight=False,
+            )
+        else:
+            console.print(
+                "🟡 Total File Created: " + str(excel_count) + " File",
+                style="bold yellow",
+                highlight=False,
+            )
+
+        console.print("📥 Completed", style="info", highlight=False)
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)

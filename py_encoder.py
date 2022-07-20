@@ -33,6 +33,7 @@ def executeAll(debugMode: bool):
     update_jobs_all(
         srcData, vessels, machineries, codes, intervals, debugMode, folder_name
     )
+    vessel_machineries_all(srcData, vessels, machineries, debugMode, folder_name)
 
     # Prompt for exit
     promptExit()
