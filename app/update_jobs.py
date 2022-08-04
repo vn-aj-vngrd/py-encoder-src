@@ -7,6 +7,7 @@ def generateUJData(
     machineries: list,
     codes: list,
     intervals: list,
+    dates: list,
     debugMode: bool,
     keys: list,
     _type: bool,
@@ -158,7 +159,7 @@ def generateUJData(
                                         "%d-%b-%y"
                                     )
                                 else:
-                                    commissioning_date = getFormattedDate(
+                                    commissioning_date = getDate(
                                         key,
                                         code,
                                         "update_jobs",
@@ -166,6 +167,7 @@ def generateUJData(
                                         str(commissioning_date),
                                         "Commissioning date",
                                         vessel,
+                                        dates,
                                     )
 
                                     if isEmpty(commissioning_date):
@@ -185,7 +187,7 @@ def generateUJData(
                                     ):
                                         last_done_date = commissioning_date
                                     else:
-                                        last_done_date = getFormattedDate(
+                                        last_done_date = getDate(
                                             key,
                                             code,
                                             "update_jobs",
@@ -193,6 +195,7 @@ def generateUJData(
                                             str(last_done_date),
                                             "Last done date",
                                             vessel,
+                                            dates,
                                         )
 
                                         if isEmpty(last_done_date):
@@ -337,6 +340,7 @@ def update_jobs(debugMode: bool):
             machineries = getMachineries()
             codes = getCodes()
             intervals = getIntervals()
+            dates = getDates()
 
             if user_input.upper() == "A":
                 for _file in srcData["files"]:
@@ -346,6 +350,7 @@ def update_jobs(debugMode: bool):
                         machineries,
                         codes,
                         intervals,
+                        dates,
                         debugMode,
                         _file["keys"],
                         _file["type"],
@@ -359,6 +364,7 @@ def update_jobs(debugMode: bool):
                             machineries,
                             codes,
                             intervals,
+                            dates,
                             debugMode,
                             _file["keys"],
                             _file["type"],
@@ -372,6 +378,7 @@ def update_jobs(debugMode: bool):
                             machineries,
                             codes,
                             intervals,
+                            dates,
                             debugMode,
                             _file["keys"],
                             _file["type"],
@@ -391,6 +398,7 @@ def update_jobs(debugMode: bool):
                     machineries,
                     codes,
                     intervals,
+                    dates,
                     debugMode,
                     srcData["files"][int(user_input) - 1]["keys"],
                     srcData["files"][int(user_input) - 1]["type"],
@@ -414,6 +422,7 @@ def update_jobs_all(
     machineries: list,
     codes: list,
     intervals: list,
+    dates: list,
     debugMode: bool,
     folder_name: str,
 ):
@@ -436,6 +445,7 @@ def update_jobs_all(
                 machineries,
                 codes,
                 intervals,
+                dates,
                 debugMode,
                 _file["keys"],
                 _file["type"],

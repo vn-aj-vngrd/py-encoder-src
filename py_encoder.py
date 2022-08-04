@@ -24,14 +24,15 @@ def executeAll(debugMode: bool):
     machineries = getMachineries()
     codes = getCodes()
     intervals = getIntervals()
+    dates = getDates()
 
     # Execute the modes
     running_hours_all(srcData, vessels, machineries, debugMode, folder_name)
     sub_categories_all(
-        srcData, vessels, machineries, codes, intervals, debugMode, folder_name
+        srcData, vessels, machineries, codes, intervals, dates, debugMode, folder_name
     )
     update_jobs_all(
-        srcData, vessels, machineries, codes, intervals, debugMode, folder_name
+        srcData, vessels, machineries, codes, intervals, dates, debugMode, folder_name
     )
     vessel_machineries_all(srcData, vessels, machineries, debugMode, folder_name)
 
@@ -99,7 +100,7 @@ def py_encoder():
                 debugMode = debugging()
             elif file_key.upper() == "E":
                 isEmpty = emptySrc()
-            elif file_key.upper() == "P":
+            elif file_key.upper() == "H":
                 displayVersionHistory()
             elif file_key.upper() == "X":
                 showExitCredits()

@@ -67,19 +67,34 @@ def resetFolderName():
 
 
 def header():
-    clear()
-
-    console.print(
-        r"""
+    global debugMode
+    if debugMode:
+        console.print(
+            r"""
     ____              ______                     __         
    / __ \__  __      / ____/___  _________  ____/ /__  _____
   / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
  / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
 /_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
-      /____/      [bold cyan]Version: 2.3[/bold cyan]
+      /____/      [bold cyan]Version: 2.4[/bold cyan]
     """,
-        style="cyan",
-    )
+            style="cyan",
+        )
+
+    else:
+        clear()
+
+        console.print(
+            r"""
+    ____              ______                     __         
+   / __ \__  __      / ____/___  _________  ____/ /__  _____
+  / /_/ / / / /_____/ __/ / __ \/ ___/ __ \/ __  / _ \/ ___/
+ / ____/ /_/ /_____/ /___/ / / / /__/ /_/ / /_/ /  __/ /    
+/_/    \__, /     /_____/_/ /_/\___/\____/\__,_/\___/_/      
+      /____/      [bold cyan]Version: 2.4[/bold cyan]
+    """,
+            style="cyan",
+        )
 
 
 def debugging():
@@ -137,7 +152,23 @@ def createLog(file_name: str, vessel: str, mode: str, desc: str):
             logger.exception(e, stack_info=True)
 
 
-def getFormattedDate(
+def getDates():
+    try:
+        dates: list = []
+
+        path = "./data/date_list.xlsx"
+        date_list = pd.read_excel(path)
+
+        for i in range(len(date_list.index)):
+            dates.append([str(date_list.iloc[i, 0]), str(date_list.iloc[i, 1])])
+
+        return dates
+    except Exception as e:
+        if debugMode:
+            logger.exception(e, stack_info=True)
+
+
+def getDate(
     key: str,
     code: str,
     mode: str,
@@ -145,48 +176,37 @@ def getFormattedDate(
     date: str,
     datetype: str,
     vessel: str,
+    dates: list,
 ):
     if not isEmpty(date):
         date = date.strip()
 
-    if date == "19-cot-2019":
-        return "19-Oct-19"
-
-    if date == "20-cot-2019":
-        return "20-Oct-19"
-
-    if date == "10-FE4B-22":
-        return "10-Feb-22"
-
-    if date == "2022-51":
-        return "01-May-22"
-
-    if date == "12/23/202":
-        return "23-Dec-20"
-
-    if date == "7103/2022":
-        return "10-Jul-22"
+    for _date in dates:
+        if _date[1] == date:
+            return str(_date[0])
 
     if "/" in date:
         if date.count("/") == 2 and len(date) >= 8 and len(date) <= 10:
             split_date = date.split("/")
             day = str(split_date[1])
-            month = str(months[int(split_date[0]) - 1])
+            if int(split_date[0]) >= 1 and int(split_date[0]) <= 12:
+                month = str(months[int(split_date[0]) - 1])
+            else:
+                month = ""
             year = str(split_date[2][2:])
-            if len(year) == 2:
+            if len(year) == 2 and (int(day) >= 1 and int(day) <= 31) and (month != ""):
                 return str(day + "-" + month + "-" + year)
 
         # ❌ Commissioning date "11/282021" is invalid (File: 20220403GLZ.xlsx, Sheet: Auto Pilot, Code: AP-015) : Fixed
         if date.count("/") == 1 and len(date) >= 8 and len(date) <= 10:
             split_date = date.split("/")
             day = str(split_date[1][:2])
-            month = str(months[int(split_date[0]) - 1])
+            if int(split_date[0]) >= 1 and int(split_date[0]) <= 12:
+                month = str(months[int(split_date[0]) - 1])
+            else:
+                month = "na"
             year = str(split_date[1][2:][2:])
-            if (
-                len(year) == 2
-                and (day >= 1 and day <= 31)
-                and (month >= 1 and month <= 12)
-            ):
+            if len(year) == 2 and (int(day) >= 1 and int(day) <= 31) and (month != ""):
                 return str(day + "-" + month + "-" + year)
 
     createLog(
@@ -544,7 +564,7 @@ def mainMenu():
         table.add_row("D", "Disable Debug Mode", "💻")
     else:
         table.add_row("D", "Enable Debug Mode", "💻")
-    table.add_row("P", "Version History", "🕓")
+    table.add_row("H", "Version History", "🕓")
     table.add_row("X", "Exit", "❌")
 
     console.print("", table, "\n")

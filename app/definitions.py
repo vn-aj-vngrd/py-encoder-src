@@ -70,6 +70,8 @@ months = [
 cleaned_log_list = []
 
 
+space = "             "
+
 version_history = [
     "Version 1.0: Initial release (7/11/2022)",
     "Version 1.1: Added functionalities: cleaning the res and log, view version history (7/12/2022)",
@@ -84,7 +86,10 @@ version_history = [
     "Version 2.0: Added functionality: add file id to encode all (AIO) (7/14/2022)",
     "Version 2.1: Added functionality: new mode (vessel machinery); Fixed: such modes failed to create a log (7/20/2022)",
     "Version 2.2: Added functionality: new mode (vessel machinery) added to AIO mode (7/20/2022)",
-    "Version 2.3: Fixed: bug about unformatted date (7/20/2022)",
+    "Version 2.3: Fixed: bug about unformatted dates (7/20/2022)",
+    "Version 2.4: Added: date list to correct invalid dates\n"
+    + space
+    + "Fixed: bug about invalid dates (8/24/2022)",
 ]
 
 is_AIO = False

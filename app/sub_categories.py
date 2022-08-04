@@ -7,6 +7,7 @@ def generateSCData(
     machineries: list,
     codes: list,
     intervals: list,
+    dates: list,
     debugMode: bool,
     keys: list,
     _type: bool,
@@ -158,7 +159,7 @@ def generateSCData(
                                         "%d-%b-%y"
                                     )
                                 else:
-                                    commissioning_date = getFormattedDate(
+                                    commissioning_date = getDate(
                                         key,
                                         code,
                                         "sub_categories",
@@ -166,6 +167,7 @@ def generateSCData(
                                         str(commissioning_date),
                                         "Commissioning date",
                                         vessel,
+                                        dates,
                                     )
 
                                     if isEmpty(commissioning_date):
@@ -185,7 +187,7 @@ def generateSCData(
                                     ):
                                         last_done_date = commissioning_date
                                     else:
-                                        last_done_date = getFormattedDate(
+                                        last_done_date = getDate(
                                             key,
                                             code,
                                             "sub_categories",
@@ -193,6 +195,7 @@ def generateSCData(
                                             str(last_done_date),
                                             "Last done date",
                                             vessel,
+                                            dates,
                                         )
 
                                         if isEmpty(last_done_date):
@@ -323,6 +326,7 @@ def sub_categories(debugMode: bool):
             machineries = getMachineries()
             codes = getCodes()
             intervals = getIntervals()
+            dates = getDates()
 
             if user_input.upper() == "A":
                 for _file in srcData["files"]:
@@ -332,6 +336,7 @@ def sub_categories(debugMode: bool):
                         machineries,
                         codes,
                         intervals,
+                        dates,
                         debugMode,
                         _file["keys"],
                         _file["type"],
@@ -345,6 +350,7 @@ def sub_categories(debugMode: bool):
                             machineries,
                             codes,
                             intervals,
+                            dates,
                             debugMode,
                             _file["keys"],
                             _file["type"],
@@ -358,6 +364,7 @@ def sub_categories(debugMode: bool):
                             machineries,
                             codes,
                             intervals,
+                            dates,
                             debugMode,
                             _file["keys"],
                             _file["type"],
@@ -377,6 +384,7 @@ def sub_categories(debugMode: bool):
                     machineries,
                     codes,
                     intervals,
+                    dates,
                     debugMode,
                     srcData["files"][int(user_input) - 1]["keys"],
                     srcData["files"][int(user_input) - 1]["type"],
@@ -400,6 +408,7 @@ def sub_categories_all(
     machineries: list,
     codes: list,
     intervals: list,
+    dates: list,
     debugMode: bool,
     folder_name: str,
 ):
@@ -422,6 +431,7 @@ def sub_categories_all(
                 machineries,
                 codes,
                 intervals,
+                dates,
                 debugMode,
                 _file["keys"],
                 _file["type"],
