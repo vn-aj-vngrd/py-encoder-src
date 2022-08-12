@@ -11,6 +11,7 @@ not_included = [
     "FIVA VALVE Monitoring",
     "Fuel Valve Monitoring",
     "Sheet1",
+    "Sheet2",
     "Details",
     " ME Exhaust Valve Monitoring (1",
     " ME Exhaust Valve Monitoring (1)",
@@ -90,6 +91,7 @@ version_history = [
     "Version 2.4: Added: date list to correct invalid dates\n"
     + space
     + "Fixed: bug about invalid dates (8/24/2022)",
+    "Version 2.5: Fixed: Invalid sheet for encode (8/12/2022)",
 ]
 
 is_AIO = False
